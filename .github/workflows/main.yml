@@ -14,6 +14,7 @@ on:
 jobs:
   # Check for proper formatting of the code using spotless.
   # Taken from wpilib docs: https://docs.wpilib.org/en/stable/docs/software/advanced-gradlerio/code-formatting.html 
+  # TODO: Configure project config files to enable formater 
   format:
     runs-on: ubuntu-latest
 
