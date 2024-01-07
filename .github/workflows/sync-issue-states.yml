@@ -1,0 +1,23 @@
+name: Project Issue State Sync
+
+on:
+  schedule:
+    # At minute 0 every 2 hours
+    - cron: 0 0-23/2 * * *
+  workflow_dispatch:
+    # Manual trigger
+
+jobs:
+  issue-state-sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Sync issue states
+        uses: dasmerlon/project-issue-state-sync@v2
+        with:
+          github_token: ${{ secrets.PROJECT_ISSUE_SYNC_TOKEN }}
+          owner: sonic-howl
+          project_number: 1
+          verbosity: debug
+          closed_statuses: ✅ Done
+          open_statuses: ❌ Blocked,🕒 Todo,🔧 In Progress,👀 In review
