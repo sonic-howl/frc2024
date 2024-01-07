@@ -9,19 +9,17 @@ on:
 jobs:
   # Check for proper formatting of the code using spotless.
   # Taken from wpilib docs: https://docs.wpilib.org/en/stable/docs/software/advanced-gradlerio/code-formatting.html
-  # TODO: Configure project config files to enable formater
   format:
     runs-on: ubuntu-latest
 
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v4
         with:
           distribution: "zulu"
-          java-version: 17 # TODO: Java version might change
+          java-version: 17
       - run: ./gradlew spotlessCheck
 
   # Copied from wpilib docs: https://docs.wpilib.org/en/stable/docs/software/advanced-gradlerio/robot-code-ci.html

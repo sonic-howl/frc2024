@@ -60,7 +60,7 @@ If you don't know how to do this, follow these steps:
 > If you get an error mentioning that git isn't installed (or that no command named git exists), download it [here](https://git-scm.com/downloads).
 
 ## Configuring Hardware
-In order to complete these steps, you will need to [intall the FRC Game Tools](#installing-frc-game-tools). 
+In order to complete these steps, you will need to [intall the FRC Game Tools](#installing-frc-game-tools).
 
 ### RoboRIO Image Update
 
@@ -78,9 +78,30 @@ The frc 2024 season will require all RoboRIOs to be flashed with a new image. To
 
 ### Programming the Radio
 
-Similar to the RoboRIO, the radio used to communicate with the bot must also be flashed with the latest firmware. Follow [this guide](https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-3/radio-programming.html) to do so. 
+Similar to the RoboRIO, the radio used to communicate with the bot must also be flashed with the latest firmware. Follow [this guide](https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-3/radio-programming.html) to do so.
 
 ## Build, Test, and Deploy
+
+### Building Robot Code
+
+Before deploying any robot code, you must build (compile) it first. To do so, you can follow [this guide](https://docs.wpilib.org/en/stable/docs/software/vscode-overview/deploying-robot-code.html#building-and-deploying-robot-code) (through ide) or run the following command:
+
+```bash
+./gradlew build
+```
+
+### Formatting Code
+
+The following command can be used to format the code:
+
+```bash
+./gradlew spotlessApply
+```
+
+When code is pushed to the repository, a workflow will be run to check if the code is properly formatted. If it isn't, you won't be able to merge the code. In order to check if the project is properly formatted, run:
+```bash
+./gradlew spotlessCheck
+```
 
 ### Running Test Programs (Using Driver Station)
 
