@@ -112,7 +112,7 @@ When code is pushed to the repository, a workflow will be run to check if the co
 
 ### Running the Robot Simulation
 
-A robot simulation is available for testing. Read the full documentation [here](https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-simulation/introduction.html). 
+A robot simulation is available for testing. Read the full documentation [here](https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-simulation/introduction.html).
 
 You can run it with the following command:
 
