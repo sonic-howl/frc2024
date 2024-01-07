@@ -123,6 +123,8 @@ You can run it with the following command:
 ./gradlew simulateJava
 ```
 
+> It's important to note that robot simulation is only enabled when `includeDesktopSupport` is set to true in `build.gradle`. When enabled, this option can cause issues with 3rd party software that doesn't support it. If ever you run into build or simulation issues, try turning off that option in the build file.
+
 ### Using the Driver Station
 
 This [guide](https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-4/running-test-program.html) shows you how to setup the frc driver station in order to run your test programs.
