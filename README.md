@@ -1,6 +1,9 @@
 # frc2024
 
-[![CI](https://github.com/sonic-howl/frc2024/actions/workflows/integrate.yml/badge.svg)](https://github.com/sonic-howl/frc2024/actions/workflows/integrate.yml)
+| Branch  | Status                                                                                                                                       |
+| ------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| main    | [![CI](https://github.com/sonic-howl/frc2024/actions/workflows/integrate.yml/badge.svg?branch=main)](https://github.com/sonic-howl/frc2024/actions/workflows/integrate.yml)    |
+| develop | [![CI](https://github.com/sonic-howl/frc2024/actions/workflows/integrate.yml/badge.svg?branch=develop)](https://github.com/sonic-howl/frc2024/actions/workflows/integrate.yml) |
 
 ## Getting started
 
