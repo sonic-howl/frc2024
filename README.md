@@ -120,6 +120,20 @@ You can run it with the following command:
 ./gradlew simulateJava
 ```
 
-### Running Test Programs (Using Driver Station)
+### Using the Driver Station
 
 This [guide](https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-4/running-test-program.html) shows you how to setup the frc driver station in order to run your test programs.
+
+### Deploying Code to Robot
+
+After [building the code](#building-robot-code), you can deploy it to a connected robot using:
+
+```bash
+./gradlew deploy
+```
+
+If deploying wirelessly, you can scan for robot IP's using:
+
+```bash
+./gradlew discoverRoborio
+```
