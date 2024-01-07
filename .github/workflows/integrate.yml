@@ -5,6 +5,8 @@ name: CI
 on:
   pull_request:
     branches: [main, develop]
+  push:
+    branches: [main, develop]
 
 jobs:
   # Check for proper formatting of the code using spotless.
