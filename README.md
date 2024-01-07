@@ -81,6 +81,13 @@ The frc 2024 season will require all RoboRIOs to be flashed with a new image. To
 Similar to the RoboRIO, the radio used to communicate with the bot must also be flashed with the latest firmware. Follow [this guide](https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-3/radio-programming.html) to do so.
 
 ## Build, Test, and Deploy
+To view all available gradle commands, use the following command:
+
+```bash
+./gradlew tasks
+```
+
+Alternatively, you can view all available commands on the [docs](https://docs.wpilib.org/en/stable/docs/software/advanced-gradlerio/gradlew-tasks.html).
 
 ### Building Robot Code
 
@@ -101,6 +108,16 @@ The following command can be used to format the code:
 When code is pushed to the repository, a workflow will be run to check if the code is properly formatted. If it isn't, you won't be able to merge the code. In order to check if the project is properly formatted, run:
 ```bash
 ./gradlew spotlessCheck
+```
+
+### Running the Robot Simulation
+
+A robot simulation is available for testing. Read the full documentation [here](https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-simulation/introduction.html). 
+
+You can run it with the following command:
+
+```bash
+./gradlew simulateJava
 ```
 
 ### Running Test Programs (Using Driver Station)
