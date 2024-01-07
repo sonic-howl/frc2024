@@ -1,6 +1,6 @@
 # frc2024
 
-[![CI](https://github.com/sonic-howl/frc2024/actions/workflows/integrate.yml/badge.svg?branch=main)](https://github.com/sonic-howl/frc2024/actions/workflows/integrate.yml)
+[![CI](https://github.com/sonic-howl/frc2024/actions/workflows/integrate.yml/badge.svg)](https://github.com/sonic-howl/frc2024/actions/workflows/integrate.yml)
 
 ## Getting started
 
@@ -80,4 +80,8 @@ The frc 2024 season will require all RoboRIOs to be flashed with a new image. To
 
 Similar to the RoboRIO, the radio used to communicate with the bot must also be flashed with the latest firmware. Follow [this guide](https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-3/radio-programming.html) to do so. 
 
-## Test and Deploy
+## Build, Test, and Deploy
+
+### Running Test Programs (Using Driver Station)
+
+This [guide](https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-4/running-test-program.html) shows you how to setup the frc driver station in order to run your test programs.
