@@ -63,7 +63,7 @@ If you don't know how to do this, follow these steps:
 > If you get an error mentioning that git isn't installed (or that no command named git exists), download it [here](https://git-scm.com/downloads).
 
 ## Configuring Hardware
-In order to complete these steps, you will need to [intall the FRC Game Tools](#installing-frc-game-tools).
+In order to complete these steps, you will need to [install the FRC Game Tools](#installing-frc-game-tools).
 
 ### RoboRIO Image Update
 
@@ -131,9 +131,9 @@ If deploying wirelessly, you can scan for robot IP's using:
 ./gradlew discoverRoborio
 ```
 
-## Simulation Testing 
+## Simulation Testing
 
-WPILib provides a [simulator](https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-simulation/introduction.html) to test your code without being physically connected to a robot. 
+WPILib provides a [simulator](https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-simulation/introduction.html) to test your code without being physically connected to a robot.
 
 ### Running the Robot Simulation
 
@@ -145,8 +145,16 @@ You can run it with the following command:
 ./gradlew simulateJava
 ```
 
-> It's important to note that robot simulation is only enabled when `includeDesktopSupport` is set to true in `build.gradle`. When enabled, this option can cause issues with 3rd party software that doesn't support it. If ever you run into build or simulation issues, try turning off that option in the build file. You can also follow [this guide](https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-simulation/simulation-gui.html#determining-simulation-from-robot-code) in order to conditionally run certain code based on the environment (if the simulation if running or not). 
+> It's important to note that robot simulation is only enabled when `includeDesktopSupport` is set to true in `build.gradle`. When enabled, this option can cause issues with 3rd party software that doesn't support it. If ever you run into build or simulation issues, try turning off that option in the build file. You can also follow [this guide](https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-simulation/simulation-gui.html#determining-simulation-from-robot-code) in order to conditionally run certain code based on the environment (if the simulation if running or not).
 
 ### Running Robot Dashboards during a Simulation
 
 Follow [this guide](https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-simulation/introduction.html#running-robot-dashboards) to enable whichever dashboard you plan on using during the simulation.
+
+### Run Tests
+
+You can also manually run unit tests using:
+
+```bash
+./gradlew test
+```
