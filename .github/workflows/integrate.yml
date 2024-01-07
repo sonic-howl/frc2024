@@ -28,7 +28,7 @@ jobs:
         run: chmod +x gradlew
       
       - name: Check code formatting
-      - run: ./gradlew spotlessCheck --info
+        run: ./gradlew spotlessCheck --info
 
   # Copied from wpilib docs: https://docs.wpilib.org/en/stable/docs/software/advanced-gradlerio/robot-code-ci.html
   build:
