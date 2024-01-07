@@ -22,7 +22,13 @@ jobs:
         with:
           distribution: "zulu"
           java-version: 17
-      - run: ./gradlew spotlessCheck
+      
+      # Grant execute permission for gradlew
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      
+      - name: Check code formatting
+      - run: ./gradlew spotlessCheck --info
 
   # Copied from wpilib docs: https://docs.wpilib.org/en/stable/docs/software/advanced-gradlerio/robot-code-ci.html
   build:
@@ -43,4 +49,4 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Compile and run tests on robot code
-        run: ./gradlew build
+        run: ./gradlew build --info
