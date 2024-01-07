@@ -83,7 +83,7 @@ The frc 2024 season will require all RoboRIOs to be flashed with a new image. To
 
 Similar to the RoboRIO, the radio used to communicate with the bot must also be flashed with the latest firmware. Follow [this guide](https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-3/radio-programming.html) to do so.
 
-## Build, Test, and Deploy
+## Build and Deploy
 To view all available gradle commands, use the following command:
 
 ```bash
@@ -113,18 +113,6 @@ When code is pushed to the repository, a workflow will be run to check if the co
 ./gradlew spotlessCheck
 ```
 
-### Running the Robot Simulation
-
-A robot simulation is available for testing. Read the full documentation [here](https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-simulation/introduction.html).
-
-You can run it with the following command:
-
-```bash
-./gradlew simulateJava
-```
-
-> It's important to note that robot simulation is only enabled when `includeDesktopSupport` is set to true in `build.gradle`. When enabled, this option can cause issues with 3rd party software that doesn't support it. If ever you run into build or simulation issues, try turning off that option in the build file.
-
 ### Using the Driver Station
 
 This [guide](https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-4/running-test-program.html) shows you how to setup the frc driver station in order to run your test programs.
@@ -142,3 +130,23 @@ If deploying wirelessly, you can scan for robot IP's using:
 ```bash
 ./gradlew discoverRoborio
 ```
+
+## Simulation Testing 
+
+WPILib provides a [simulator](https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-simulation/introduction.html) to test your code without being physically connected to a robot. 
+
+### Running the Robot Simulation
+
+A robot simulation is available for testing. Read the full documentation [here](https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-simulation/introduction.html).
+
+You can run it with the following command:
+
+```bash
+./gradlew simulateJava
+```
+
+> It's important to note that robot simulation is only enabled when `includeDesktopSupport` is set to true in `build.gradle`. When enabled, this option can cause issues with 3rd party software that doesn't support it. If ever you run into build or simulation issues, try turning off that option in the build file. You can also follow [this guide](https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-simulation/simulation-gui.html#determining-simulation-from-robot-code) in order to conditionally run certain code based on the environment (if the simulation if running or not). 
+
+### Running Robot Dashboards during a Simulation
+
+Follow [this guide](https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-simulation/introduction.html#running-robot-dashboards) to enable whichever dashboard you plan on using during the simulation.
