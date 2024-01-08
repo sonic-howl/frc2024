@@ -18,6 +18,6 @@ jobs:
           github_token: ${{ secrets.PROJECT_ISSUE_SYNC_TOKEN }}
           owner: sonic-howl
           project_number: 1
-          verbosity: debug
+          verbosity: trace
           closed_statuses: ✅ Done
           open_statuses: ❌ Blocked,🕒 Todo,🔧 In Progress,👀 In review
