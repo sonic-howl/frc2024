@@ -33,6 +33,12 @@ To get started, install python version 3.12.1 from these links and run the insta
 
 - [Windows](https://www.python.org/ftp/python/3.12.1/python-3.12.1-amd64.exe)
 
+**Installation Steps**
+
+1. Select Modify
+2. Click Next
+3. Select `Associate files with Python` then click install
+
 - [MacOS](https://www.python.org/ftp/python/3.12.1/python-3.12.1-macos11.pkg)
 
 #### Install VSCode
@@ -50,13 +56,13 @@ Run these commands in Powershell on Windows. If you're on another operating syst
 **For Windows PowerShell**
 
 ```bash
-py -3 -m pip install -U "robotpy robotpy[all]"
+py -3 -m pip install -U robotpy "robotpy[all]"
 ```
 
 **For Ubuntu**
 
 ```bash
-pip3 install -U "robotpy robotpy[all]"
+pip3 install -U robotpy "robotpy[all]"
 ```
 
 #### Getting Started with VSCode
@@ -95,6 +101,10 @@ The frc 2024 season will require all RoboRIOs to be flashed with a new image. To
 [**RoboRIO 1.0**](https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-3/imaging-your-roborio.html)
 
 <img src="./static/roborio_1.png" width="400" height="400">
+
+### Install RobotPY on RoboRIO
+
+Follow [this guide](https://robotpy.readthedocs.io/en/stable/install/robot.html) to install python and RobotPY on the RobotRIO.
 
 ### Programming the Radio
 
