@@ -1,7 +1,7 @@
 # frc2024
 
-| Branch  | Status                                                                                                                                       |
-| ------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| Branch  | Status                                                                                                                                                                         |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | main    | [![CI](https://github.com/sonic-howl/frc2024/actions/workflows/integrate.yml/badge.svg?branch=main)](https://github.com/sonic-howl/frc2024/actions/workflows/integrate.yml)    |
 | develop | [![CI](https://github.com/sonic-howl/frc2024/actions/workflows/integrate.yml/badge.svg?branch=develop)](https://github.com/sonic-howl/frc2024/actions/workflows/integrate.yml) |
 
@@ -21,30 +21,45 @@ Once installed, you'll have access to these tools:
 - FRC Driver Station
 - FRC roboRIO Imaging Tool and Images
 
-### Installing WPILib 2024
+### Installing WPILib 2024 (Python)
 
-To install the 2024 WPILib programming environment, follow [this guide](https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-2/wpilib-setup.html).
+To install the 2024 WPILib programming environment for python, follow [this guide](https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-2/python-setup.html).
 
 If you're unsure of what options to choose during the install, follow these steps:
 
-1. Click `start`
-2. Select the `Everything` button, then press `Install for this User`
-3. Select `Download for this computer only (fastest)`. Once finished, press `next`.
-4. Click `Finish` to complete the install
+#### Installing Python
 
-> If you're using Mac or Linux, Make sure to read the `Post-Install` section.
+To get started, install python version 3.12.1 from these links and run the installer:
 
-This year, we will be programming in Java, so you can skip the C++ post installation steps.
+- [Windows](https://www.python.org/ftp/python/3.12.1/python-3.12.1-amd64.exe)
 
-Once installed, you'll have access to these tools:
+- [MacOS](https://www.python.org/ftp/python/3.12.1/python-3.12.1-macos11.pkg)
 
-- Visual Studio Code: The programming IDE (Integrated Development Environment
-  )
-- Gradle: Used to build the Java code
-- Java JDK/JRE: The necessary version of Java
-- WPILib Tools: Includes: SmartDashboard, Shuffleboard, RobotBuilder, Outline Viewer, Pathweaver, Glass, SysID
-- WPILib Dependencies
-- VS Code Extensions
+#### Install VSCode
+
+Follow the instructions [here](https://code.visualstudio.com/download) to install VSCode.
+
+#### Extra Step on Windows
+
+If you're on Windows, install this [Visual Studio package](https://aka.ms/vs/17/release/vc_redist.x64.exe) by downloading and running the installer.
+
+#### Installing RobotPy
+
+Run these commands in Powershell on Windows. If you're on another operating system, run the appropriate commands found on [this guide](https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-2/python-setup.html#install-robotpy).
+
+**For Windows PowerShell**
+
+```bash
+py -3 -m pip install -U "robotpy robotpy[all]"
+```
+
+**For Ubuntu**
+
+```bash
+pip3 install -U "robotpy robotpy[all]"
+```
+
+#### Getting Started with VSCode
 
 If you're new to VSCode, WPILib's docs have a good [starting guide](https://docs.wpilib.org/en/stable/docs/software/vscode-overview/vscode-basics.html#visual-studio-code-basics-and-the-wpilib-extension) explaining the basics.
 
@@ -53,6 +68,7 @@ If you're new to VSCode, WPILib's docs have a good [starting guide](https://docs
 In order to gain access to the robot code, clone the [Sonic Howl frc2024 repo](https://github.com/sonic-howl/frc2024).
 
 If you don't know how to do this, follow these steps:
+
 1. Open the repository [link](https://github.com/sonic-howl/frc2024) in your browser
 2. Ask one of the organization admins to add you to the repo. (Neil, Nathan, Ramez). **TODO: Not sure if this is needed is repo is public. Update this section after testing.**
 3. Click on the `Clone` button, choose HTTPS and copy the link to your clipboard.
@@ -63,6 +79,7 @@ If you don't know how to do this, follow these steps:
 > If you get an error mentioning that git isn't installed (or that no command named git exists), download it [here](https://git-scm.com/downloads).
 
 ## Configuring Hardware
+
 In order to complete these steps, you will need to [install the FRC Game Tools](#installing-frc-game-tools).
 
 ### RoboRIO Image Update
@@ -84,6 +101,7 @@ The frc 2024 season will require all RoboRIOs to be flashed with a new image. To
 Similar to the RoboRIO, the radio used to communicate with the bot must also be flashed with the latest firmware. Follow [this guide](https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-3/radio-programming.html) to do so.
 
 ## Build and Deploy
+
 To view all available gradle commands, use the following command:
 
 ```bash
@@ -109,6 +127,7 @@ The following command can be used to format the code:
 ```
 
 When code is pushed to the repository, a workflow will be run to check if the code is properly formatted. If it isn't, you won't be able to merge the code. In order to check if the project is properly formatted, run:
+
 ```bash
 ./gradlew spotlessCheck
 ```
