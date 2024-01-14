@@ -31,15 +31,17 @@ If you're unsure of what options to choose during the install, follow these step
 
 To get started, install python version 3.12.1 from these links and run the installer:
 
-- [Windows](https://www.python.org/ftp/python/3.12.1/python-3.12.1-amd64.exe)
+**[Windows](https://www.python.org/ftp/python/3.12.1/python-3.12.1-amd64.exe)**
 
-**Installation Steps**
+> **Installation Steps**
+>
+> 1.  Select Modify
+> 2.  Click Next
+> 3.  Select `Associate files with Python` then click install
 
-1. Select Modify
-2. Click Next
-3. Select `Associate files with Python` then click install
+---
 
-- [MacOS](https://www.python.org/ftp/python/3.12.1/python-3.12.1-macos11.pkg)
+**[MacOS](https://www.python.org/ftp/python/3.12.1/python-3.12.1-macos11.pkg)**
 
 #### Install VSCode
 
@@ -48,22 +50,6 @@ Follow the instructions [here](https://code.visualstudio.com/download) to instal
 #### Extra Step on Windows
 
 If you're on Windows, install this [Visual Studio package](https://aka.ms/vs/17/release/vc_redist.x64.exe) by downloading and running the installer.
-
-#### Installing RobotPy
-
-Run these commands in Powershell on Windows. If you're on another operating system, run the appropriate commands found on [this guide](https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-2/python-setup.html#install-robotpy).
-
-**For Windows PowerShell**
-
-```bash
-py -3 -m pip install -U robotpy "robotpy[all]"
-```
-
-**For Ubuntu**
-
-```bash
-pip3 install -U robotpy "robotpy[all]"
-```
 
 #### Getting Started with VSCode
 
@@ -83,6 +69,28 @@ If you don't know how to do this, follow these steps:
 6. Enter the command `git clone "the link you copied"`
 
 > If you get an error mentioning that git isn't installed (or that no command named git exists), download it [here](https://git-scm.com/downloads).
+
+### Installing RobotPy and Dependencies
+
+Run the appropriate command in terminal depending on you operating system to install the project's dependencies.
+
+**For Windows**
+
+```bash
+py -3 -m robotpy sync
+```
+
+**For Linux**
+
+```bash
+python3 -m robotpy sync
+```
+
+**For macOS**
+
+```bash
+python3 -m robotpy sync
+```
 
 ## Configuring Hardware
 
@@ -110,15 +118,29 @@ Follow [this guide](https://robotpy.readthedocs.io/en/stable/install/robot.html)
 
 Similar to the RoboRIO, the radio used to communicate with the bot must also be flashed with the latest firmware. Follow [this guide](https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-3/radio-programming.html) to do so.
 
-## Build and Deploy
+## Build and Deploy Commands
 
-To view all available gradle commands, use the following command:
+To view all available robotpy commands, use the following command:
 
 ```bash
-./gradlew tasks
+# Linux
+python3 -m robotpy
+
+# Windows
+py -3 -m robotpy
 ```
 
-Alternatively, you can view all available commands on the [docs](https://docs.wpilib.org/en/stable/docs/software/advanced-gradlerio/gradlew-tasks.html).
+> You can pass the `--help` argument to see more information about the subcommand.
+>
+> For example, to see help for the sim command you can do the following:
+>
+> ```bash
+> # Linux
+> python3 -m robotpy sim --help
+>
+> # Windows
+> py -3 -m robotpy sim --help
+> ```
 
 ### Building Robot Code
 
