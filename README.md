@@ -94,6 +94,40 @@ pip3 install robotpy
 python3 -m robotpy sync
 ```
 
+### Installing Formatter and Linter
+
+This project uses [ruff](https://docs.astral.sh/ruff/) to provide formatting and linting capabilities.
+
+> **Note:** There's currently an error with the `pyproject.toml` file's requirements where it isn't able to locate and install `ruff`. Instead, we'll install it manually in the upcoming steps.
+
+To install ruff, run:
+
+```bash
+pip install ruff
+```
+
+---
+
+You can also integrate ruff in VsCode by installing the `ruff` extension.
+
+To configure the ruff VsCode extension, follow these steps:
+
+1. Create a folder called `.vscode`
+2. Create a file in this folder named `settings.json`
+3. Copy these settings in the file:
+
+```json
+{
+  "[python]": {
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true
+    },
+    "editor.defaultFormatter": "charliermarsh.ruff"
+  }
+}
+```
+
 ## Configuring Hardware
 
 In order to complete these steps, you will need to [install the FRC Game Tools](#installing-frc-game-tools).
