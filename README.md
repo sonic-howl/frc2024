@@ -87,11 +87,11 @@ py -3 -m robotpy sync
 **For Linux and macOS**
 
 ```bash
-pip3 install robotpy
+pip install robotpy
 ```
 
 ```bash
-python3 -m robotpy sync
+robotpy sync
 ```
 
 ### Installing Formatter and Linter
@@ -103,6 +103,10 @@ This project uses [ruff](https://docs.astral.sh/ruff/) to provide formatting and
 To install ruff, run:
 
 ```bash
+# Windows
+py -3 -m pip install ruff
+
+# Linux
 pip install ruff
 ```
 
