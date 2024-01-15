@@ -8,7 +8,7 @@
 /.ruff_cache
 
 # Build directory
-/__pycache__
+**/__pycache__
 
 # Simulate config
 simgui*.json
