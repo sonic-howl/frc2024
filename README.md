@@ -87,11 +87,11 @@ py -3 -m robotpy sync
 **For Linux and macOS**
 
 ```bash
-pip install robotpy
+python3 -m pip install robotpy
 ```
 
 ```bash
-robotpy sync
+python3 -m robotpy sync
 ```
 
 ### Installing Formatter and Linter
@@ -107,7 +107,7 @@ To install ruff, run:
 py -3 -m pip install ruff
 
 # Linux
-pip install ruff
+python3 -m pip install ruff
 ```
 
 ---
@@ -130,6 +130,22 @@ To configure the ruff VsCode extension, follow these steps:
     "editor.defaultFormatter": "charliermarsh.ruff"
   }
 }
+```
+
+### Create Pre-commit Hook
+
+The `pre-commit` module will check your code before you commit to make sure you're using the proper formatting and that your code doesn't break any linting rules.
+
+It should already be installed if you've run the `robotpy sync` command [this step](#installing-robotpy-and-dependencies)
+
+To create the hook, use the following commands:
+
+```bash
+# Windows
+py -3 -m pre_commit install
+
+#Linux
+python3 -m pre_commit install
 ```
 
 ## Configuring Hardware
