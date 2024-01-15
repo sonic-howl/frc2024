@@ -3,3 +3,9 @@
 
 # Python Version
 .python-version
+
+# ruff cahce
+/.ruff_cache
+
+# Build directory
+/__pycache__
