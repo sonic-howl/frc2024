@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Set your GitHub username and email
-USERNAME="Username1"
-EMAIL="email1@example.com"
+USERNAME="portnord"
+EMAIL="45200621+Portnord@users.noreply.github.com"
 
 # Configure git with the new credentials
 git config user.name "$USERNAME"
