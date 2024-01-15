@@ -178,26 +178,44 @@ py -3 -m robotpy
 > py -3 -m robotpy sim --help
 > ```
 
-### Building Robot Code
+### Running Robot Code
 
-Before deploying any robot code, you must build (compile) it first. To do so, you can follow [this guide](https://docs.wpilib.org/en/stable/docs/software/vscode-overview/deploying-robot-code.html#building-and-deploying-robot-code) (through ide) or run the following command:
+In order to run the robot code, use the following command:
 
 ```bash
-./gradlew build
+# Windows
+py -3 robot.py
+
+# Linux
+python3 robot.py
 ```
+
+> See full guide on running robot code [here](https://robotpy.readthedocs.io/en/stable/guide/running.html)
 
 ### Formatting Code
 
 The following command can be used to format the code:
 
 ```bash
-./gradlew spotlessApply
+ruff format
 ```
 
 When code is pushed to the repository, a workflow will be run to check if the code is properly formatted. If it isn't, you won't be able to merge the code. In order to check if the project is properly formatted, run:
 
 ```bash
-./gradlew spotlessCheck
+ruff format --check
+```
+
+> A pre-commit hook will also automatically check this for you. If the files aren't formatted correctly, you won't be able to commit.
+
+### Linting Code
+
+Code linting is like a grammar check for your code. It helps find mistakes and keeps your code neat and consistent, making it easier to read and understand.
+
+To run the linting check, use the following command:
+
+```bash
+ruff check .
 ```
 
 ### Using the Driver Station
@@ -206,17 +224,17 @@ This [guide](https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-4/running
 
 ### Deploying Code to Robot
 
-After [building the code](#building-robot-code), you can deploy it to a connected robot using:
+You can deploy robot code to a robot you're connected to using:
 
 ```bash
-./gradlew deploy
+# Windows
+py -3 robot.py deploy
+
+# Linux
+python3 robot.py deploy
 ```
 
-If deploying wirelessly, you can scan for robot IP's using:
-
-```bash
-./gradlew discoverRoborio
-```
+> See full guide on deploying robot code [here](https://robotpy.readthedocs.io/en/stable/guide/deploy.html)
 
 ## Simulation Testing
 
@@ -229,10 +247,12 @@ A robot simulation is available for testing. Read the full documentation [here](
 You can run it with the following command:
 
 ```bash
-./gradlew simulateJava
-```
+# Windows
+py -3 -m robotpy sim
 
-> It's important to note that robot simulation is only enabled when `includeDesktopSupport` is set to true in `build.gradle`. When enabled, this option can cause issues with 3rd party software that doesn't support it. If ever you run into build or simulation issues, try turning off that option in the build file. You can also follow [this guide](https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-simulation/simulation-gui.html#determining-simulation-from-robot-code) in order to conditionally run certain code based on the environment (if the simulation if running or not).
+# Linux and macOS
+python3 -m robotpy sim
+```
 
 ### Running Robot Dashboards during a Simulation
 
@@ -243,5 +263,11 @@ Follow [this guide](https://docs.wpilib.org/en/stable/docs/software/wpilib-tools
 You can also manually run unit tests using:
 
 ```bash
-./gradlew test
+# Windows
+py -3 robot.py test
+
+# Linux
+python3 robot.py test
 ```
+
+> See full unit testing documentation [here](https://robotpy.readthedocs.io/en/stable/guide/testing.html)
