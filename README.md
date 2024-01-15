@@ -63,7 +63,7 @@ If you don't know how to do this, follow these steps:
 
 1. Open the repository [link](https://github.com/sonic-howl/frc2024) in your browser
 2. Ask one of the organization admins to add you to the repo. (Neil, Nathan, Ramez). **TODO: Not sure if this is needed is repo is public. Update this section after testing.**
-3. Click on the `<Code>` button, choose HTTPS and copy the link to your clipboard.
+3. Click on the `<>Code` button, choose HTTPS and copy the link to your clipboard.
 4. Launch the `2024 WPILib VS Code` application.
 5. Open the terminal by pressing the `CTRL + ~` keys.
 6. Enter the command `git clone "the link you copied"`
