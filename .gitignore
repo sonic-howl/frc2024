@@ -8,4 +8,4 @@
 /.ruff_cache
 
 # Build directory
-/__pycache__
+**/__pycache__
