@@ -9,3 +9,9 @@
 
 # Build directory
 /__pycache__
+
+# Simulate config
+simgui*.json
+
+# Network Tables
+networktables.json
