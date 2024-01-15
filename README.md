@@ -201,12 +201,20 @@ python3 robot.py
 The following command can be used to format the code:
 
 ```bash
+# Windows
+py -3 -m ruff format
+
+# Linux
 ruff format
 ```
 
 When code is pushed to the repository, a workflow will be run to check if the code is properly formatted. If it isn't, you won't be able to merge the code. In order to check if the project is properly formatted, run:
 
 ```bash
+# Windows
+py -3 -m ruff format --check
+
+# Linux
 ruff format --check
 ```
 
@@ -219,6 +227,10 @@ Code linting is like a grammar check for your code. It helps find mistakes and k
 To run the linting check, use the following command:
 
 ```bash
+# Windows
+py -3 -m ruff check .
+
+# Linux
 ruff check .
 ```
 
