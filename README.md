@@ -77,16 +77,18 @@ Run the appropriate command in terminal depending on you operating system to ins
 **For Windows**
 
 ```bash
+py -3 -m pip install robotpy
+```
+
+```bash
 py -3 -m robotpy sync
 ```
 
-**For Linux**
+**For Linux and macOS**
 
 ```bash
-python3 -m robotpy sync
+pip3 install robotpy
 ```
-
-**For macOS**
 
 ```bash
 python3 -m robotpy sync
