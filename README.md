@@ -63,7 +63,7 @@ If you don't know how to do this, follow these steps:
 
 1. Open the repository [link](https://github.com/sonic-howl/frc2024) in your browser
 2. Ask one of the organization admins to add you to the repo. (Neil, Nathan, Ramez). **TODO: Not sure if this is needed is repo is public. Update this section after testing.**
-3. Click on the `<Code>` button, choose HTTPS and copy the link to your clipboard.
+3. Click on the `<>Code` button, choose HTTPS and copy the link to your clipboard.
 4. Launch the `2024 WPILib VS Code` application.
 5. Open the terminal by pressing the `CTRL + ~` keys.
 6. Enter the command `git clone "the link you copied"`
@@ -87,7 +87,7 @@ py -3 -m robotpy sync
 **For Linux and macOS**
 
 ```bash
-pip3 install robotpy
+python3 -m pip install robotpy
 ```
 
 ```bash
@@ -103,7 +103,11 @@ This project uses [ruff](https://docs.astral.sh/ruff/) to provide formatting and
 To install ruff, run:
 
 ```bash
-pip install ruff
+# Windows
+py -3 -m pip install ruff
+
+# Linux
+python3 -m pip install ruff
 ```
 
 ---
@@ -150,10 +154,26 @@ git config user.email "$EMAIL"
 echo "Git user has been set to: $USERNAME ($EMAIL)"
 ```
 
-1. In order to change VsCode's GitHub credentials, use the script by running the following command **(NOTE: must be run in a `bash` terminal)**:
+3. In order to change VsCode's GitHub credentials, use the script by running the following command **(NOTE: must be run in a `bash` terminal)**:
 
 ```bash
 ./switch-gituser/{THE NAME OF YOUR FILE}.sh
+```
+
+### Create Pre-commit Hook
+
+The `pre-commit` module will check your code before you commit to make sure you're using the proper formatting and that your code doesn't break any linting rules.
+
+It should already be installed if you've run the `robotpy sync` command [this step](#installing-robotpy-and-dependencies)
+
+To create the hook, use the following commands:
+
+```bash
+# Windows
+py -3 -m pre_commit install
+
+#Linux
+python3 -m pre_commit install
 ```
 
 ## Configuring Hardware
@@ -225,12 +245,20 @@ python3 robot.py
 The following command can be used to format the code:
 
 ```bash
+# Windows
+py -3 -m ruff format
+
+# Linux
 ruff format
 ```
 
 When code is pushed to the repository, a workflow will be run to check if the code is properly formatted. If it isn't, you won't be able to merge the code. In order to check if the project is properly formatted, run:
 
 ```bash
+# Windows
+py -3 -m ruff format --check
+
+# Linux
 ruff format --check
 ```
 
@@ -243,6 +271,10 @@ Code linting is like a grammar check for your code. It helps find mistakes and k
 To run the linting check, use the following command:
 
 ```bash
+# Windows
+py -3 -m ruff check .
+
+# Linux
 ruff check .
 ```
 
