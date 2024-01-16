@@ -1,4 +1,6 @@
 import wpilib
+import wpilib.deployinfo
+from wpilib.shuffleboard import BuiltInLayouts, Shuffleboard
 
 
 class MyRobot(wpilib.TimedRobot):
@@ -7,6 +9,19 @@ class MyRobot(wpilib.TimedRobot):
     This function is called upon program startup and
     should be used for any initialization code.
     """
+    deployArtifacts = wpilib.deployinfo.getDeployData()
+    print(deployArtifacts)
+
+    (
+      buildArtifacts_layout := Shuffleboard.getTab("metadata")
+      .getLayout("DeployArtifacts", BuiltInLayouts.kList)
+      .withSize(3, 2)
+      .withProperties(map("Label position", "LEFT"))
+    )
+
+    buildArtifacts_layout.add("GIT_BRANCH", deployArtifacts["git-branch"])
+    buildArtifacts_layout.add("BUILD_DATE", "test")
+    buildArtifacts_layout.add("Uncommited Changes", "test")
 
   def autonomousInit(self):
     """This function is run once each time the robot enters autonomous mode."""
