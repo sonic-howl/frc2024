@@ -10,7 +10,7 @@ class MyRobot(wpilib.TimedRobot):
     This function is called upon program startup and
     should be used for any initialization code.
     """
-    if wpilib.RobotBase.isReal():  # getDeployData() returns None in simulation
+    if wpilib.RobotBase.isReal():  # getDeployData() returns None during simulation
       deployArtifacts = wpilib.deployinfo.getDeployData()
       (
         buildArtifacts_layout := Shuffleboard.getTab("metadata")
