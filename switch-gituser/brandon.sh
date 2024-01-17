@@ -2,7 +2,7 @@
 
 # Set your GitHub username and email
 USERNAME="BMorozov"
-EMAIL=""
+EMAIL="156851685+BMorozov@users.noreply.github.com"
 
 # Configure git with the new credentials
 git config user.name "$USERNAME"
