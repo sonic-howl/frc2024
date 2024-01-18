@@ -7,14 +7,14 @@ class Operators:
 
     # Return positive values to move forward, negatives values reverse
     def getSpeedCommand(self) -> float:
-        y = self.pilot.getLeftY();
-        return y
+        return self.pilot.getLeftY()
 
     def getStrafeCommand(self) -> float:
-        x = self.pilot.getLeftX();
-        return x
+        return self.pilot.getLeftX()
     
     def getRotationCommand(self) -> float:
-        z = self.pilot.getRightX()
-        return z
+        return self.pilot.getRightX()
+    
+    def getShootCommand(self) -> bool:
+        return self.pilot.getR1Button()
     

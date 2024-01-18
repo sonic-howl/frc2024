@@ -24,7 +24,10 @@ class MyRobot(wpilib.TimedRobot):
         cmdX = self.DT.getStrafeCommand()
         cmdY = self.DT.getSpeedCommand()
         cmdZ = self.DT.getRotationCommand()
+        shoot = self.DT.getShootCommand()
         #print( f"Y: {cmdY}, X: {cmdX}, Z: {cmdZ}")
+        if shoot:
+          print( "SHOOT" )
 
     def teleopExit(self):
         pass
