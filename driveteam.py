@@ -1,6 +1,6 @@
 import wpilib
 
-class Operators:
+class DriveTeam:
 
     pilot = wpilib.PS4Controller(0); #pilot controller on port 0
     #engineer = TBD
