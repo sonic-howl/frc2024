@@ -2,12 +2,17 @@ import wpilib
 import driveteam
 
 
-drive = driveteam.Drive() 
-drive.get_turn()
+
 
 
 
 class MyRobot(wpilib.TimedRobot):
+  
+  pilots = driveteam.DriveTeam() 
+  strafe = 0.
+  turn = 0.
+  drive = 0.
+
   def robotInit(self):
     """
     This function is called upon program startup and
@@ -25,6 +30,13 @@ class MyRobot(wpilib.TimedRobot):
 
   def teleopPeriodic(self):
     """This function is called periodically during teleoperated mode."""
+    self.strafe = self.pilots.get_strafe_commands()
+    self.turn = self.pilots.get_turn()
+    self.drive = self.pilots.get_drive_commands()
+    if self.pilots.get_shoot_commands():
+      print(f"{self.strafe}, {self.turn}, {self.drive}")
+    
+
 
   def testInit(self):
     """This function is called once each time the robot enters test mode."""
