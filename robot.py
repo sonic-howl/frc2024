@@ -1,12 +1,15 @@
 import wpilib
 import driveteam
 import launcher
+import mechanisms
 
 class MyRobot(wpilib.TimedRobot):
 
-    DT      = driveteam.DriveTeam()
-    shooter = launcher.Launcher()
-  
+    DT = driveteam.DriveTeam()
+
+    shooter    = launcher.Launcher()
+    testmotors = mechanisms.ControllerTest()
+
     #def robotInit(self):
     """
     This function is called upon program startup and
@@ -23,10 +26,11 @@ class MyRobot(wpilib.TimedRobot):
     """This function is called once each time the robot enters teleoperated mode."""
 
     def teleopPeriodic(self):
-        cmdX    = self.DT.getStrafeCommand()
-        cmdY    = self.DT.getSpeedCommand()
-        cmdZ    = self.DT.getRotationCommand()
-        # No drive base yet
+        # Bogus motion
+        cmdX = self.DT.getStrafeCommand()
+        cmdY = self.DT.getSpeedCommand()
+        cmdZ = self.DT.getRotationCommand()
+        self.testmotors.move( cmdX, cmdY, cmdZ )
 
         # Shoot notes
         trigger = self.DT.getShootCommand()
@@ -35,6 +39,7 @@ class MyRobot(wpilib.TimedRobot):
     def teleopExit(self):
         # Stop the shooter
         self.shooter.launch(False)
+        self.swervedrive.stop()
 
     def testInit(self):
         pass
