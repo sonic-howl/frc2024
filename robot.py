@@ -7,7 +7,7 @@ import driveteam
 
 
 class MyRobot(wpilib.TimedRobot):
-  
+  copilots = driveteam.DriveTeam()
   pilots = driveteam.DriveTeam() 
   strafe = 0.
   turn = 0.
@@ -31,10 +31,20 @@ class MyRobot(wpilib.TimedRobot):
   def teleopPeriodic(self):
     """This function is called periodically during teleoperated mode."""
     self.strafe = self.pilots.get_strafe_commands()
-    self.turn = self.pilots.get_turn()
+    self.turn = self.pilots.get_turn_commands()
     self.drive = self.pilots.get_drive_commands()
-    if self.pilots.get_shoot_commands():
-      print(f"{self.strafe}, {self.turn}, {self.drive}")
+    self.winch = self.pilots.get_winch_commands()
+    self.hookextend = self.pilots.get_hook_extension_commands()
+    self.hookretract = self.pilots.get_hook_retract_commands()
+    self.hookleft = self.pilots.get_hook_left_commands()
+    self.hookright = self.pilots.get_hook_right_commands()
+
+    self.aim = self.copilots.get_aim_commands()
+    self.fire = self.copilots.get_firing_commands()
+    self.unjam = self.copilots.get_unjam_commands()
+    self.pickup = self.copilots.get_pickup_commands()
+    self.eject = self.copilots.get_eject_commands()
+    
     
 
 
