@@ -1,5 +1,9 @@
 import wpilib
 import driveteam
+import drivestation
+
+
+
 
 
 class MyRobot(wpilib.TimedRobot):
@@ -40,6 +44,11 @@ class MyRobot(wpilib.TimedRobot):
     self.unjam = self.copilots.get_unjam_commands()
     self.pickup = self.copilots.get_pickup_commands()
     self.eject = self.copilots.get_eject_commands()
+    drivestation.light_0(self.winch)
+    drivestation.light_1(self.drive)
+    drivestation.light_2(self.fire)
+    drivestation.light_3(self.pickup)
+
 
   def testInit(self):
     """This function is called once each time the robot enters test mode."""
