@@ -1,20 +1,21 @@
 import wpilib
 
-class DriveTeam:
+# Treat controller instances as private, use the functions below to access controls.
+pilot = wpilib.PS4Controller(0);
+#engineer = TBD
 
-    pilot = wpilib.PS4Controller(0); #pilot controller on port 0
-    #engineer = TBD
+def speedCommand() -> float:
+    return pilot.getLeftY()
 
-    # Return positive values to move forward, negatives values reverse
-    def getSpeedCommand(self) -> float:
-        return self.pilot.getLeftY()
-
-    def getStrafeCommand(self) -> float:
-        return self.pilot.getLeftX()
+def strafeCommand() -> float:
+    return pilot.getLeftX()
     
-    def getRotationCommand(self) -> float:
-        return self.pilot.getRightX()
+def rotationCommand() -> float:
+    return pilot.getRightX()
     
-    def getShootCommand(self) -> bool:
-        return self.pilot.getR1Button()
+def pickupCommand() -> bool:
+    return pilot.getL1Button()
+
+def shootCommand() -> bool:
+    return pilot.getR1Button()
     
