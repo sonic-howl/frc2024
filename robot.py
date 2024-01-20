@@ -2,16 +2,12 @@ import wpilib
 import driveteam
 
 
-
-
-
-
 class MyRobot(wpilib.TimedRobot):
   copilots = driveteam.DriveTeam()
-  pilots = driveteam.DriveTeam() 
-  strafe = 0.
-  turn = 0.
-  drive = 0.
+  pilots = driveteam.DriveTeam()
+  strafe = 0.0
+  turn = 0.0
+  drive = 0.0
 
   def robotInit(self):
     """
@@ -44,9 +40,6 @@ class MyRobot(wpilib.TimedRobot):
     self.unjam = self.copilots.get_unjam_commands()
     self.pickup = self.copilots.get_pickup_commands()
     self.eject = self.copilots.get_eject_commands()
-    
-    
-
 
   def testInit(self):
     """This function is called once each time the robot enters test mode."""
@@ -63,4 +56,3 @@ class MyRobot(wpilib.TimedRobot):
 
 if __name__ == "__main__":
   wpilib.run(MyRobot)
-
