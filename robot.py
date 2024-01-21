@@ -4,6 +4,7 @@ import dashboard
 import subsystems
 
 from cscore import CameraServer
+from cscore import VideoMode
 
 class MyRobot(wpilib.TimedRobot):
 
@@ -11,7 +12,13 @@ class MyRobot(wpilib.TimedRobot):
 
     def robotInit(self):
         usbCam = CameraServer.startAutomaticCapture()
-        usbCam.setResolution( 640, 480 )
+        mode   = usbCam.getVideoMode()
+        print( f"format: {mode.pixelFormat}, fps: {mode.fps}, {mode.width}x{mode.height}")
+        #usbCam.setResolution( 640, 480 )
+        # kGray appears unsupported
+        usbCam.setVideoMode( VideoMode.PixelFormat.kMJPEG, 640, 480, 30 )
+        mode   = usbCam.getVideoMode()
+        print( f"format: {mode.pixelFormat}, fps: {mode.fps}, {mode.width}x{mode.height}")
 
     #def autonomousInit(self):
     """This function is run once each time the robot enters autonomous mode."""
@@ -33,8 +40,8 @@ class MyRobot(wpilib.TimedRobot):
 
         # Issue Commands
         self.testmotors.move( cmdX, cmdY, cmdZ )
-        self.testmotors.pickup( intake )
-        self.testmotors.shoot( trigger )
+        #self.testmotors.pickup( intake )
+        #self.testmotors.shoot( trigger )
 
         # Update dahboard
         dashboard.lightLed( 0, intake )

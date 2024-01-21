@@ -7,13 +7,19 @@ import robotpy_apriltag
 import math
 
 # This function is called once to initialize the apriltag detector and the pose estimator
-def get_apriltag_detector_and_estimator(frame_size):
+def get_apriltag_detector_and_estimator( width: float, height: float ):
     detector = robotpy_apriltag.AprilTagDetector()
     # FRC 2024 uses tag36h11
     assert detector.addFamily("tag36h11")
+
+    # Focal lengths need to be characterised for robot camera.
+    tagSize = 6.5 * 0.0254 # 6.5 inches convert to meters
+    # rough focal length measure using ruler as target.
+    fx = width  * 14.5/12.0
+    fy = height * 19.5/12.0
     estimator = robotpy_apriltag.AprilTagPoseEstimator(
     robotpy_apriltag.AprilTagPoseEstimator.Config(
-            0.2, 500, 500, frame_size[1] / 2.0, frame_size[0] / 2.0
+            tagSize, fx, fy, width / 2.0, height / 2.0
         )
     )
     return detector, estimator
@@ -73,7 +79,7 @@ def get_capture(window_name, video_capture_device_index=0):
 
     rickroll = "https://web.archive.org/web/2oe_/http://wayback-fakeurl.archive.org/yt/dQw4w9WgXcQ"
     localsim = "http://localhost:1181/?action=stream"
-    roborio  = "http://roboRIO-3985-frc.local:1181/?action=stream"
+    roborio  = "http://roboRIO-TEAM-frc.local:1181/?action=stream" # IP depends on connection method (USB Tether, Ethernet, Radio)
     testfile = "tagtest.mp4"
     # Create a window named 'window_name'
     cv2.namedWindow(window_name)
@@ -125,7 +131,7 @@ def cleanup_capture(capture):
 def main():
     capture_window_name = 'Capture Window'
     capture = get_capture(capture_window_name, 0)
-    detector, estimator = get_apriltag_detector_and_estimator((1080,1920))
+    detector, estimator = get_apriltag_detector_and_estimator( 640, 480 )
     show_capture(capture_window_name, capture, detector, estimator)
     cleanup_capture(capture)
 
