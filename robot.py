@@ -3,15 +3,15 @@ import driveteam
 import dashboard
 import subsystems
 
+from cscore import CameraServer
+
 class MyRobot(wpilib.TimedRobot):
 
     testmotors = subsystems.ControllerTest()
 
-    #def robotInit(self):
-    """
-    This function is called upon program startup and
-    should be used for any initialization code.
-    """
+    def robotInit(self):
+        usbCam = CameraServer.startAutomaticCapture()
+        usbCam.setResolution( 640, 480 )
 
     #def autonomousInit(self):
     """This function is run once each time the robot enters autonomous mode."""

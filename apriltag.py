@@ -72,7 +72,8 @@ def detect_and_process_apriltag(frame, detector, estimator):
 def get_capture(window_name, video_capture_device_index=0):
 
     rickroll = "https://web.archive.org/web/2oe_/http://wayback-fakeurl.archive.org/yt/dQw4w9WgXcQ"
-    roborio  = "http://roboRIO-3985-frc.local:1181" # /?action=stream probably needed
+    localsim = "http://localhost:1181/?action=stream"
+    roborio  = "http://roboRIO-3985-frc.local:1181/?action=stream"
     testfile = "tagtest.mp4"
     # Create a window named 'window_name'
     cv2.namedWindow(window_name)
@@ -81,7 +82,7 @@ def get_capture(window_name, video_capture_device_index=0):
     # For a stream provide the URL of the video feed
     #cap = cv2.VideoCapture(video_capture_device_index)
     cap = cv2.VideoCapture(rickroll)
-    if cap.isOpened():
+    #if cap.isOpened():
         #print( "opened successfully" )
     return cap
 
