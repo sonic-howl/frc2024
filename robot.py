@@ -1,6 +1,8 @@
 import wpilib
-import driveteam
+
 import drivestation
+import driveteam
+import launcher
 
 
 class MyRobot(wpilib.TimedRobot):
@@ -45,6 +47,13 @@ class MyRobot(wpilib.TimedRobot):
     drivestation.light_1(self.drive)
     drivestation.light_2(self.fire)
     drivestation.light_3(self.pickup)
+
+    # Launcher
+    launcher.shoot(self.fire)
+    launcher.elevate(self.aim)
+
+  def teleopExit(self):
+    launcher.stop()
 
   def testInit(self):
     """This function is called once each time the robot enters test mode."""
