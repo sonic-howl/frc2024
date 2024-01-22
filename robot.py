@@ -3,15 +3,12 @@ import driveteam
 import drivestation
 
 
-
-
-
 class MyRobot(wpilib.TimedRobot):
   copilots = driveteam.DriveTeam()
-  pilots = driveteam.DriveTeam() 
-  strafe = 0.
-  turn = 0.
-  drive = 0.
+  pilots = driveteam.DriveTeam()
+  strafe = 0.0
+  turn = 0.0
+  drive = 0.0
 
   def robotInit(self):
     """
@@ -49,7 +46,6 @@ class MyRobot(wpilib.TimedRobot):
     # drivestation.light_2(self.fire)
     # drivestation.light_3(self.pickup)
 
-
   def testInit(self):
     """This function is called once each time the robot enters test mode."""
 
@@ -65,4 +61,3 @@ class MyRobot(wpilib.TimedRobot):
 
 if __name__ == "__main__":
   wpilib.run(MyRobot)
-
