@@ -44,10 +44,10 @@ class MyRobot(wpilib.TimedRobot):
     self.unjam = self.copilots.get_unjam_commands()
     self.pickup = self.copilots.get_pickup_commands()
     self.eject = self.copilots.get_eject_commands()
-    drivestation.light_0(self.winch)
-    drivestation.light_1(self.drive)
-    drivestation.light_2(self.fire)
-    drivestation.light_3(self.pickup)
+    drivestation.toggleLight("0", self.unjam)
+    drivestation.toggleLight("1", self.eject)
+    # drivestation.light_2(self.fire)
+    # drivestation.light_3(self.pickup)
 
 
   def testInit(self):
