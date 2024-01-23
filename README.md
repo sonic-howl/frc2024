@@ -94,6 +94,20 @@ python3 -m pip install robotpy
 python3 -m robotpy sync
 ```
 
+### Installing OpenCV
+
+We use [opencv](https://opencv.org/) for the vision processing of apriltags. **This dependency isn't installed when running sync and must be installed manually (due to an issue with pyproject.toml)**.
+
+To install it, use the following command:
+
+```bash
+# Windows
+py -3 -m pip install opencv-python
+
+# Linux
+python3 -m pip install opencv-python
+```
+
 ### Installing Formatter and Linter
 
 This project uses [ruff](https://docs.astral.sh/ruff/) to provide formatting and linting capabilities.
@@ -130,6 +144,34 @@ To configure the ruff VsCode extension, follow these steps:
     "editor.defaultFormatter": "charliermarsh.ruff"
   }
 }
+```
+
+## Using the Lab PCs
+
+When using the Lab PCs, you're going to want to use your GitHub account so the rest of the team knows who worked on what. If you don't have one, [create one here](https://github.com/signup).
+
+If you're using a lab PC, follow these steps to link your GitHub account to VsCode:
+
+1. Create a new script in the `switch-gituser` folder and use your real name as the name of the file (Ex: create new file `NathanGrenier.sh` in folder `switch-gituser`).
+2. Replace the `USERNAME` and `EMAIL` variables in the newly created file with your GitHub username and password.
+
+**Example:**
+
+```bash
+# Set your GitHub username and email
+USERNAME="{REPLACE ME WITH GITHUB YOUR USERNAME}" # Make sure to remove the {}
+EMAIL="{REPALCE ME WITH YOUR GITHUB EMAIL}" # Make sure to remove the {}
+
+git config user.name "$USERNAME"
+git config user.email "$EMAIL"
+
+echo "Git user has been set to: $USERNAME ($EMAIL)"
+```
+
+3. In order to change VsCode's GitHub credentials, use the script by running the following command **(NOTE: must be run in a `bash` terminal)**:
+
+```bash
+./switch-gituser/{THE NAME OF YOUR FILE}.sh
 ```
 
 ### Create Pre-commit Hook
