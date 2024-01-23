@@ -15,3 +15,6 @@ simgui*.json
 
 # Network Tables
 networktables.json
+
+# Test Coverage
+.coverage
