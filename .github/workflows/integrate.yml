@@ -53,3 +53,11 @@ jobs:
         run: |
           python3 -m robotpy coverage test
           coverage html -d coverage_html
+      - name: HTML Preview
+        id: html_preview
+        uses: pavi2410/html-preview-action@v2
+        with:
+          html_file: "coverage_html/index.html"
+      - name: test
+        run: |
+          echo ${{ steps.html_preview.outputs.url }}
