@@ -20,8 +20,11 @@ class MyRobot(wpilib.TimedRobot):
       )
 
       buildArtifacts_layout.add("GIT_BRANCH", deployArtifacts["git-branch"])
-      buildArtifacts_layout.add("BUILD_DATE", "test")
-      buildArtifacts_layout.add("Uncommited Changes", "test")
+      buildArtifacts_layout.add("DEPLOY_DATE", deployArtifacts["deploy-date"])
+      buildArtifacts_layout.add(
+        "Uncommited Changes",
+        "Yes" if deployArtifacts["git-desc"].split("-")[2] == "dirty" else "No",
+      )
 
   def autonomousInit(self):
     """This function is run once each time the robot enters autonomous mode."""
