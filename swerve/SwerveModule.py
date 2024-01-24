@@ -3,6 +3,7 @@ import math
 import ctre
 import rev
 from ntcore import NetworkTableInstance
+from phoenix6 import configs, controls, hardware, signals
 from wpimath.geometry import Rotation2d
 from wpimath.kinematics import SwerveModulePosition, SwerveModuleState
 
@@ -39,7 +40,10 @@ class SwerveModule:
 
     # create motors
     # drive motor
-    self.drive_motor = ctre.WPI_TalonFX(drive_motor_id)
+    self.drive_motor = hardware.TalonFX(drive_motor_id)
+    talonfx_configs = configs.TalonFXConfiguration()
+
+    # ----
     self.drive_motor.configPeakOutputReverse(-RobotConstants.maxSpeed)
     self.drive_motor.configPeakOutputForward(RobotConstants.maxSpeed)
     self.drive_motor.configClosedLoopPeakOutput(0, RobotConstants.maxSpeed)

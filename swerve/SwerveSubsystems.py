@@ -6,7 +6,6 @@ from typing import Tuple
 import wpilib
 from commands2 import SubsystemBase
 from navx import AHRS
-from subsystems.Swerve.SwerveModule import SwerveModule
 from wpilib import Field2d, SmartDashboard
 from wpimath.controller import (
   HolonomicDriveController,
@@ -24,6 +23,7 @@ from wpimath.trajectory import TrapezoidProfileRadians
 
 from constants.RobotConstants import RobotConstants
 from constants.SwerveConstants import SwerveConstants
+from swerve.SwerveModule import SwerveModule
 
 
 class SwerveSubsystem(SubsystemBase):
