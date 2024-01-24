@@ -7,6 +7,23 @@ import driveteam
 class MyRobot(wpilib.TimedRobot):
   pilots = driveteam.DriveTeam()
 
+  def __init__(self):
+    self.strafe = 0.0
+    self.turn = 0.0
+    self.drive = 0.0
+    self.winch = False
+    self.hookextend = False
+    self.hookretract = False
+    self.hookleft = False
+    self.hookright = False
+
+    self.aim = 0.0
+    self.fire = 0.0
+    self.unjam = False
+    self.pickup = 0.0
+    self.eject = False
+    wpilib._wpilib.TimedRobot.__init__(self)
+
   def getInputs(self):
     self.strafe = self.pilots.get_strafe_command()
     self.turn = self.pilots.get_turn_command()
