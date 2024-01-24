@@ -111,10 +111,10 @@ class SwerveSubsystem(SubsystemBase):
   def getAngle(self) -> float:
     # return self.gyro.getAngle() % 360
     # return self.gyro.getFusedHeading()
-    if RobotConstants.isSimulation:
-      from physics import PhysicsEngine
+    # if RobotConstants.isSimulation:
+    #  from physics import PhysicsEngine
 
-      return PhysicsEngine.simGyro.getAngle()
+    #  return PhysicsEngine.simGyro.getAngle()
 
     return -self.gyro.getYaw()
 
