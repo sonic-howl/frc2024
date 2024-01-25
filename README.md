@@ -94,6 +94,20 @@ python3 -m pip install robotpy
 python3 -m robotpy sync
 ```
 
+### Installing OpenCV
+
+We use [opencv](https://opencv.org/) for the vision processing of apriltags. **This dependency isn't installed when running sync and must be installed manually (due to an issue with pyproject.toml)**.
+
+To install it, use the following command:
+
+```bash
+# Windows
+py -3 -m pip install opencv-python
+
+# Linux
+python3 -m pip install opencv-python
+```
+
 ### Installing Formatter and Linter
 
 This project uses [ruff](https://docs.astral.sh/ruff/) to provide formatting and linting capabilities.

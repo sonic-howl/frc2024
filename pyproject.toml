@@ -26,8 +26,8 @@ robotpy_extras = [
     # "xrp"
 ]
 
-# Other pip packages to install. BUG: `ruff` is a requirement but cannot be found by the wpilib parser.
-requires = ["pre-commit"]
+# Other pip packages to install. BUG: `ruff` and `opencv-python` is a requirement but cannot be found by the wpilib parser.
+requires = ["pre-commit", "numpy"]
 
 
 [tool.ruff]
