@@ -49,15 +49,16 @@ jobs:
       - name: Run tests
         run: |
           python3 -m robotpy test
-      - name: Generate coverage report
-        run: |
-          python3 -m robotpy coverage test
-          coverage html -d coverage_html
-      - name: HTML Preview
-        id: html_preview
-        uses: pavi2410/html-preview-action@v2
-        with:
-          html_file: "coverage_html/index.html"
-      - name: test
-        run: |
-          echo ${{ steps.html_preview.outputs.url }}
+      # Action to preview HTML files currenctly not working: https://github.com/pavi2410/html-preview-action
+      # - name: Generate coverage report
+      #   run: |
+      #     python3 -m robotpy coverage test
+      #     coverage html -d coverage_html
+      # - name: HTML Preview
+      #   id: html_preview
+      #   uses: pavi2410/html-preview-action@v2
+      #   with:
+      #     html_file: "coverage_html/index.html"
+      # - name: test
+      #   run: |
+      #     echo ${{ steps.html_preview.outputs.url }}
