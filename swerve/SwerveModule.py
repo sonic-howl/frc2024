@@ -1,9 +1,8 @@
 import math
 
-import ctre
+import phoenix5
 import rev
 from ntcore import NetworkTableInstance
-from phoenix6 import configs, controls, hardware, signals
 from wpimath.geometry import Rotation2d
 from wpimath.kinematics import SwerveModulePosition, SwerveModuleState
 
@@ -40,20 +39,20 @@ class SwerveModule:
 
     # create motors
     # drive motor
-    self.drive_motor = hardware.TalonFX(drive_motor_id)
-    talonfx_configs = configs.TalonFXConfiguration()
+    self.drive_motor = phoenix5.WPI_TalonFX(drive_motor_id)
+    #talonfx_configs = configs.TalonFXConfiguration()
 
     # ----
     self.drive_motor.configPeakOutputReverse(-RobotConstants.maxSpeed)
     self.drive_motor.configPeakOutputForward(RobotConstants.maxSpeed)
     self.drive_motor.configClosedLoopPeakOutput(0, RobotConstants.maxSpeed)
     self.drive_motor.configFactoryDefault()
-    self.drive_motor.setNeutralMode(ctre.NeutralMode.Brake)
+    self.drive_motor.setNeutralMode(phoenix5.NeutralMode.Brake)
     self.drive_motor.configStatorCurrentLimit(
-      ctre.StatorCurrentLimitConfiguration(True, 25, 30, 0.5)
+      phoenix5.StatorCurrentLimitConfiguration(True, 25, 30, 0.5)
     )
     self.drive_motor.configSupplyCurrentLimit(
-      ctre.SupplyCurrentLimitConfiguration(True, 30, 35, 0.5)
+      phoenix5.SupplyCurrentLimitConfiguration(True, 30, 35, 0.5)
     )
     self.drive_motor.configOpenloopRamp(0.25)
     self.drive_motor.setSelectedSensorPosition(0)
@@ -69,7 +68,7 @@ class SwerveModule:
 
     # turn motor
     self.turn_motor = rev.CANSparkMax(
-      turn_motor_id, rev.CANSparkMaxLowLevel.MotorType.kBrushless
+      turn_motor_id, rev.CANSparkLowLevel.MotorType.kBrushless
     )
     # ?
     self.turn_motor.restoreFactoryDefaults()
@@ -192,7 +191,7 @@ class SwerveModule:
     # print(f"state speed: {state.speed}, drive speed: {drive_speed}")
 
     self.drive_motor.set(
-      ctre.ControlMode.Velocity,
+      phoenix5.ControlMode.Velocity,
       drive_speed,
     )
 

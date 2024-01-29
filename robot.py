@@ -2,11 +2,12 @@ import wpilib
 
 import drivestation
 import driveteam
-
+import swerve.swervesubsystem
+import utils.utils
 
 class MyRobot(wpilib.TimedRobot):
   pilots = driveteam.DriveTeam()
-
+  drivebase = swerve.swervesubsystem.SwerveSubsystem()
   def __init__(self):
     self.strafe = 0.0
     self.turn = 0.0
@@ -62,6 +63,14 @@ class MyRobot(wpilib.TimedRobot):
     drivestation.setDBLED("1", self.eject)
     # drivestation.light_2(self.fire)
     # drivestation.light_3(self.pickup)
+
+    # drive base
+    magnitude = abs(self.strafe) + abs(self.drive) + abs(self.turn)
+    if utils.utils.dz(magnitude) > 0:
+      self.drivebase.setvelocity(self.strafe, self.drive, self.turn)
+    else:
+      self.drivebase.stop()
+
 
   def testInit(self):
     """This function is called once each time the robot enters test mode."""

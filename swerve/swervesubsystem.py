@@ -4,7 +4,8 @@ from time import sleep
 from typing import Tuple
 
 import wpilib
-from commands2 import SubsystemBase
+
+import utils.utils
 from navx import AHRS
 from wpilib import Field2d, SmartDashboard
 from wpimath.controller import (
@@ -26,7 +27,7 @@ from constants.SwerveConstants import SwerveConstants
 from swerve.SwerveModule import SwerveModule
 
 
-class SwerveSubsystem(SubsystemBase):
+class SwerveSubsystem():
   simChassisSpeeds: ChassisSpeeds | None = None
   """Meant for simulation only"""
   swerveAutoStartPose: Pose2d | None = None
@@ -152,11 +153,52 @@ class SwerveSubsystem(SubsystemBase):
 
     self.odometer.update(
       self.getRotation2d(),
+      (
       self.front_left.getPosition(),
       self.front_right.getPosition(),
       self.back_left.getPosition(),
-      self.back_right.getPosition(),
+      self.back_right.getPosition()
+      )
     )
+
+  def setvelocity(self, drive: float, strafe: float, rotate: float):
+    self.periodic()
+    speed_scale = 1.0
+    x = utils.utils.dz(self.controller.getForward()) * speed_scale
+    y = utils.utils.dz(self.controller.getStrafe()) * speed_scale
+    z = self.controller.getTurn() * speed_scale
+    # z = self.zLimiter.calculate(z)
+    z = utils.utils.calcAxisSpeedWithCurvatureAndDeadzone(z)
+    # convert values to meters per second and apply rate limiters
+    x *= SwerveConstants.kDriveMaxMetersPerSecond
+    # x = self.xLimiter.calculate(x)
+
+    y *= SwerveConstants.kDriveMaxMetersPerSecond
+    # y = self.yLimiter.calculate(y)
+
+    z = self.zLimiter.calculate(z)
+
+    if self.get_field_oriented():
+      chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+          x,
+          y,
+          z,
+          self.swerveSubsystem.getRotation2d(),
+            )
+    else:
+      chassisSpeeds = ChassisSpeeds(
+        x,
+        y,
+        z,
+          )
+
+    #if RobotConstants.isSimulation:
+      #self.swerveSubsystem.simChassisSpeeds = chassisSpeeds
+
+    swerveModuleStates = SwerveSubsystem.toSwerveModuleStatesForecast(
+      chassisSpeeds
+        )
+    self.swerveSubsystem.setModuleStates(swerveModuleStates)
 
   def stop(self) -> None:
     self.front_left.stop()
