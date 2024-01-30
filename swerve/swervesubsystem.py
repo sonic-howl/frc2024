@@ -2,6 +2,7 @@ import math
 from threading import Thread
 from time import sleep
 from typing import Tuple
+from commands2 import Subsystem
 
 import wpilib
 
@@ -27,7 +28,7 @@ from constants.SwerveConstants import SwerveConstants
 from swerve.SwerveModule import SwerveModule
 
 
-class SwerveSubsystem():
+class SwerveSubsystem(Subsystem):
   simChassisSpeeds: ChassisSpeeds | None = None
   """Meant for simulation only"""
   swerveAutoStartPose: Pose2d | None = None
@@ -164,9 +165,9 @@ class SwerveSubsystem():
   def setvelocity(self, drive: float, strafe: float, rotate: float):
     self.periodic()
     speed_scale = 1.0
-    x = utils.utils.dz(self.controller.getForward()) * speed_scale
-    y = utils.utils.dz(self.controller.getStrafe()) * speed_scale
-    z = self.controller.getTurn() * speed_scale
+    x = utils.utils.dz(drive) * speed_scale
+    y = utils.utils.dz(strafe) * speed_scale
+    z = rotate * speed_scale
     # z = self.zLimiter.calculate(z)
     z = utils.utils.calcAxisSpeedWithCurvatureAndDeadzone(z)
     # convert values to meters per second and apply rate limiters
