@@ -75,7 +75,7 @@ class SwerveSubsystem(Subsystem):
 
     self.gyro = (
       AHRS(
-        wpilib.SerialPort.Port.kUSB,
+        wpilib.SerialPort.Port.kMXP,
         AHRS.SerialDataType.kProcessedData,
         int(1 / RobotConstants.period),
       )
@@ -177,21 +177,21 @@ class SwerveSubsystem(Subsystem):
     y *= SwerveConstants.kDriveMaxMetersPerSecond
     # y = self.yLimiter.calculate(y)
 
-    z = self.zLimiter.calculate(z)
+    # z = self.zLimiter.calculate(z)
 
-    if self.get_field_oriented():
-      chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-          x,
-          y,
-          z,
-          self.swerveSubsystem.getRotation2d(),
-            )
-    else:
-      chassisSpeeds = ChassisSpeeds(
-        x,
-        y,
-        z,
-          )
+    # if self.get_field_oriented():
+    #   chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+    #       x,
+    #       y,
+    #       z,
+    #       self.swerveSubsystem.getRotation2d(),
+    #         )
+    # else:
+    chassisSpeeds = ChassisSpeeds(
+      x,
+      y,
+      z,
+        )
 
     #if RobotConstants.isSimulation:
       #self.swerveSubsystem.simChassisSpeeds = chassisSpeeds
@@ -199,7 +199,7 @@ class SwerveSubsystem(Subsystem):
     swerveModuleStates = SwerveSubsystem.toSwerveModuleStatesForecast(
       chassisSpeeds
         )
-    self.swerveSubsystem.setModuleStates(swerveModuleStates)
+    self.setModuleStates(swerveModuleStates)
 
   def stop(self) -> None:
     self.front_left.stop()
