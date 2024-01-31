@@ -28,12 +28,11 @@ from constants.SwerveConstants import SwerveConstants
 from swerve.SwerveModule import SwerveModule
 
 
-class SwerveSubsystem(Subsystem):
+class SwerveSubsystem():
   simChassisSpeeds: ChassisSpeeds | None = None
   """Meant for simulation only"""
   swerveAutoStartPose: Pose2d | None = None
   """Meant for simulation only"""
-
   front_left = SwerveModule(
     SwerveConstants.fl_drive_id,
     SwerveConstants.fl_turn_id,
@@ -72,16 +71,11 @@ class SwerveSubsystem(Subsystem):
 
   def __init__(self) -> None:
     super().__init__()
-
+    self.field_oriented = True
     self.gyro = (
       AHRS(
         wpilib.SerialPort.Port.kMXP,
         AHRS.SerialDataType.kProcessedData,
-        int(1 / RobotConstants.period),
-      )
-      if RobotConstants.navxPort == RobotConstants.NavXPort.kUSB
-      else AHRS(
-        wpilib.SPI.Port.kMXP,
         int(1 / RobotConstants.period),
       )
     )
@@ -167,7 +161,7 @@ class SwerveSubsystem(Subsystem):
     speed_scale = 1.0
     x = utils.utils.dz(drive) * speed_scale
     y = utils.utils.dz(strafe) * speed_scale
-    z = rotate * speed_scale
+    z = utils.utils.dz(rotate) * speed_scale
     # z = self.zLimiter.calculate(z)
     z = utils.utils.calcAxisSpeedWithCurvatureAndDeadzone(z)
     # convert values to meters per second and apply rate limiters
@@ -179,22 +173,22 @@ class SwerveSubsystem(Subsystem):
 
     # z = self.zLimiter.calculate(z)
 
-    # if self.get_field_oriented():
-    #   chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-    #       x,
-    #       y,
-    #       z,
-    #       self.swerveSubsystem.getRotation2d(),
-    #         )
-    # else:
-    chassisSpeeds = ChassisSpeeds(
-      x,
-      y,
-      z,
-        )
+    if self.field_oriented:
+      chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+          x,
+          y,
+          z,
+          self.getRotation2d(),
+            )
+    else:
+      chassisSpeeds = ChassisSpeeds(
+        x,
+        y,
+        z,
+      )
 
     #if RobotConstants.isSimulation:
-      #self.swerveSubsystem.simChassisSpeeds = chassisSpeeds
+      #self.simChassisSpeeds = chassisSpeeds
 
     swerveModuleStates = SwerveSubsystem.toSwerveModuleStatesForecast(
       chassisSpeeds
