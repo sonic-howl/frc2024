@@ -4,7 +4,7 @@ import wpilib
 pilot = wpilib.PS4Controller(0);
 #engineer = TBD
 
-def speedCommand() -> float:
+def driveCommand() -> float:
     return pilot.getLeftY()
 
 def strafeCommand() -> float:

@@ -5,14 +5,14 @@ import wpilib
 # Dummy subsystems for experimenting with motor controllers in simulation
 class ControllerTest:
 
-    # Dummy motor types for testing simulator
-    mot0 = wpilib.PWMSparkMax(0)
-    mot1 = wpilib.PWMVictorSPX(1)
-    mot2 = wpilib.PWMTalonSRX(2)
-    #mot3 = rev.CANSparkMax(3,rev.CANSparkLowLevel.MotorType.kBrushless)
-    #mot4 = phoenix6.hardware.TalonFX(4)
-
-    #cmdMot4 = phoenix6.controls.DutyCycleOut(0.)
+    def __init__(self) -> None:
+        # Dummy motor types for testing simulator
+        self.mot0 = wpilib.PWMSparkMax(0)
+        self.mot1 = wpilib.PWMVictorSPX(1)
+        self.mot2 = wpilib.PWMTalonSRX(2)
+        #self.mot3 = rev.CANSparkMax(3,rev.CANSparkLowLevel.MotorType.kBrushless)
+        #self.mot4 = phoenix6.hardware.TalonFX(4)
+        #self.cmdMot4 = phoenix6.controls.DutyCycleOut(0.)
 
     # Movement left/right, forward/back, rotate left/right
     def move( self, x: float, y:float, z: float ):

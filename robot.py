@@ -11,6 +11,7 @@ class MyRobot(wpilib.TimedRobot):
     testmotors = subsystems.ControllerTest()
 
     def robotInit(self):
+        #wpilib.cameraserver.CameraServer.launch()
         usbCam = CameraServer.startAutomaticCapture()
         mode   = usbCam.getVideoMode()
         print( f"format: {mode.pixelFormat}, fps: {mode.fps}, {mode.width}x{mode.height}")
@@ -26,13 +27,16 @@ class MyRobot(wpilib.TimedRobot):
     #def autonomousPeriodic(self):
     """This function is called periodically during autonomous."""
 
+    #def autonomousExit(self):
+    """This function is called when the robot exits autonomous mode."""
+
     #def teleopInit(self):
     """This function is called once each time the robot enters teleoperated mode."""
 
     def teleopPeriodic(self):
         # Collect inputs
         cmdX = driveteam.strafeCommand()
-        cmdY = driveteam.speedCommand()
+        cmdY = driveteam.driveCommand()
         cmdZ = driveteam.rotationCommand()
 
         intake  = driveteam.pickupCommand()
@@ -48,9 +52,7 @@ class MyRobot(wpilib.TimedRobot):
         dashboard.lightLed( 1, trigger )
 
     def teleopExit(self):
-        # Stop the shooter
-        self.shooter.launch(False)
-        self.swervedrive.stop()
+        self.testmotors.stop()
 
     def testInit(self):
         pass
