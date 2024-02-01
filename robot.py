@@ -61,6 +61,8 @@ class MyRobot(wpilib.TimedRobot):
     self.getInputs()
     drivestation.setDBLED("0", self.unjam)
     drivestation.setDBLED("1", self.eject)
+
+    wpilib.SmartDashboard.putString("DB/String 0", str(self.drivebase.getRotation2d()))
     # drivestation.light_2(self.fire)
     # drivestation.light_3(self.pickup)
 

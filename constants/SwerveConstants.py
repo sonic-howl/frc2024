@@ -25,22 +25,22 @@ class SwerveConstants:
 
   fl_drive_id = 2
   fl_turn_id = 3
-  fl_abs_encoder_offset_rad = 2.6546849
+  fl_abs_encoder_offset_rad = 0.0
   fl_chassis_angular_offset = -math.pi / 2
 
   fr_drive_id = 4
   fr_turn_id = 5
-  fr_abs_encoder_offset_rad = 5.2596858
+  fr_abs_encoder_offset_rad = 0.0
   fr_chassis_angular_offset = 0
 
   bl_drive_id = 6
   bl_turn_id = 7
-  bl_abs_encoder_offset_rad = 0.5824341
+  bl_abs_encoder_offset_rad = 0.0
   bl_chassis_angular_offset = math.pi
 
   br_drive_id = 8
   br_turn_id = 9
-  br_abs_encoder_offset_rad = 0.7112656
+  br_abs_encoder_offset_rad = 0.0
   br_chassis_angular_offset = math.pi / 2
 
   kPTurning = 1
