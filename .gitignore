@@ -18,3 +18,5 @@ networktables.json
 
 # CTRE generated files
 /ctre_sim
+
+/.wpilib
