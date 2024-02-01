@@ -40,23 +40,24 @@ def draw_tag( result ):
     assert frame is not None
     assert result is not None
     tag_id, pose, center = result
-    cv2.circle(frame, (int(center.x), int(center.y)), 50, (255, 0, 255), 3)
-    msg  = f"Tag ID: {tag_id}"
-    msg2 = f"Pose T: {pose.translation().X():.2f}, {pose.translation().Y():.2f}, {pose.translation().Z():.2f}"
-    msg3 = f"Pose R: {pose.rotation().X():.3f}, {pose.rotation().Y():.3f}, {pose.rotation().Z():.3f}"
-    # Get tag location on the field
-    tagPose = field.getTagPose( tag_id )
-    tagLoc  = tagPose.translation()
-    tagRot  = tagPose.rotation()
-    msg4 = f"Tag T: {tagLoc.X():.3f}, {tagLoc.Y():.3f}, {tagLoc.Z():.3f}"
-    msg5 = f"Tag R: {tagRot.X():.3f}, {tagRot.Y():.3f}, {tagRot.Z():.3f}"
-    msg6 = f"Bot Pose: x{bot_pose.X():.3f} y{bot_pose.Y():.3f} r{bot_pose.rotation().radians():.3f}"
-    cv2.putText(frame, msg,  (150, 50 * 1), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 100), 2)
-    cv2.putText(frame, msg2, ( 50, 50 * 2), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 100), 2)
-    cv2.putText(frame, msg3, ( 50, 50 * 3), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 100), 2)
-    cv2.putText(frame, msg4, ( 50, 50 * 4), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 100), 2)
-    cv2.putText(frame, msg5, ( 50, 50 * 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 100), 2)
-    cv2.putText(frame, msg6, ( 50, 50 * 6), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 100), 2)
+    if tag_id>0:
+      cv2.circle(frame, (int(center.x), int(center.y)), 50, (255, 0, 255), 3)
+      msg  = f"Tag ID: {tag_id}"
+      msg2 = f"Pose T: {pose.translation().X():.2f}, {pose.translation().Y():.2f}, {pose.translation().Z():.2f}"
+      msg3 = f"Pose R: {pose.rotation().X():.3f}, {pose.rotation().Y():.3f}, {pose.rotation().Z():.3f}"
+      # Get tag location on the field
+      tagPose = field.getTagPose( tag_id )
+      tagLoc  = tagPose.translation()
+      tagRot  = tagPose.rotation()
+      msg4 = f"Tag T: {tagLoc.X():.3f}, {tagLoc.Y():.3f}, {tagLoc.Z():.3f}"
+      msg5 = f"Tag R: {tagRot.X():.3f}, {tagRot.Y():.3f}, {tagRot.Z():.3f}"
+      msg6 = f"Bot Pose: x{bot_pose.X():.3f} y{bot_pose.Y():.3f} r{bot_pose.rotation().radians():.3f}"
+      cv2.putText(frame, msg,  (150, 50 * 1), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 100), 2)
+      cv2.putText(frame, msg2, ( 50, 50 * 2), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 100), 2)
+      cv2.putText(frame, msg3, ( 50, 50 * 3), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 100), 2)
+      cv2.putText(frame, msg4, ( 50, 50 * 4), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 100), 2)
+      cv2.putText(frame, msg5, ( 50, 50 * 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 100), 2)
+      cv2.putText(frame, msg6, ( 50, 50 * 6), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 100), 2)
 
 # This function is called for every detected tag. It uses the `estimator` to 
 # return information about the tag, including its centerpoint. (The corners are 
@@ -82,14 +83,19 @@ def process_apriltag(estimator, tag):
     #print( f"p1: {est.pose1}")
     #print (f"p2: {est.pose2}")
 
-    # TBD Disambiguate pose? Likely pick x rotation closest to zero (vertical)
-
-    # Check range (z in camera coordinates) for low values, filters some library errors that zero pose.
+    # Filter out zero poses that apriltag library can return due to errors
     if est.pose1.translation().Z()>0.01:
+      tag_pose = est.pose1
+      #print( f"p1 {tag_pose}")
+      # Disambiguate pose, choose closest to vertical (TBD adjust for camera elevation).
+      if est.pose2.translation().Z()>0.01 and abs(est.pose2.rotation().X())<abs(est.pose1.rotation().X()):
+        tag_pose = est.pose2
+        #print( f"p2 {tag_pose}")
+
       # Get 1st camera position
       # 1) Convert pose estimate from camera coordinates frame to robot coordinate frame
       # 2) Create pose for camera position, transform to tag position
-      T1 = wpimath.geometry.CoordinateSystem.convert( est.pose1, wpimath.geometry.CoordinateSystem.EDN(), wpimath.geometry.CoordinateSystem.NWU() )
+      T1 = wpimath.geometry.CoordinateSystem.convert( tag_pose, wpimath.geometry.CoordinateSystem.EDN(), wpimath.geometry.CoordinateSystem.NWU() )
       #print( f"T1: {T1}")
       bc = wpimath.geometry.Pose3d()
       bt = bc.transformBy(T1)
@@ -108,13 +114,12 @@ def process_apriltag(estimator, tag):
       global bot_pose
       bot_pose = fc.toPose2d()
       #print( f"pb: {bot_pose}" )
-      pass
+      
+    else:
+      # Discarded both poses
+      tag_id = 0  
 
-    if est.pose2.translation().Z()>0.01:
-      # Get 2nd camera position
-      pass
-
-    return tag_id, est.pose1, center
+    return tag_id, tag_pose, center
 
 # This function is called once for every frame captured by the Webcam. For testing, it can simply
 # be passed a frame capture loaded from a file. (See commented-out alternative `if __name__ == main:` at bottom of file)
@@ -130,7 +135,7 @@ def detect_and_process_apriltag( detector, estimator ):
     # Note that results will be empty if no apriltag is detected
     for result in results:
     #    print( f"Tag: {result[0]}, Pose: {result[1]}" ) 
-        draw_tag( result )
+      draw_tag( result )
     #print("...")
 
 # Code relating to Webcam capture 
@@ -148,7 +153,7 @@ def get_capture(window_name, video_capture_device_index=0):
     # For a usb camera provide port number
     # For a stream provide the URL of the video feed
     #cap = cv2.VideoCapture(video_capture_device_index)
-    cap = cv2.VideoCapture(localsim)
+    cap = cv2.VideoCapture(rickroll)
     #if cap.isOpened():
         #print( "opened successfully" )
     return cap
