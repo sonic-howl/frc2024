@@ -13,6 +13,8 @@ rot090 = wpimath.geometry.Rotation3d( 0.0, 0.0,  math.pi/2 ) #  90 degree rotati
 rot180 = wpimath.geometry.Rotation3d( 0.0, 0.0, -math.pi  )  # 180 degree rotation in xy plane
 rot270 = wpimath.geometry.Rotation3d( 0.0, 0.0, -math.pi/2 ) # -90 degree rotation in xy plane
 
+bot_pose = wpimath.geometry.Pose2d()
+
 # This function is called once to initialize the apriltag detector and the pose estimator
 def get_apriltag_detector_and_estimator( width: float, height: float ):
     detector = robotpy_apriltag.AprilTagDetector()
@@ -48,13 +50,13 @@ def draw_tag( result ):
     tagRot  = tagPose.rotation()
     msg4 = f"Tag T: {tagLoc.X():.3f}, {tagLoc.Y():.3f}, {tagLoc.Z():.3f}"
     msg5 = f"Tag R: {tagRot.X():.3f}, {tagRot.Y():.3f}, {tagRot.Z():.3f}"
-    # simplified transform
-    botX = tagLoc.X()
+    msg6 = f"Bot Pose: x{bot_pose.X():.3f} y{bot_pose.Y():.3f} r{bot_pose.rotation().radians():.3f}"
     cv2.putText(frame, msg,  (150, 50 * 1), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 100), 2)
     cv2.putText(frame, msg2, ( 50, 50 * 2), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 100), 2)
     cv2.putText(frame, msg3, ( 50, 50 * 3), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 100), 2)
     cv2.putText(frame, msg4, ( 50, 50 * 4), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 100), 2)
     cv2.putText(frame, msg5, ( 50, 50 * 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 100), 2)
+    cv2.putText(frame, msg6, ( 50, 50 * 6), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 100), 2)
 
 # This function is called for every detected tag. It uses the `estimator` to 
 # return information about the tag, including its centerpoint. (The corners are 
@@ -66,19 +68,19 @@ def process_apriltag(estimator, tag):
     decision_margin = tag.getDecisionMargin()
     #print("Hamming for {} is {} with decision margin {}".format(tag_id, hamming, decision_margin))
 
-    est = estimator.estimateOrthogonalIteration(tag, 100)
+    est = estimator.estimateOrthogonalIteration(tag, 50)
 
     # Get pose in field coordinates
     field_pose = field.getTagPose( tag_id )
-    print( f"tag  {tag_id} {field_pose}")
+    #print( f"tag  {tag_id} {field_pose}")
     correction = wpimath.geometry.Transform3d( wpimath.geometry.Translation3d( 0.0, 0.0, 0.0), rot180 ) # Apriltag defines orientation into tag, field out of
     field_pose = field_pose.transformBy( correction )
-    print( f"tag' {tag_id} {field_pose}")
+    #print( f"tag' {tag_id} {field_pose}")
 
     #if est.getAmbiguity()<0.2:
-    print( est.getAmbiguity() )
-    print( f"p1: {est.pose1}")
-    print (f"p2: {est.pose2}")
+    #print( est.getAmbiguity() )
+    #print( f"p1: {est.pose1}")
+    #print (f"p2: {est.pose2}")
 
     # TBD Disambiguate pose? Likely pick x rotation closest to zero (vertical)
 
@@ -88,23 +90,24 @@ def process_apriltag(estimator, tag):
       # 1) Convert pose estimate from camera coordinates frame to robot coordinate frame
       # 2) Create pose for camera position, transform to tag position
       T1 = wpimath.geometry.CoordinateSystem.convert( est.pose1, wpimath.geometry.CoordinateSystem.EDN(), wpimath.geometry.CoordinateSystem.NWU() )
-      print( f"T1: {T1}")
+      #print( f"T1: {T1}")
       bc = wpimath.geometry.Pose3d()
       bt = bc.transformBy(T1)
-      print( f"bc: {bc}" )
-      print( f"bt: {bt}" )
-      #TBD can correct for camera position and orientation here and generate bb, the bot frame center
+      #print( f"bc: {bc}" )
+      #print( f"bt: {bt}" )
+      # TBD can correct for camera position and orientation here and generate bb, the bot frame center
       # Reset origin at tag
       bc = bc.relativeTo(bt)
       bt = bt.relativeTo(bt)
-      print( f"bc: {bc}" )
-      print( f"bt: {bt}" )
+      #print( f"bc: {bc}" )
+      #print( f"bt: {bt}" )
       fc = bc.rotateBy( field_pose.rotation() )
-      print( f"fc: {fc}" )
+      #print( f"fc: {fc}" )
       fc = wpimath.geometry.Pose3d( fc.translation()+field_pose.translation(), fc.rotation() )
-      print( f"fc: {fc}" )
-      pb = fc.toPose2d()
-      print( f"pb: {pb}" )
+      #print( f"fc: {fc}" )
+      global bot_pose
+      bot_pose = fc.toPose2d()
+      #print( f"pb: {bot_pose}" )
       pass
 
     if est.pose2.translation().Z()>0.01:
