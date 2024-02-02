@@ -13,7 +13,7 @@ class RobotConstants:
 
   period = 0.02
 
-  controller_deadzone = 0.05
+  controller_deadzone = 0.075
   pilot_controller_id = 0
   operator_controller_id = 1
 
