@@ -63,7 +63,7 @@ If you don't know how to do this, follow these steps:
 
 1. Open the repository [link](https://github.com/sonic-howl/frc2024) in your browser
 2. Ask one of the organization admins to add you to the repo. (Neil, Nathan, Ramez). **TODO: Not sure if this is needed is repo is public. Update this section after testing.**
-3. Click on the `Clone` button, choose HTTPS and copy the link to your clipboard.
+3. Click on the `<>Code` button, choose HTTPS and copy the link to your clipboard.
 4. Launch the `2024 WPILib VS Code` application.
 5. Open the terminal by pressing the `CTRL + ~` keys.
 6. Enter the command `git clone "the link you copied"`
@@ -77,19 +77,103 @@ Run the appropriate command in terminal depending on you operating system to ins
 **For Windows**
 
 ```bash
+py -3 -m pip install robotpy
+```
+
+```bash
 py -3 -m robotpy sync
 ```
 
-**For Linux**
+**For Linux and macOS**
+
+```bash
+python3 -m pip install robotpy
+```
 
 ```bash
 python3 -m robotpy sync
 ```
 
-**For macOS**
+### Installing Formatter and Linter
+
+This project uses [ruff](https://docs.astral.sh/ruff/) to provide formatting and linting capabilities.
+
+> **Note:** There's currently an error with the `pyproject.toml` file's requirements where it isn't able to locate and install `ruff`. Instead, we'll install it manually in the upcoming steps.
+
+To install ruff, run:
 
 ```bash
-python3 -m robotpy sync
+# Windows
+py -3 -m pip install ruff
+
+# Linux
+python3 -m pip install ruff
+```
+
+---
+
+You can also integrate ruff in VsCode by installing the `ruff` extension.
+
+To configure the ruff VsCode extension, follow these steps:
+
+1. Create a folder called `.vscode`
+2. Create a file in this folder named `settings.json`
+3. Copy these settings in the file:
+
+```json
+{
+  "[python]": {
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true
+    },
+    "editor.defaultFormatter": "charliermarsh.ruff"
+  }
+}
+```
+
+## Using the Lab PCs
+
+When using the Lab PCs, you're going to want to use your GitHub account so the rest of the team knows who worked on what. If you don't have one, [create one here](https://github.com/signup).
+
+If you're using a lab PC, follow these steps to link your GitHub account to VsCode:
+
+1. Create a new script in the `switch-gituser` folder and use your real name as the name of the file (Ex: create new file `NathanGrenier.sh` in folder `switch-gituser`).
+2. Replace the `USERNAME` and `EMAIL` variables in the newly created file with your GitHub username and password.
+
+**Example:**
+
+```bash
+# Set your GitHub username and email
+USERNAME="{REPLACE ME WITH GITHUB YOUR USERNAME}" # Make sure to remove the {}
+EMAIL="{REPALCE ME WITH YOUR GITHUB EMAIL}" # Make sure to remove the {}
+
+git config user.name "$USERNAME"
+git config user.email "$EMAIL"
+
+echo "Git user has been set to: $USERNAME ($EMAIL)"
+```
+
+3. In order to change VsCode's GitHub credentials, use the script by running the following command **(NOTE: must be run in a `bash` terminal)**:
+
+```bash
+./switch-gituser/{THE NAME OF YOUR FILE}.sh
+```
+
+### Create Pre-commit Hook
+
+The `pre-commit` module will check your code before you commit to make sure you're using the proper formatting and that your code doesn't break any linting rules.
+
+It should already be installed if you've run the `robotpy sync` command [this step](#installing-robotpy-and-dependencies)
+
+To create the hook, use the following commands:
+
+```bash
+# Windows
+py -3 -m pre_commit install
+
+#Linux
+python3 -m pre_commit install
 ```
 
 ## Configuring Hardware
@@ -142,26 +226,56 @@ py -3 -m robotpy
 > py -3 -m robotpy sim --help
 > ```
 
-### Building Robot Code
+### Running Robot Code
 
-Before deploying any robot code, you must build (compile) it first. To do so, you can follow [this guide](https://docs.wpilib.org/en/stable/docs/software/vscode-overview/deploying-robot-code.html#building-and-deploying-robot-code) (through ide) or run the following command:
+In order to run the robot code, use the following command:
 
 ```bash
-./gradlew build
+# Windows
+py -3 robot.py
+
+# Linux
+python3 robot.py
 ```
+
+> See full guide on running robot code [here](https://robotpy.readthedocs.io/en/stable/guide/running.html)
 
 ### Formatting Code
 
 The following command can be used to format the code:
 
 ```bash
-./gradlew spotlessApply
+# Windows
+py -3 -m ruff format
+
+# Linux
+ruff format
 ```
 
 When code is pushed to the repository, a workflow will be run to check if the code is properly formatted. If it isn't, you won't be able to merge the code. In order to check if the project is properly formatted, run:
 
 ```bash
-./gradlew spotlessCheck
+# Windows
+py -3 -m ruff format --check
+
+# Linux
+ruff format --check
+```
+
+> A pre-commit hook will also automatically check this for you. If the files aren't formatted correctly, you won't be able to commit.
+
+### Linting Code
+
+Code linting is like a grammar check for your code. It helps find mistakes and keeps your code neat and consistent, making it easier to read and understand.
+
+To run the linting check, use the following command:
+
+```bash
+# Windows
+py -3 -m ruff check .
+
+# Linux
+ruff check .
 ```
 
 ### Using the Driver Station
@@ -170,17 +284,17 @@ This [guide](https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-4/running
 
 ### Deploying Code to Robot
 
-After [building the code](#building-robot-code), you can deploy it to a connected robot using:
+You can deploy robot code to a robot you're connected to using:
 
 ```bash
-./gradlew deploy
+# Windows
+py -3 robot.py deploy
+
+# Linux
+python3 robot.py deploy
 ```
 
-If deploying wirelessly, you can scan for robot IP's using:
-
-```bash
-./gradlew discoverRoborio
-```
+> See full guide on deploying robot code [here](https://robotpy.readthedocs.io/en/stable/guide/deploy.html)
 
 ## Simulation Testing
 
@@ -193,10 +307,12 @@ A robot simulation is available for testing. Read the full documentation [here](
 You can run it with the following command:
 
 ```bash
-./gradlew simulateJava
-```
+# Windows
+py -3 -m robotpy sim
 
-> It's important to note that robot simulation is only enabled when `includeDesktopSupport` is set to true in `build.gradle`. When enabled, this option can cause issues with 3rd party software that doesn't support it. If ever you run into build or simulation issues, try turning off that option in the build file. You can also follow [this guide](https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-simulation/simulation-gui.html#determining-simulation-from-robot-code) in order to conditionally run certain code based on the environment (if the simulation if running or not).
+# Linux and macOS
+python3 -m robotpy sim
+```
 
 ### Running Robot Dashboards during a Simulation
 
@@ -207,5 +323,11 @@ Follow [this guide](https://docs.wpilib.org/en/stable/docs/software/wpilib-tools
 You can also manually run unit tests using:
 
 ```bash
-./gradlew test
+# Windows
+py -3 robot.py test
+
+# Linux
+python3 robot.py test
 ```
+
+> See full unit testing documentation [here](https://robotpy.readthedocs.io/en/stable/guide/testing.html)

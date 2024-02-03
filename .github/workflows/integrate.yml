@@ -9,44 +9,27 @@ on:
     branches: [main, develop]
 
 jobs:
-  # Check for proper formatting of the code using spotless.
-  # Taken from wpilib docs: https://docs.wpilib.org/en/stable/docs/software/advanced-gradlerio/code-formatting.html
-  format:
+  lint_and_format_checks:
     runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-java@v4
-        with:
-          distribution: "zulu"
-          java-version: 17
-      
-      # Grant execute permission for gradlew
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-      
-      - name: Check code formatting
-        run: ./gradlew spotlessCheck --info
-
-  # Copied from wpilib docs: https://docs.wpilib.org/en/stable/docs/software/advanced-gradlerio/robot-code-ci.html
-  build:
-    runs-on: ubuntu-latest
-    # This grabs the WPILib docker container
-    container: wpilib/roborio-cross-ubuntu:2024-22.04
-
     steps:
       - uses: actions/checkout@v3
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff
+      - name: Lint
+        run: ruff check --output-format=github .
+      - name: Check Formatting
+        run: ruff format --check
 
-      # Declares the repository safe and not under dubious ownership.
-      - name: Add repository to git safe directories
-        run: git config --global --add safe.directory $GITHUB_WORKSPACE
-
-      # Grant execute permission for gradlew
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      # Runs a single command using the runners shell
-      - name: Compile and run tests on robot code
-        run: ./gradlew build --info
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: TODO
+        run: |
+          echo "test"

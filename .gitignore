@@ -4,7 +4,7 @@
 # Python Version
 .python-version
 
-# ruff cahce
+# ruff cache
 /.ruff_cache
 
 # Build directory
@@ -19,4 +19,5 @@ networktables.json
 # CTRE generated files
 /ctre_sim
 
+# Wpilib generated files
 /.wpilib
