@@ -1,10 +1,10 @@
 import wpilib
 
-
+# Treat controller instances as private, use the functions below to access controls.
 class DriveTeam:
   def __init__(self):
-    self.pilot = wpilib.XboxController(0)
-    self.copilot = wpilib.XboxController(1)
+    self.pilot   = wpilib.PS4Controller(0)
+    self.copilot = wpilib.PS4Controller(1)
 
   def get_strafe_command(self):
     return self.pilot.getLeftX()
@@ -34,13 +34,13 @@ class DriveTeam:
     return self.copilot.getLeftY()
 
   def get_firing_command(self):  # shoot shooter
-    return self.copilot.getLeftTriggerAxis()
+    return self.copilot.getR1Button()
 
   def get_unjam_command(self):  # unjam shooter
     return self.copilot.getLeftBumper()
 
   def get_pickup_command(self):  # used to pickup rings
-    return self.copilot.getRightTriggerAxis()
+    return self.copilot.getL1Button()
 
   def get_eject_command(self):  # eject stuck note
     return self.copilot.getRightBumper()

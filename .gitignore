@@ -4,7 +4,7 @@
 # Python Version
 .python-version
 
-# ruff cahce
+# ruff cache
 /.ruff_cache
 
 # Build directory
@@ -16,4 +16,8 @@ simgui*.json
 # Network Tables
 networktables.json
 
-**/.wpilib
+# CTRE generated files
+/ctre_sim
+
+# Wpilib generated files
+/.wpilib

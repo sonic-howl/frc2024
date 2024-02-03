@@ -46,6 +46,10 @@ class MyRobot(wpilib.TimedRobot):
     This function is called upon program startup and
     should be used for any initialization code.
     """
+    # CameraServer.launch will immediately return in simulation
+    #wpilib.cameraserver.CameraServer.launch()
+    usbCam = CameraServer.startAutomaticCapture()
+    usbCam.setVideoMode( VideoMode.PixelFormat.kMJPEG, 640, 480, 30 )
 
   def autonomousInit(self):
     """This function is run once each time the robot enters autonomous mode."""
@@ -62,16 +66,16 @@ class MyRobot(wpilib.TimedRobot):
     drivestation.setDBLED("0", self.unjam)
     drivestation.setDBLED("1", self.eject)
 
-    wpilib.SmartDashboard.putString("DB/String 0", str(self.drivebase.getRotation2d()))
-    # drivestation.light_2(self.fire)
-    # drivestation.light_3(self.pickup)
-
     # drive base
     magnitude = abs(self.strafe) + abs(self.drive) + abs(self.turn)
     if utils.utils.dz(magnitude) > 0:
       self.drivebase.setvelocity(self.strafe, self.drive, self.turn)
     else:
       self.drivebase.stop()
+
+    # Update dahboard
+    dashboard.lightLed( 0, intake )
+    dashboard.lightLed( 1, trigger )
 
 
   def testInit(self):
@@ -80,11 +84,11 @@ class MyRobot(wpilib.TimedRobot):
   def testPeriodic(self):
     """This function is called periodically during test mode."""
 
-  # def simulationInit(self):
-  #   """This function is called once each time the robot enters simulation mode."""
+  #def simulationInit(self):
+  #  """This function is called once each time the robot enters simulation mode."""
 
-  # def simulationPeriodic(self):
-  #   """This function is called periodically during simulation mode."""
+  #def simulationPeriodic(self):
+  #  """This function is called periodically during simulation mode."""
 
 
 if __name__ == "__main__":
