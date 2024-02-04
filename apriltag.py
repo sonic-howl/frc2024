@@ -7,6 +7,16 @@ import robotpy_apriltag
 import math
 import wpimath.geometry
 
+from constants.ntconstants import VisionBoard
+
+# Allows us to report back to robot
+from ntcore import NetworkTableInstance
+network_table_instance = NetworkTableInstance.getDefault()
+vision_dashboard = network_table_instance.getTable( VisionBoard.name )
+bot_x_pub = vision_dashboard.getFloatTopic( VisionBoard.bot_x_pose ).publish()
+bot_y_pub = vision_dashboard.getFloatTopic( VisionBoard.bot_y_pose ).publish()
+bot_r_pub = vision_dashboard.getFloatTopic( VisionBoard.bot_r_pose ).publish()
+
 field  = robotpy_apriltag.loadAprilTagLayoutField(robotpy_apriltag.AprilTagField.k2024Crescendo)
 rot000 = wpimath.geometry.Rotation3d( 0.0, 0.0,      0.0 )   #   0 degree rotation in xy plane
 rot090 = wpimath.geometry.Rotation3d( 0.0, 0.0,  math.pi/2 ) #  90 degree rotation in xy plane
@@ -114,6 +124,10 @@ def process_apriltag(estimator, tag):
       global bot_pose
       bot_pose = fc.toPose2d()
       #print( f"pb: {bot_pose}" )
+      # Publish bot pose (should be done on detection for time stamping)
+      bot_x_pub.set( bot_pose.translation().X() )
+      bot_y_pub.set( bot_pose.translation().Y() )
+      bot_r_pub.set( bot_pose.rotation().radians() )
       
     else:
       # Discarded both poses
@@ -153,9 +167,12 @@ def get_capture(window_name, video_capture_device_index=0):
     # For a usb camera provide port number
     # For a stream provide the URL of the video feed
     #cap = cv2.VideoCapture(video_capture_device_index)
-    cap = cv2.VideoCapture(roborio)
+    cap = cv2.VideoCapture(localsim)
     #if cap.isOpened():
         #print( "opened successfully" )
+    network_table_instance.startClient4( "April Tag Processor" )
+    network_table_instance.setServer( "localhost" )
+    #network_table_instance.startDSClient()
     return cap
 
 # Draws a "targeting overlay" on `frame`
@@ -173,26 +190,30 @@ def draw_overlay():
 # Display loop: captures a frame, detects apriltags, draws an overlay, shows the composited frame
 # Infinite loop breaks when user presses 'q' key on keyboard
 def show_capture(capture_window_name, capture, detector, estimator):
-    while True:
-        # Capture frame-by-frame
-        global frame
-        ret, frame = capture.read()
-        if frame is not None:
-            # Detect apriltag, frame will be modified
-            detect_and_process_apriltag( detector, estimator )
-            draw_overlay()
-            # Display the resulting frame in the named window
-            cv2.imshow(capture_window_name, frame)
-        else:
-            break
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+  while True:
+    # Capture frame-by-frame
+    global frame
+    ret, frame = capture.read()
+    if frame is not None:
+        # Detect apriltag, frame will be modified
+        detect_and_process_apriltag( detector, estimator )
+        draw_overlay()
+        # Display the resulting frame in the named window
+        cv2.imshow(capture_window_name, frame)
+    else:
+        break
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
 
 # Called once at program end
 def cleanup_capture(capture):
     # When everything done, release the capture
     capture.release()
     cv2.destroyAllWindows()
+    # Stop publishing to network tables
+    bot_x_pub.close()
+    bot_y_pub.close()
+    bot_r_pub.close()
 
 # Main function:
 # Initializes capture & display window, initializes Apriltag detection, shows capture, cleans up

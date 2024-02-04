@@ -23,7 +23,7 @@
               "_glyph": 148,
               "_showGlyph": false,
               "Game/Game": "k2024Crescendo",
-              "Visuals/Robot Icon Size": 50.0,
+              "Visuals/Robot Icon Size": 40.0,
               "Visuals/Show Outside Circles": false
             }
           },
@@ -299,6 +299,77 @@
               "Range/Min": -10.0,
               "Range/Max": 10.0,
               "Visuals/Show value": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Vision",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "0,0": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Graph",
+              "_source0": "network_table:///Vision Processing Board/Bot X",
+              "_title": "/Vision Processing Board/Bot X",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Graph/Visible time": 30.0,
+              "Graph/X-axis auto scrolling": true,
+              "Y-axis/Automatic bounds": false,
+              "Y-axis/Upper bound": 15.0,
+              "Y-axis/Lower bound": -1.0,
+              "Y-axis/Unit": "ul"
+            }
+          },
+          "3,0": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Graph",
+              "_source0": "network_table:///Vision Processing Board/Bot Y",
+              "_title": "/Vision Processing Board/Bot Y",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Graph/Visible time": 30.0,
+              "Graph/X-axis auto scrolling": true,
+              "Y-axis/Automatic bounds": false,
+              "Y-axis/Upper bound": 8.0,
+              "Y-axis/Lower bound": -1.0,
+              "Y-axis/Unit": "m"
+            }
+          },
+          "6,0": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Graph",
+              "_source0": "network_table:///Vision Processing Board/Bot R",
+              "_title": "/Vision Processing Board/Bot R",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Graph/Visible time": 30.0,
+              "Graph/X-axis auto scrolling": true,
+              "Y-axis/Automatic bounds": false,
+              "Y-axis/Upper bound": 3.15,
+              "Y-axis/Lower bound": -3.15,
+              "Y-axis/Unit": "ul"
             }
           }
         }

@@ -5,6 +5,8 @@ from typing import Tuple
 from commands2 import Subsystem
 
 import wpilib
+import ntcore
+from constants.ntconstants import VisionBoard
 
 import utils.utils
 from navx import AHRS
@@ -103,6 +105,18 @@ class SwerveSubsystem():
     if not RobotConstants.isSimulation:
       self.field = Field2d()
       SmartDashboard.putData("Field", self.field)
+    
+    self.network_table = ntcore.NetworkTableInstance.getDefault()
+    self.vision_table = self.network_table.getTable( VisionBoard.name )
+    self.bot_x_sub = self.vision_table.getFloatTopic( VisionBoard.bot_x_pose ).subscribe( 0.0 )
+    self.bot_y_sub = self.vision_table.getFloatTopic( VisionBoard.bot_y_pose ).subscribe( 0.0 )
+    self.bot_r_sub = self.vision_table.getFloatTopic( VisionBoard.bot_r_pose ).subscribe( 0.0 )
+
+    # pose info from vision processing
+    self.vx = 0.0
+    self.vy = 0.0
+    self.vr = 0.0
+
 
   def getAngle(self) -> float:
     # return self.gyro.getAngle() % 360
@@ -143,8 +157,14 @@ class SwerveSubsystem():
   def periodic(self) -> None:
     # TODO print gyro angle, robot pose on dashboard
 
-    if not RobotConstants.isSimulation:
-      self.field.setRobotPose(self.getPose())
+    # assuming simulation
+    self.vx = self.bot_x_sub.get(self.vx)
+    self.vy = self.bot_y_sub.get(self.vy)
+    self.vr = self.bot_r_sub.get(self.vr)
+
+    self.field.setRobotPose( Pose2d( self.vx, self.vy, self.vr ) )
+    #if not RobotConstants.isSimulation:
+    #  self.field.setRobotPose(self.getPose())
 
     self.odometer.update(
       self.getRotation2d(),
