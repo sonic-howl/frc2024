@@ -29,16 +29,16 @@ class MyRobot(wpilib.TimedRobot):
     wpilib._wpilib.TimedRobot.__init__(self)
 
   def getInputs(self):
-    self.strafe = driveteam.get_strafe_command()
-    self.turn = driveteam.get_turn_command()
-    self.drive = driveteam.get_drive_command()
-    self.winch = driveteam.get_winch_command()
-    self.hookextend = driveteam.get_hook_extension_command()
-    self.hookretract = driveteam.get_hook_retract_command()
-    self.hookleft = driveteam.get_hook_left_command()
-    self.hookright = driveteam.get_hook_right_command()
+    self.strafe = driveteam.strafe_command()
+    self.turn = driveteam.turn_command()
+    self.drive = driveteam.drive_command()
+    #self.winch = driveteam.get_winch_command()
+    #self.hookextend = driveteam.get_hook_extension_command()
+    #self.hookretract = driveteam.get_hook_retract_command()
+    #self.hookleft = driveteam.get_hook_left_command()
+    #self.hookright = driveteam.get_hook_right_command()
 
-    self.aim = driveteam.get_aim_command()
+    #self.aim = driveteam.get_aim_command()
     self.fire = driveteam.launch_command()
     self.unjam = driveteam.unjam_command()
     self.pickup = driveteam.pickup_command()
@@ -71,7 +71,7 @@ class MyRobot(wpilib.TimedRobot):
     # drive base
     magnitude = abs(self.strafe) + abs(self.drive) + abs(self.turn)
     if utils.utils.dz(magnitude) > 0:
-      self.drivebase.setvelocity(self.strafe, self.drive, self.turn)
+      self.drivebase.setvelocity( self.drive, self.strafe, self.turn )
     else:
       self.drivebase.stop()
 
