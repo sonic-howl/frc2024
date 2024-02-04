@@ -1,13 +1,16 @@
 import wpilib
+from cscore import CameraServer
+from cscore import VideoMode
 
-import drivestation
+import dashboard
 import driveteam
 import swerve.swervesubsystem
 import utils.utils
 
 class MyRobot(wpilib.TimedRobot):
-  pilots = driveteam.DriveTeam()
+
   drivebase = swerve.swervesubsystem.SwerveSubsystem()
+
   def __init__(self):
     self.strafe = 0.0
     self.turn = 0.0
@@ -26,20 +29,20 @@ class MyRobot(wpilib.TimedRobot):
     wpilib._wpilib.TimedRobot.__init__(self)
 
   def getInputs(self):
-    self.strafe = self.pilots.get_strafe_command()
-    self.turn = self.pilots.get_turn_command()
-    self.drive = self.pilots.get_drive_command()
-    self.winch = self.pilots.get_winch_command()
-    self.hookextend = self.pilots.get_hook_extension_command()
-    self.hookretract = self.pilots.get_hook_retract_command()
-    self.hookleft = self.pilots.get_hook_left_command()
-    self.hookright = self.pilots.get_hook_right_command()
+    self.strafe = driveteam.get_strafe_command()
+    self.turn = driveteam.get_turn_command()
+    self.drive = driveteam.get_drive_command()
+    self.winch = driveteam.get_winch_command()
+    self.hookextend = driveteam.get_hook_extension_command()
+    self.hookretract = driveteam.get_hook_retract_command()
+    self.hookleft = driveteam.get_hook_left_command()
+    self.hookright = driveteam.get_hook_right_command()
 
-    self.aim = self.pilots.get_aim_command()
-    self.fire = self.pilots.get_firing_command()
-    self.unjam = self.pilots.get_unjam_command()
-    self.pickup = self.pilots.get_pickup_command()
-    self.eject = self.pilots.get_eject_command()
+    self.aim = driveteam.get_aim_command()
+    self.fire = driveteam.launch_command()
+    self.unjam = driveteam.unjam_command()
+    self.pickup = driveteam.pickup_command()
+    self.eject = driveteam.eject_command()
 
   def robotInit(self):
     """
@@ -50,6 +53,7 @@ class MyRobot(wpilib.TimedRobot):
     #wpilib.cameraserver.CameraServer.launch()
     usbCam = CameraServer.startAutomaticCapture()
     usbCam.setVideoMode( VideoMode.PixelFormat.kMJPEG, 640, 480, 30 )
+    
 
   def autonomousInit(self):
     """This function is run once each time the robot enters autonomous mode."""
@@ -63,8 +67,6 @@ class MyRobot(wpilib.TimedRobot):
   def teleopPeriodic(self):
     """This function is called periodically during teleoperated mode."""
     self.getInputs()
-    drivestation.setDBLED("0", self.unjam)
-    drivestation.setDBLED("1", self.eject)
 
     # drive base
     magnitude = abs(self.strafe) + abs(self.drive) + abs(self.turn)
@@ -74,9 +76,10 @@ class MyRobot(wpilib.TimedRobot):
       self.drivebase.stop()
 
     # Update dahboard
-    dashboard.lightLed( 0, intake )
-    dashboard.lightLed( 1, trigger )
-
+    dashboard.light_led( 0, self.pickup )
+    dashboard.light_led( 1, self.fire )
+    dashboard.light_led( 2, self.eject )
+    dashboard.light_led( 3, self.unjam )
 
   def testInit(self):
     """This function is called once each time the robot enters test mode."""

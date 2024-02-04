@@ -1,9 +1,9 @@
 import wpilib
 
-def lightLed( id: int, on: bool ):
+def light_led( id: int, on: bool ):
     wpilib.SmartDashboard.putBoolean( f"DB/LED {id}", on )
 
-def sendMessage( id: int, msg: str ):
+def send_message( id: int, msg: str ):
     wpilib.SmartDashboard.putString( f"DB/String {id}", msg )
 
 def button( id: int ) -> bool:
