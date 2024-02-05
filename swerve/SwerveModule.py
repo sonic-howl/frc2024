@@ -75,7 +75,7 @@ class SwerveModule:
     self.turn_motor.setInverted(turn_motor_reversed)
     self.turn_motor.setIdleMode(rev.CANSparkMax.IdleMode.kBrake)
     # self.turn_motor.setOpenLoopRampRate(200 / 1000)  # ms
-    self.turn_motor.setSmartCurrentLimit(15)
+    self.turn_motor.setSmartCurrentLimit(20)
     self.turn_motor.setSecondaryCurrentLimit(20)
 
     # create encoders
@@ -87,7 +87,7 @@ class SwerveModule:
       (math.pi * 2) / 60
     )  # radians per second
     self.turn_encoder.setInverted(abs_encoder_reversed)
-    self.turn_encoder.setZeroOffset(abs_encoder_offset_rad)
+    #self.turn_encoder.setZeroOffset(abs_encoder_offset_rad)
 
     # We are not using the built in PID controller, but this is where the config would go...
     # self. #...

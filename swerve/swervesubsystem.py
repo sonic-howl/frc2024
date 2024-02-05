@@ -206,16 +206,16 @@ class SwerveSubsystem():
 
   def setX(self) -> None:
     self.front_left.setDesiredState(
-      SwerveModuleState(0, Rotation2d.fromDegrees(-45)), True
+      SwerveModuleState(0, Rotation2d.fromDegrees(45)), True
     )
     self.front_right.setDesiredState(
-      SwerveModuleState(0, Rotation2d.fromDegrees(45)), True
+      SwerveModuleState(0, Rotation2d.fromDegrees(-45)), True
     )
     self.back_left.setDesiredState(
-      SwerveModuleState(0, Rotation2d.fromDegrees(45)), True
+      SwerveModuleState(0, Rotation2d.fromDegrees(-45)), True
     )
     self.back_right.setDesiredState(
-      SwerveModuleState(0, Rotation2d.fromDegrees(-45)), True
+      SwerveModuleState(0, Rotation2d.fromDegrees(45)), True
     )
 
   @staticmethod

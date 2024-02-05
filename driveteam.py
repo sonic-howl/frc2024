@@ -7,13 +7,13 @@ class DriveTeam:
     self.copilot = wpilib.XboxController(1)
 
   def get_strafe_command(self):
-    return self.pilot.getLeftX()
+    return -self.pilot.getLeftX()
 
   def get_drive_command(self):  # translational(foward/backward)
-    return self.pilot.getLeftY()
+    return -self.pilot.getLeftY()
 
   def get_turn_command(self):  # left/right
-    return self.pilot.getRightX()
+    return -self.pilot.getRightX()
 
   def get_winch_command(self):  # deploy winch
     return self.pilot.getStartButton()

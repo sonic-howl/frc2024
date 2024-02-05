@@ -69,7 +69,7 @@ class MyRobot(wpilib.TimedRobot):
     # drive base
     magnitude = abs(self.strafe) + abs(self.drive) + abs(self.turn)
     if utils.utils.dz(magnitude) > 0:
-      self.drivebase.setvelocity(self.strafe, self.drive, self.turn)
+      self.drivebase.setvelocity(self.drive, self.strafe, self.turn)
     else:
       self.drivebase.stop()
 
