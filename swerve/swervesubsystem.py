@@ -102,9 +102,9 @@ class SwerveSubsystem():
     self.theta_pid.enableContinuousInput(0, math.tau)
     self.theta_pid.setTolerance(math.radians(3))
 
-    if not RobotConstants.isSimulation:
-      self.field = Field2d()
-      SmartDashboard.putData("Field", self.field)
+    self.field   = Field2d()
+    self.cv_pose = self.field.getObject( "CV Pose" )
+    SmartDashboard.putData("Field", self.field)
     
     self.network_table = ntcore.NetworkTableInstance.getDefault()
     self.vision_table = self.network_table.getTable( VisionBoard.name )
@@ -162,9 +162,9 @@ class SwerveSubsystem():
     self.vy = self.bot_y_sub.get(self.vy)
     self.vr = self.bot_r_sub.get(self.vr)
 
+    #self.cv_pose.setPose( Pose2d( self.vx, self.vy, self.vr ) )
     self.field.setRobotPose( Pose2d( self.vx, self.vy, self.vr ) )
-    #if not RobotConstants.isSimulation:
-    #  self.field.setRobotPose(self.getPose())
+    #self.field.setRobotPose(self.getPose())
 
     self.odometer.update(
       self.getRotation2d(),
