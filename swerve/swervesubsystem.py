@@ -82,13 +82,6 @@ class SwerveSubsystem():
       )
     )
 
-    def resetGyro():
-      """reset gyro after it's calibration of 1s"""
-      sleep(1)
-      self.resetGyro()
-
-    Thread(target=resetGyro).start()
-
     self.theta_pid = ProfiledPIDControllerRadians(
       SwerveConstants.kPRobotTurn,
       SwerveConstants.kIRobotTurn,
@@ -117,6 +110,8 @@ class SwerveSubsystem():
     self.vy = 0.0
     self.vr = 0.0
 
+    self.gyro_calibrated = False
+    
 
   def getAngle(self) -> float:
     # return self.gyro.getAngle() % 360
@@ -135,8 +130,9 @@ class SwerveSubsystem():
     return self.odometer.getPose()
 
   def resetGyro(self):
-    # self.gyro.zeroYaw()
-    self.gyro.reset()
+    # TBD preferably set a yaw offset to match a given rotation.
+    self.gyro.zeroYaw()
+    #self.gyro.reset()
 
   def reset_motor_positions(self):
     self.front_left.resetEncoders()
@@ -155,9 +151,18 @@ class SwerveSubsystem():
     )
 
   def periodic(self) -> None:
+    """
+    This function should be called periodically before all commands 
+    """
+    # check for completion of gyro calibration
+    # should take 1 second, completing during 5 second countdown in Disabled mode
+    if not self.gyro_calibrated and not self.gyro.isCalibrating():
+      # TBD handle starting yaw offset if not always aligned with field zero.
+      self.gyro.zeroYaw()
+      self.gyro_calibrated = True
     # TODO print gyro angle, robot pose on dashboard
 
-    # assuming simulation
+    # This should be collected by the robot for more elaborate context checking
     self.vx = self.bot_x_sub.get(self.vx)
     self.vy = self.bot_y_sub.get(self.vy)
     self.vr = self.bot_r_sub.get(self.vr)
@@ -216,6 +221,7 @@ class SwerveSubsystem():
     self.setModuleStates(swerveModuleStates)
 
   def stop(self) -> None:
+    self.periodic()
     self.front_left.stop()
     self.front_right.stop()
     self.back_left.stop()
@@ -223,20 +229,6 @@ class SwerveSubsystem():
 
     if RobotConstants.isSimulation:
       self.simChassisSpeeds = None
-
-  def setX(self) -> None:
-    self.front_left.setDesiredState(
-      SwerveModuleState(0, Rotation2d.fromDegrees(-45)), True
-    )
-    self.front_right.setDesiredState(
-      SwerveModuleState(0, Rotation2d.fromDegrees(45)), True
-    )
-    self.back_left.setDesiredState(
-      SwerveModuleState(0, Rotation2d.fromDegrees(45)), True
-    )
-    self.back_right.setDesiredState(
-      SwerveModuleState(0, Rotation2d.fromDegrees(-45)), True
-    )
 
   @staticmethod
   def toSwerveModuleStatesForecast(chassisSpeeds: ChassisSpeeds):

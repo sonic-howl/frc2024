@@ -7,6 +7,8 @@ import driveteam
 import swerve.swervesubsystem
 import utils.utils
 
+from constants.RobotConstants import RobotConstants
+
 class MyRobot(wpilib.TimedRobot):
 
   drivebase = swerve.swervesubsystem.SwerveSubsystem()
@@ -43,6 +45,7 @@ class MyRobot(wpilib.TimedRobot):
     self.unjam = driveteam.unjam_command()
     self.pickup = driveteam.pickup_command()
     self.eject = driveteam.eject_command()
+    
 
   def robotInit(self):
     """
@@ -53,13 +56,31 @@ class MyRobot(wpilib.TimedRobot):
     #wpilib.cameraserver.CameraServer.launch()
     usbCam = CameraServer.startAutomaticCapture()
     usbCam.setVideoMode( VideoMode.PixelFormat.kMJPEG, 640, 480, 30 )
+
+    RobotConstants.period = self.getPeriod()
+
+  def robotPeriodic(self):
+    """
+    Periodic code for all modes should go here.
+        
+    This function is called each time a new packet is received from the driver station.
+    """
     
+  def disabledInit(self):
+    """
+    This function is called each and every time disabled is entered from another mode
+    """
+  
+  def disabledPeriodic(self):
+    # Execute commands on the subsystems to allow periodic monitoring.
+    self.drivebase.stop()
 
   def autonomousInit(self):
     """This function is run once each time the robot enters autonomous mode."""
 
   def autonomousPeriodic(self):
-    """This function is called periodically during autonomous."""
+    # TBD Autonomous commands
+    self.drivebase.stop()
 
   def teleopInit(self):
     """This function is called once each time the robot enters teleoperated mode."""
