@@ -1,10 +1,9 @@
 import wpilib
 import wpilib.deployinfo
 
-from shuffleboard import addDeployArtifacts
-
 import drivestation
 import driveteam
+from shuffleboard import addDeployArtifacts
 
 
 class MyRobot(wpilib.TimedRobot):
