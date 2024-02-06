@@ -340,10 +340,70 @@ You can also manually run unit tests using:
 
 ```bash
 # Windows
-py -3 robot.py test
+py -3 -m robot.py test
 
 # Linux
-python3 robot.py test
+python3 -m robot.py test
+```
+
+### Code Coverage
+
+To measure the code coverage of your tests, first install the `coverage` package:
+
+```bash
+# Windows
+py -3 -m pip install coverage
+
+# Linux
+python3 -m pip install coverage
 ```
 
 > See full unit testing documentation [here](https://robotpy.readthedocs.io/en/stable/guide/testing.html)
+
+#### Test Coverage
+
+To run the ‘test’ command to run unit tests, use:
+
+```bash
+# Windows
+py -3 -m robotpy coverage test
+
+# Linux
+python3 -m robotpy coverage test
+```
+
+#### Sim Coverage
+
+To run coverage over the simulator, use:
+
+```bash
+# Windows
+py -3 -m robotpy coverage sim
+
+# Linux
+python3 -m robotpy coverage sim
+```
+
+#### Coverage Report
+
+To view the report of a previous test run in the console, use:
+
+```bash
+# Windows
+py -3 -m coverage report -m
+
+# Linux
+python3 -m coverage report -m
+```
+
+---
+
+To generate the coverage report as a html file, use:
+
+```bash
+# Windows
+py -3 -m coverage html
+
+# Linux
+python3 -m coverage html
+```

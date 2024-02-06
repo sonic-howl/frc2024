@@ -1,12 +1,11 @@
 import wpilib
 import wpilib.deployinfo
 
-from shuffleboard import addDeployArtifacts
-
 import drivestation
 import driveteam
 import swerve.swervesubsystem
 import utils.utils
+from shuffleboard import addDeployArtifacts
 
 
 class MyRobot(wpilib.TimedRobot):
