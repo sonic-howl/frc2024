@@ -1,4 +1,7 @@
 import wpilib
+import wpilib.deployinfo
+
+from shuffleboard import addDeployArtifacts
 
 import drivestation
 import driveteam
@@ -48,6 +51,8 @@ class MyRobot(wpilib.TimedRobot):
     This function is called upon program startup and
     should be used for any initialization code.
     """
+    # Add the deploy artifacts to the shuffleboard
+    addDeployArtifacts()
 
   def autonomousInit(self):
     """This function is run once each time the robot enters autonomous mode."""
