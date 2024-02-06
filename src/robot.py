@@ -5,9 +5,11 @@ import driveteam
 import swerve.swervesubsystem
 import utils.utils
 
+
 class MyRobot(wpilib.TimedRobot):
   pilots = driveteam.DriveTeam()
   drivebase = swerve.swervesubsystem.SwerveSubsystem()
+
   def __init__(self):
     self.strafe = 0.0
     self.turn = 0.0
@@ -72,7 +74,6 @@ class MyRobot(wpilib.TimedRobot):
       self.drivebase.setvelocity(self.drive, self.strafe, self.turn)
     else:
       self.drivebase.stop()
-
 
   def testInit(self):
     """This function is called once each time the robot enters test mode."""
