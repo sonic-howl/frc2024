@@ -2,13 +2,11 @@ import math
 from threading import Thread
 from time import sleep
 from typing import Tuple
-from commands2 import Subsystem
 
 import wpilib
-
-import utils.utils
+from commands2 import Subsystem
 from navx import AHRS
-from wpilib import Field2d, SmartDashboard
+from wpilib import DriverStation, Field2d, SmartDashboard
 from wpimath.controller import (
   HolonomicDriveController,
   PIDController,
@@ -23,12 +21,13 @@ from wpimath.kinematics import (
 )
 from wpimath.trajectory import TrapezoidProfileRadians
 
+import utils.utils
 from constants.RobotConstants import RobotConstants
 from constants.SwerveConstants import SwerveConstants
 from swerve.SwerveModule import SwerveModule
 
 
-class SwerveSubsystem():
+class SwerveSubsystem:
   simChassisSpeeds: ChassisSpeeds | None = None
   """Meant for simulation only"""
   swerveAutoStartPose: Pose2d | None = None
@@ -72,12 +71,10 @@ class SwerveSubsystem():
   def __init__(self) -> None:
     super().__init__()
     self.field_oriented = True
-    self.gyro = (
-      AHRS(
-        wpilib.SerialPort.Port.kMXP,
-        AHRS.SerialDataType.kProcessedData,
-        int(1 / RobotConstants.period),
-      )
+    self.gyro = AHRS(
+      wpilib.SerialPort.Port.kMXP,
+      AHRS.SerialDataType.kProcessedData,
+      int(1 / RobotConstants.period),
     )
 
     def resetGyro():
@@ -149,12 +146,15 @@ class SwerveSubsystem():
     self.odometer.update(
       self.getRotation2d(),
       (
-      self.front_left.getPosition(),
-      self.front_right.getPosition(),
-      self.back_left.getPosition(),
-      self.back_right.getPosition()
-      )
+        self.front_left.getPosition(),
+        self.front_right.getPosition(),
+        self.back_left.getPosition(),
+        self.back_right.getPosition(),
+      ),
     )
+
+  def toggleFieldOriented(self):
+    self.field_oriented = not self.field_oriented
 
   def setvelocity(self, drive: float, strafe: float, rotate: float):
     self.periodic()
@@ -174,12 +174,15 @@ class SwerveSubsystem():
     # z = self.zLimiter.calculate(z)
 
     if self.field_oriented:
+      if DriverStation.getAlliance() == DriverStation.Alliance.kRed:
+        x = -x
+        y = -y
       chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-          x,
-          y,
-          z,
-          self.getRotation2d(),
-            )
+        x,
+        y,
+        z,
+        self.getRotation2d(),
+      )
     else:
       chassisSpeeds = ChassisSpeeds(
         x,
@@ -187,12 +190,10 @@ class SwerveSubsystem():
         z,
       )
 
-    #if RobotConstants.isSimulation:
-      #self.simChassisSpeeds = chassisSpeeds
+    # if RobotConstants.isSimulation:
+    # self.simChassisSpeeds = chassisSpeeds
 
-    swerveModuleStates = SwerveSubsystem.toSwerveModuleStatesForecast(
-      chassisSpeeds
-        )
+    swerveModuleStates = SwerveSubsystem.toSwerveModuleStatesForecast(chassisSpeeds)
     self.setModuleStates(swerveModuleStates)
 
   def stop(self) -> None:

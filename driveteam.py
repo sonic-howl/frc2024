@@ -50,3 +50,6 @@ class DriveTeam:
 
   def get_test_command2(self):
     return self.copilot.getAButton()
+
+  def get_view_command(self):  # swap between 3rd & first person view
+    return self.pilot.getBButtonPressed()

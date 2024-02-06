@@ -5,9 +5,11 @@ import driveteam
 import swerve.swervesubsystem
 import utils.utils
 
+
 class MyRobot(wpilib.TimedRobot):
   pilots = driveteam.DriveTeam()
   drivebase = swerve.swervesubsystem.SwerveSubsystem()
+
   def __init__(self):
     self.strafe = 0.0
     self.turn = 0.0
@@ -41,6 +43,8 @@ class MyRobot(wpilib.TimedRobot):
     self.pickup = self.pilots.get_pickup_command()
     self.eject = self.pilots.get_eject_command()
 
+    self.togglefieldoriented = self.pilots.get_view_command()
+
   def robotInit(self):
     """
     This function is called upon program startup and
@@ -67,12 +71,14 @@ class MyRobot(wpilib.TimedRobot):
     # drivestation.light_3(self.pickup)
 
     # drive base
+    if self.togglefieldoriented:
+      self.drivebase.toggleFieldOriented()
+
     magnitude = abs(self.strafe) + abs(self.drive) + abs(self.turn)
     if utils.utils.dz(magnitude) > 0:
       self.drivebase.setvelocity(self.drive, self.strafe, self.turn)
     else:
       self.drivebase.stop()
-
 
   def testInit(self):
     """This function is called once each time the robot enters test mode."""
