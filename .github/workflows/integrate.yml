@@ -48,7 +48,7 @@ jobs:
           python3 -m pip install opencv-python
       - name: Run tests
         run: |
-          python3 -m robotpy test
+          python3 -m unittest
       # Action to preview HTML files currenctly not working: https://github.com/pavi2410/html-preview-action
       # - name: Generate coverage report
       #   run: |

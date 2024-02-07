@@ -3,13 +3,19 @@ import wpilib.deployinfo
 
 import drivestation
 import driveteam
+
+import swerve.swervesubsystem
+import utils.utils
+
 from shuffleboard import addDeployArtifacts
 
 
 class MyRobot(wpilib.TimedRobot):
-  pilots = driveteam.DriveTeam()
-
   def __init__(self):
+    wpilib._wpilib.TimedRobot.__init__(self)
+
+    self.pilots = driveteam.DriveTeam()
+    self.drivebase = swerve.swervesubsystem.SwerveSubsystem()
     self.strafe = 0.0
     self.turn = 0.0
     self.drive = 0.0
@@ -24,7 +30,6 @@ class MyRobot(wpilib.TimedRobot):
     self.unjam = False
     self.pickup = 0.0
     self.eject = False
-    wpilib._wpilib.TimedRobot.__init__(self)
 
   def getInputs(self):
     self.strafe = self.pilots.get_strafe_command()
@@ -41,6 +46,8 @@ class MyRobot(wpilib.TimedRobot):
     self.unjam = self.pilots.get_unjam_command()
     self.pickup = self.pilots.get_pickup_command()
     self.eject = self.pilots.get_eject_command()
+
+    self.togglefieldoriented = self.pilots.get_view_command()
 
   def robotInit(self):
     """
@@ -64,8 +71,20 @@ class MyRobot(wpilib.TimedRobot):
     self.getInputs()
     drivestation.setDBLED("0", self.unjam)
     drivestation.setDBLED("1", self.eject)
+
+    wpilib.SmartDashboard.putString("DB/String 0", str(self.drivebase.getRotation2d()))
     # drivestation.light_2(self.fire)
     # drivestation.light_3(self.pickup)
+
+    # drive base
+    if self.togglefieldoriented:
+      self.drivebase.toggleFieldOriented()
+
+    magnitude = abs(self.strafe) + abs(self.drive) + abs(self.turn)
+    if utils.utils.dz(magnitude) > 0:
+      self.drivebase.setvelocity(self.drive, self.strafe, self.turn)
+    else:
+      self.drivebase.stop()
 
   def testInit(self):
     """This function is called once each time the robot enters test mode."""
