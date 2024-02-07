@@ -17,3 +17,6 @@ simgui*.json
 networktables.json
 
 **/.wpilib
+
+# Test Coverage
+.coverage
