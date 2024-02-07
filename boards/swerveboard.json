@@ -22,7 +22,7 @@
               "_title": "Field",
               "_glyph": 148,
               "_showGlyph": false,
-              "Game/Game": "A2023_Charged_Up",
+              "Game/Game": "k2024Crescendo",
               "Visuals/Robot Icon Size": 50.0,
               "Visuals/Show Outside Circles": false
             }
@@ -429,24 +429,7 @@
               "Visuals/Counter clockwise": true
             }
           },
-          "12,4": {
-            "size": [
-              2,
-              2
-            ],
-            "content": {
-              "_type": "Gyro",
-              "_source0": "network_table:///Swerve Dashboard/module set point angle 9",
-              "_title": "/Swerve Dashboard/module set point angle 9",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Visuals/Major tick spacing": 45.0,
-              "Visuals/Starting angle": 90.0,
-              "Visuals/Show tick mark ring": true,
-              "Visuals/Counter clockwise": true
-            }
-          },
-          "6,6": {
+          "4,0": {
             "size": [
               2,
               2
@@ -463,7 +446,7 @@
               "Visuals/Counter clockwise": true
             }
           },
-          "8,6": {
+          "6,0": {
             "size": [
               2,
               2
@@ -480,7 +463,7 @@
               "Visuals/Counter clockwise": true
             }
           },
-          "10,6": {
+          "4,2": {
             "size": [
               2,
               2
@@ -497,7 +480,7 @@
               "Visuals/Counter clockwise": true
             }
           },
-          "12,6": {
+          "6,2": {
             "size": [
               2,
               2
@@ -562,22 +545,6 @@
               "Visuals/Show value": true
             }
           },
-          "12,3": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Simple Dial",
-              "_source0": "network_table:///Swerve Dashboard/module drive speed 9",
-              "_title": "/Swerve Dashboard/module drive speed 9",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Range/Min": -10.0,
-              "Range/Max": 10.0,
-              "Visuals/Show value": true
-            }
-          },
           "2,3": {
             "size": [
               2,
@@ -616,9 +583,9 @@
     }
   ],
   "windowGeometry": {
-    "x": -7.199999809265137,
-    "y": -7.199999809265137,
-    "width": 1550.4000244140625,
-    "height": 926.4000244140625
+    "x": -8.0,
+    "y": -8.0,
+    "width": 2576.0,
+    "height": 1568.0
   }
 }

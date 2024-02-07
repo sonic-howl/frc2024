@@ -11,10 +11,11 @@ from shuffleboard import addDeployArtifacts
 
 
 class MyRobot(wpilib.TimedRobot):
-  pilots = driveteam.DriveTeam()
-  drivebase = swerve.swervesubsystem.SwerveSubsystem()
-
   def __init__(self):
+    wpilib._wpilib.TimedRobot.__init__(self)
+
+    self.pilots = driveteam.DriveTeam()
+    self.drivebase = swerve.swervesubsystem.SwerveSubsystem()
     self.strafe = 0.0
     self.turn = 0.0
     self.drive = 0.0
@@ -29,7 +30,6 @@ class MyRobot(wpilib.TimedRobot):
     self.unjam = False
     self.pickup = 0.0
     self.eject = False
-    wpilib._wpilib.TimedRobot.__init__(self)
 
   def getInputs(self):
     self.strafe = self.pilots.get_strafe_command()

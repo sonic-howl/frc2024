@@ -4,14 +4,9 @@ from time import sleep
 from typing import Tuple
 
 import wpilib
-from commands2 import Subsystem
 from navx import AHRS
 from wpilib import DriverStation, Field2d, SmartDashboard
-from wpimath.controller import (
-  HolonomicDriveController,
-  PIDController,
-  ProfiledPIDControllerRadians,
-)
+from wpimath.controller import ProfiledPIDControllerRadians
 from wpimath.geometry import Pose2d, Rotation2d
 from wpimath.kinematics import (
   ChassisSpeeds,
@@ -32,49 +27,44 @@ class SwerveSubsystem:
   """Meant for simulation only"""
   swerveAutoStartPose: Pose2d | None = None
   """Meant for simulation only"""
-  front_left = SwerveModule(
-    SwerveConstants.fl_drive_id,
-    SwerveConstants.fl_turn_id,
-    abs_encoder_offset_rad=SwerveConstants.fl_abs_encoder_offset_rad,
-    chassis_angular_offset=SwerveConstants.fl_chassis_angular_offset,
-  )
-  front_right = SwerveModule(
-    SwerveConstants.fr_drive_id,
-    SwerveConstants.fr_turn_id,
-    abs_encoder_offset_rad=SwerveConstants.fr_abs_encoder_offset_rad,
-    chassis_angular_offset=SwerveConstants.fr_chassis_angular_offset,
-  )
-  back_left = SwerveModule(
-    SwerveConstants.bl_drive_id,
-    SwerveConstants.bl_turn_id,
-    abs_encoder_offset_rad=SwerveConstants.bl_abs_encoder_offset_rad,
-    chassis_angular_offset=SwerveConstants.bl_chassis_angular_offset,
-  )
-  back_right = SwerveModule(
-    SwerveConstants.br_drive_id,
-    SwerveConstants.br_turn_id,
-    abs_encoder_offset_rad=SwerveConstants.br_abs_encoder_offset_rad,
-    chassis_angular_offset=SwerveConstants.br_chassis_angular_offset,
-  )
-
-  odometer = SwerveDrive4Odometry(
-    SwerveConstants.kDriveKinematics,
-    Rotation2d(),
-    (
-      front_left.getPosition(),
-      front_right.getPosition(),
-      back_left.getPosition(),
-      back_right.getPosition(),
-    ),
-  )
 
   def __init__(self) -> None:
-    super().__init__()
     self.field_oriented = True
     self.gyro = AHRS(
       wpilib.SerialPort.Port.kMXP,
       AHRS.SerialDataType.kProcessedData,
       int(1 / RobotConstants.period),
+    )
+    self.front_left = SwerveModule(
+      SwerveConstants.fl_drive_id,
+      SwerveConstants.fl_turn_id,
+      chassis_angular_offset=SwerveConstants.fl_chassis_angular_offset,
+    )
+    self.front_right = SwerveModule(
+      SwerveConstants.fr_drive_id,
+      SwerveConstants.fr_turn_id,
+      chassis_angular_offset=SwerveConstants.fr_chassis_angular_offset,
+    )
+    self.back_left = SwerveModule(
+      SwerveConstants.bl_drive_id,
+      SwerveConstants.bl_turn_id,
+      chassis_angular_offset=SwerveConstants.bl_chassis_angular_offset,
+    )
+    self.back_right = SwerveModule(
+      SwerveConstants.br_drive_id,
+      SwerveConstants.br_turn_id,
+      chassis_angular_offset=SwerveConstants.br_chassis_angular_offset,
+    )
+
+    self.odometer = SwerveDrive4Odometry(
+      SwerveConstants.kDriveKinematics,
+      Rotation2d(),
+      (
+        self.front_left.getPosition(),
+        self.front_right.getPosition(),
+        self.back_left.getPosition(),
+        self.back_right.getPosition(),
+      ),
     )
 
     def resetGyro():
@@ -204,20 +194,6 @@ class SwerveSubsystem:
 
     if RobotConstants.isSimulation:
       self.simChassisSpeeds = None
-
-  def setX(self) -> None:
-    self.front_left.setDesiredState(
-      SwerveModuleState(0, Rotation2d.fromDegrees(45)), True
-    )
-    self.front_right.setDesiredState(
-      SwerveModuleState(0, Rotation2d.fromDegrees(-45)), True
-    )
-    self.back_left.setDesiredState(
-      SwerveModuleState(0, Rotation2d.fromDegrees(-45)), True
-    )
-    self.back_right.setDesiredState(
-      SwerveModuleState(0, Rotation2d.fromDegrees(45)), True
-    )
 
   @staticmethod
   def toSwerveModuleStatesForecast(chassisSpeeds: ChassisSpeeds):
