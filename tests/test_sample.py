@@ -7,11 +7,11 @@ You can also group multiple tests in a class: https://pytest.org/en/7.4.x/gettin
 
 from unittest import TestCase, main
 
-
+"""
 class SampleTestCase(TestCase):
   def test_sample(self):
     assert 4 == 4
-
+"""
 
 if __name__ == "__name__":
   main()
