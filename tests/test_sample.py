@@ -5,7 +5,7 @@ The test file must be in the tests directory.
 You can also group multiple tests in a class: https://pytest.org/en/7.4.x/getting-started.html#group-multiple-tests-in-a-class
 """
 
-from unittest import TestCase, main
+from unittest import main #, TestCase
 
 """
 class SampleTestCase(TestCase):
