@@ -39,6 +39,7 @@ jobs:
           python -m pip install --upgrade pip
           python3 -m pip install robotpy
       - name: Sync robotpy
+        working-directory: ./src
         run: |
           python3 -m robotpy sync
       - name: Install dependencies
@@ -47,9 +48,11 @@ jobs:
           python3 -m pip install coverage
           python3 -m pip install opencv-python
       - name: Run tests
+        working-directory: ./src
         run: |
           python3 -m unittest
-      # Action to preview HTML files currenctly not working: https://github.com/pavi2410/html-preview-action
+
+      # BUG: Action to preview HTML files currenctly not working: https://github.com/pavi2410/html-preview-action
       # - name: Generate coverage report
       #   run: |
       #     python3 -m robotpy coverage test
