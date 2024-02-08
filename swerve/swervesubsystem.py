@@ -1,12 +1,7 @@
 import math
-from threading import Thread
-from time import sleep
 from typing import Tuple
-from commands2 import Subsystem
 
 import wpilib
-import ntcore
-from constants.ntconstants import VisionBoard
 
 import utils.utils
 from navx import AHRS
@@ -35,44 +30,39 @@ class SwerveSubsystem():
   """Meant for simulation only"""
   swerveAutoStartPose: Pose2d | None = None
   """Meant for simulation only"""
-  front_left = SwerveModule(
-    SwerveConstants.fl_drive_id,
-    SwerveConstants.fl_turn_id,
-    abs_encoder_offset_rad=SwerveConstants.fl_abs_encoder_offset_rad,
-    chassis_angular_offset=SwerveConstants.fl_chassis_angular_offset,
-  )
-  front_right = SwerveModule(
-    SwerveConstants.fr_drive_id,
-    SwerveConstants.fr_turn_id,
-    abs_encoder_offset_rad=SwerveConstants.fr_abs_encoder_offset_rad,
-    chassis_angular_offset=SwerveConstants.fr_chassis_angular_offset,
-  )
-  back_left = SwerveModule(
-    SwerveConstants.bl_drive_id,
-    SwerveConstants.bl_turn_id,
-    abs_encoder_offset_rad=SwerveConstants.bl_abs_encoder_offset_rad,
-    chassis_angular_offset=SwerveConstants.bl_chassis_angular_offset,
-  )
-  back_right = SwerveModule(
-    SwerveConstants.br_drive_id,
-    SwerveConstants.br_turn_id,
-    abs_encoder_offset_rad=SwerveConstants.br_abs_encoder_offset_rad,
-    chassis_angular_offset=SwerveConstants.br_chassis_angular_offset,
-  )
-
-  odometer = SwerveDrive4Odometry(
-    SwerveConstants.kDriveKinematics,
-    Rotation2d(),
-    (
-      front_left.getPosition(),
-      front_right.getPosition(),
-      back_left.getPosition(),
-      back_right.getPosition(),
-    ),
-  )
 
   def __init__(self) -> None:
-    super().__init__()
+    self.front_left = SwerveModule(
+      SwerveConstants.fl_drive_id,
+      SwerveConstants.fl_turn_id,
+      chassis_angular_offset=SwerveConstants.fl_chassis_angular_offset,
+    )
+    self.front_right = SwerveModule(
+      SwerveConstants.fr_drive_id,
+      SwerveConstants.fr_turn_id,
+      chassis_angular_offset=SwerveConstants.fr_chassis_angular_offset,
+    )
+    self.back_left = SwerveModule(
+      SwerveConstants.bl_drive_id,
+      SwerveConstants.bl_turn_id,
+      chassis_angular_offset=SwerveConstants.bl_chassis_angular_offset,
+    )
+    self.back_right = SwerveModule(
+      SwerveConstants.br_drive_id,
+      SwerveConstants.br_turn_id,
+      chassis_angular_offset=SwerveConstants.br_chassis_angular_offset,
+    )
+
+    self.odometer = SwerveDrive4Odometry(
+      SwerveConstants.kDriveKinematics,
+      Rotation2d(),
+      (
+        self.front_left.getPosition(),
+        self.front_right.getPosition(),
+        self.back_left.getPosition(),
+        self.back_right.getPosition(),
+      ),
+    )
     self.field_oriented = True
     self.gyro = (
       AHRS(
@@ -99,17 +89,6 @@ class SwerveSubsystem():
     self.cv_pose = self.field.getObject( "CV Pose" )
     SmartDashboard.putData("Field", self.field)
     
-    self.network_table = ntcore.NetworkTableInstance.getDefault()
-    self.vision_table = self.network_table.getTable( VisionBoard.name )
-    self.bot_x_sub = self.vision_table.getFloatTopic( VisionBoard.bot_x_pose ).subscribe( 0.0 )
-    self.bot_y_sub = self.vision_table.getFloatTopic( VisionBoard.bot_y_pose ).subscribe( 0.0 )
-    self.bot_r_sub = self.vision_table.getFloatTopic( VisionBoard.bot_r_pose ).subscribe( 0.0 )
-
-    # pose info from vision processing
-    self.vx = 0.0
-    self.vy = 0.0
-    self.vr = 0.0
-
     self.gyro_calibrated = False
     
 
@@ -143,11 +122,11 @@ class SwerveSubsystem():
   def resetOdometer(self, pose: Pose2d = Pose2d()):
     self.odometer.resetPosition(
       self.getRotation2d(),
-      pose,
-      self.front_left.getPosition(),
+      [self.front_left.getPosition(),
       self.front_right.getPosition(),
       self.back_left.getPosition(),
-      self.back_right.getPosition(),
+      self.back_right.getPosition()],
+      pose
     )
 
   def periodic(self) -> None:
@@ -162,14 +141,8 @@ class SwerveSubsystem():
       self.gyro_calibrated = True
     # TODO print gyro angle, robot pose on dashboard
 
-    # This should be collected by the robot for more elaborate context checking
-    self.vx = self.bot_x_sub.get(self.vx)
-    self.vy = self.bot_y_sub.get(self.vy)
-    self.vr = self.bot_r_sub.get(self.vr)
-
-    #self.cv_pose.setPose( Pose2d( self.vx, self.vy, self.vr ) )
-    self.field.setRobotPose( Pose2d( self.vx, self.vy, self.vr ) )
-    #self.field.setRobotPose(self.getPose())
+    #self.field.setRobotPose( Pose2d( self.vx, self.vy, self.vr ) )
+    self.field.setRobotPose(self.getPose())
 
     self.odometer.update(
       self.getRotation2d(),

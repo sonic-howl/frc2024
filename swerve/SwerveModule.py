@@ -24,7 +24,6 @@ class SwerveModule:
     self,
     drive_motor_id: int,
     turn_motor_id: int,
-    abs_encoder_offset_rad=0.0,
     chassis_angular_offset=0.0,
     abs_encoder_reversed=True,
     turn_motor_reversed=False,
@@ -32,7 +31,6 @@ class SwerveModule:
     self.chassis_angular_offset = chassis_angular_offset
 
     # set angle offset
-    self.abs_encoder_offset_rad = abs_encoder_offset_rad % (math.pi * 2)
     self.abs_encoder_reversed = abs_encoder_reversed
 
     self.turn_motor_id = turn_motor_id
@@ -87,7 +85,6 @@ class SwerveModule:
       (math.pi * 2) / 60
     )  # radians per second
     self.turn_encoder.setInverted(abs_encoder_reversed)
-    self.turn_encoder.setZeroOffset(abs_encoder_offset_rad)
 
     # We are not using the built in PID controller, but this is where the config would go...
     # self. #...

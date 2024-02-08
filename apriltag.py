@@ -7,15 +7,14 @@ import robotpy_apriltag
 import math
 import wpimath.geometry
 
-from constants.ntconstants import VisionBoard
+from constants.ntconstants import VisionTable
 
 # Allows us to report back to robot
 from ntcore import NetworkTableInstance
 network_table_instance = NetworkTableInstance.getDefault()
-vision_dashboard = network_table_instance.getTable( VisionBoard.name )
-bot_x_pub = vision_dashboard.getFloatTopic( VisionBoard.bot_x_pose ).publish()
-bot_y_pub = vision_dashboard.getFloatTopic( VisionBoard.bot_y_pose ).publish()
-bot_r_pub = vision_dashboard.getFloatTopic( VisionBoard.bot_r_pose ).publish()
+vision_dashboard = network_table_instance.getTable( VisionTable.name )
+bot_pose_pub = vision_dashboard.getFloatArrayTopic( VisionTable.bot_pose ).publish()
+tag_pose_pub = vision_dashboard.getFloatArrayTopic( VisionTable.tag_pose ).publish()
 
 field  = robotpy_apriltag.loadAprilTagLayoutField(robotpy_apriltag.AprilTagField.k2024Crescendo)
 rot000 = wpimath.geometry.Rotation3d( 0.0, 0.0,      0.0 )   #   0 degree rotation in xy plane
@@ -75,59 +74,39 @@ def draw_tag( result ):
 def process_apriltag(estimator, tag):
     tag_id = tag.getId()
     center = tag.getCenter()
-    hamming = tag.getHamming()
-    decision_margin = tag.getDecisionMargin()
-    #print("Hamming for {} is {} with decision margin {}".format(tag_id, hamming, decision_margin))
 
     est = estimator.estimateOrthogonalIteration(tag, 50)
 
     # Get pose in field coordinates
     field_pose = field.getTagPose( tag_id )
-    #print( f"tag  {tag_id} {field_pose}")
-    correction = wpimath.geometry.Transform3d( wpimath.geometry.Translation3d( 0.0, 0.0, 0.0), rot180 ) # Apriltag defines orientation into tag, field out of
+    # Apriltag defines orientation into tag, field out of so rotating 180 degrees
+    correction = wpimath.geometry.Transform3d( wpimath.geometry.Translation3d( 0.0, 0.0, 0.0), rot180 ) 
     field_pose = field_pose.transformBy( correction )
-    #print( f"tag' {tag_id} {field_pose}")
-
-    #if est.getAmbiguity()<0.2:
-    #print( est.getAmbiguity() )
-    #print( f"p1: {est.pose1}")
-    #print (f"p2: {est.pose2}")
 
     # Filter out zero poses that apriltag library can return due to errors
     if est.pose1.translation().Z()>0.01:
       tag_pose = est.pose1
-      #print( f"p1 {tag_pose}")
       # Disambiguate pose, choose closest to vertical (TBD adjust for camera elevation).
       if est.pose2.translation().Z()>0.01 and abs(est.pose2.rotation().X())<abs(est.pose1.rotation().X()):
         tag_pose = est.pose2
-        #print( f"p2 {tag_pose}")
 
       # Get 1st camera position
-      # 1) Convert pose estimate from camera coordinates frame to robot coordinate frame
+      # 1) Convert pose estimate transform from camera coordinates frame to robot coordinate frame
       # 2) Create pose for camera position, transform to tag position
+      # 3) Reset the origin at the tag
+      # 4) Apply a rigid body transform (using the defined tag pose on the field) to compute robot pose on the field 
       T1 = wpimath.geometry.CoordinateSystem.convert( tag_pose, wpimath.geometry.CoordinateSystem.EDN(), wpimath.geometry.CoordinateSystem.NWU() )
-      #print( f"T1: {T1}")
       bc = wpimath.geometry.Pose3d()
       bt = bc.transformBy(T1)
-      #print( f"bc: {bc}" )
-      #print( f"bt: {bt}" )
       # TBD can correct for camera position and orientation here and generate bb, the bot frame center
-      # Reset origin at tag
       bc = bc.relativeTo(bt)
       bt = bt.relativeTo(bt)
-      #print( f"bc: {bc}" )
-      #print( f"bt: {bt}" )
       fc = bc.rotateBy( field_pose.rotation() )
-      #print( f"fc: {fc}" )
       fc = wpimath.geometry.Pose3d( fc.translation()+field_pose.translation(), fc.rotation() )
-      #print( f"fc: {fc}" )
+      # Publish bot pose (should be done on detection for time stamping)
       global bot_pose
       bot_pose = fc.toPose2d()
-      #print( f"pb: {bot_pose}" )
-      # Publish bot pose (should be done on detection for time stamping)
-      bot_x_pub.set( bot_pose.translation().X() )
-      bot_y_pub.set( bot_pose.translation().Y() )
-      bot_r_pub.set( bot_pose.rotation().radians() )
+      bot_pose_pub.set( [bot_pose.translation().X(), bot_pose.translation().Y(), bot_pose.rotation().radians()] )
       
     else:
       # Discarded both poses
@@ -211,9 +190,7 @@ def cleanup_capture(capture):
     capture.release()
     cv2.destroyAllWindows()
     # Stop publishing to network tables
-    bot_x_pub.close()
-    bot_y_pub.close()
-    bot_r_pub.close()
+    bot_pose_pub.close()
 
 # Main function:
 # Initializes capture & display window, initializes Apriltag detection, shows capture, cleans up

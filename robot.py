@@ -1,4 +1,6 @@
+import ntcore
 import wpilib
+import wpimath
 from cscore import CameraServer
 from cscore import VideoMode
 
@@ -8,10 +10,9 @@ import swerve.swervesubsystem
 import utils.utils
 
 from constants.RobotConstants import RobotConstants
+from constants.ntconstants import VisionTable
 
 class MyRobot(wpilib.TimedRobot):
-
-  drivebase = swerve.swervesubsystem.SwerveSubsystem()
 
   def __init__(self):
     self.strafe = 0.0
@@ -28,6 +29,14 @@ class MyRobot(wpilib.TimedRobot):
     self.unjam = False
     self.pickup = 0.0
     self.eject = False
+
+    # pose info from computer vision
+    self.vx = 0.0
+    self.vy = 0.0
+    self.vr = 0.0
+    self.ts = 0
+    self.vision_pose = ntcore.TimestampedFloat()
+
     wpilib._wpilib.TimedRobot.__init__(self)
 
   def getInputs(self):
@@ -45,7 +54,7 @@ class MyRobot(wpilib.TimedRobot):
     self.unjam = driveteam.unjam_command()
     self.pickup = driveteam.pickup_command()
     self.eject = driveteam.eject_command()
-    
+
 
   def robotInit(self):
     """
@@ -59,12 +68,34 @@ class MyRobot(wpilib.TimedRobot):
 
     RobotConstants.period = self.getPeriod()
 
+    # Set up network tables
+    self.network_table = ntcore.NetworkTableInstance.getDefault()
+    self.vision_table = self.network_table.getTable( VisionTable.name )
+    self.bot_pose_sub = self.vision_table.getFloatArrayTopic( VisionTable.bot_pose ).subscribe( [0.0, 0.0, 0.0] )
+
+    self.drivebase = swerve.swervesubsystem.SwerveSubsystem()
+
   def robotPeriodic(self):
     """
     Periodic code for all modes should go here.
         
     This function is called each time a new packet is received from the driver station.
     """
+    # Check on network tables 
+    # Location from computer vision, perform sanity check 
+    self.vision_pose = self.bot_pose_sub.getAtomic()
+
+    # Check if new pose was published
+    if self.vision_pose.time != self.ts:
+
+      # TBD run additional checks for movement and range, possibly average out the pose
+      self.vx = self.vision_pose.value[0]
+      self.vy = self.vision_pose.value[1]
+      self.vr = self.vision_pose.value[2]
+
+      self.drivebase.resetOdometer( wpimath.geometry.Pose2d( self.vx, self.vy, self.vr ) )
+
+      self.ts = self.vision_pose.time
     
   def disabledInit(self):
     """

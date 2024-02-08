@@ -17,8 +17,8 @@ class RobotConstants:
   pilot_controller_id = 0
   operator_controller_id = 1
 
-  frame_width = 27
-  frame_length = 26
+  frame_width = 25
+  frame_length = 34.5
 
   light_strip_pwm_port = 1
 
