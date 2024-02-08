@@ -85,7 +85,7 @@ class SwerveModule:
       (math.pi * 2) / 60
     )  # radians per second
     self.turn_encoder.setInverted(abs_encoder_reversed)
-  
+
     # We are not using the built in PID controller, but this is where the config would go...
     # self. #...
     self.turn_pid = self.turn_motor.getPIDController()
