@@ -3,10 +3,9 @@ import wpilib.deployinfo
 
 import drivestation
 import driveteam
-
+import launcher
 import swerve.swervesubsystem
 import utils.utils
-
 from shuffleboard import addDeployArtifacts
 
 
@@ -16,6 +15,8 @@ class MyRobot(wpilib.TimedRobot):
 
     self.pilots = driveteam.DriveTeam()
     self.drivebase = swerve.swervesubsystem.SwerveSubsystem()
+    self.launcher = launcher.Launchers()
+
     self.strafe = 0.0
     self.turn = 0.0
     self.drive = 0.0
@@ -85,6 +86,11 @@ class MyRobot(wpilib.TimedRobot):
       self.drivebase.setvelocity(self.drive, self.strafe, self.turn)
     else:
       self.drivebase.stop()
+
+    if self.unjam:
+      self.launcher.unjams()
+    else:
+      self.launcher.shoot(self.fire)
 
   def testInit(self):
     """This function is called once each time the robot enters test mode."""
