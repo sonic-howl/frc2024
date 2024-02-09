@@ -124,12 +124,18 @@ def detect_and_process_apriltag( detector, estimator ):
     tag_info = detector.detect(gray)
     DETECTION_MARGIN_THRESHOLD = 100
     filter_tags = [tag for tag in tag_info if tag.getDecisionMargin() > DETECTION_MARGIN_THRESHOLD]
-    results = [ process_apriltag(estimator, tag) for tag in filter_tags ]
+    #results = [ process_apriltag(estimator, tag) for tag in filter_tags ]
+    best_tag_id = 0
+    for tag in filter_tags:
+      result = process_apriltag( estimator, tag )
+      if result[0]>0: # Screen for tags that had no useful poses
+        if best_tag_id==0 or result[1].translation().norm()<best_result[1].translation().norm(): # Pick closest tag if there are multiple choices
+          best_tag_id = result[0]
+          best_result = result
+          draw_tag( best_result )
     # Note that results will be empty if no apriltag is detected
-    for result in results:
-    #    print( f"Tag: {result[0]}, Pose: {result[1]}" ) 
-      draw_tag( result )
-    #print("...")
+    #for result in results:
+    #  draw_tag( result )
 
 # Code relating to Webcam capture 
 
