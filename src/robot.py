@@ -87,8 +87,11 @@ class MyRobot(wpilib.TimedRobot):
     else:
       self.drivebase.stop()
 
+    # launcher
     if self.unjam:
       self.launcher.unjams()
+    elif abs(self.aim) >= 0.05:
+      self.launcher.elevate(self.aim)
     else:
       self.launcher.shoot(self.fire)
 

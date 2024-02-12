@@ -3,9 +3,11 @@ import rev
 
 class Launchers:
   def __init__(self):
-    self.motor1 = self.rev.CANSparkMax(1, rev.CANSparkLowLevel.MotorType.kBrushless)
+    self.motor1 = rev.CANSparkMax(1, rev.CANSparkLowLevel.MotorType.kBrushless)
 
-    self.motor2 = self.rev.CANSparkMax(2, rev.CANSparkLowLevel.MotorType.kBrushless)
+    self.motor2 = rev.CANSparkMax(2, rev.CANSparkLowLevel.MotorType.kBrushless)
+
+    self.elevator = rev.CANSparkMax(10, rev.CANSparkLowLevel.MotorType.kBrushless)
 
     self.encoder1 = self.motor1.getEncoder()
 
@@ -14,6 +16,7 @@ class Launchers:
   def stop(self):
     self.motor1.set(0.0)
     self.motor2.set(0.0)
+    self.elevator.set(0.0)
 
   def shoot(self, fire: float):
     if fire <= 0.05:
@@ -33,5 +36,8 @@ class Launchers:
     self.motor1.set(0.51)
     self.motor2.set(-0.51)
 
-  def elevate(elevate: float):
-    pass
+  def elevate(self, elevate: float):
+    if abs(elevate) <= 0.05:
+      self.stop()
+    else:
+      self.elevator.set(elevate)

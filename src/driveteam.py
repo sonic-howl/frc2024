@@ -30,19 +30,19 @@ class DriveTeam:
   def get_hook_right_command(self):
     return self.pilot.getPOV() == 180
 
-  def get_aim_command(self):  # raise/lower shooter
+  def get_aim_command(self) -> float:  # raise/lower shooter
     return self.copilot.getLeftY()
 
-  def get_firing_command(self):  # shoot shooter
+  def get_firing_command(self) -> float:  # shoot shooter
     return self.copilot.getLeftTriggerAxis()
 
-  def get_unjam_command(self):  # unjam shooter
+  def get_unjam_command(self) -> bool:  # unjam shooter
     return self.copilot.getLeftBumper()
 
-  def get_pickup_command(self):  # used to pickup rings
+  def get_pickup_command(self) -> float:  # used to pickup rings
     return self.copilot.getRightTriggerAxis()
 
-  def get_eject_command(self):  # eject stuck note
+  def get_eject_command(self) -> bool:  # eject stuck note
     return self.copilot.getRightBumper()
 
   def get_test_command(self):
@@ -51,5 +51,5 @@ class DriveTeam:
   def get_test_command2(self):
     return self.copilot.getAButton()
 
-  def get_view_command(self):  # swap between 3rd & first person view
+  def get_view_command(self) -> bool:  # swap between 3rd & first person view
     return self.pilot.getBButtonPressed()
