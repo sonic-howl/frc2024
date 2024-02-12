@@ -77,37 +77,12 @@ def process_apriltag(estimator, tag):
 
     est = estimator.estimateOrthogonalIteration(tag, 50)
 
-    # Get pose in field coordinates
-    field_pose = field.getTagPose( tag_id )
-    # Apriltag defines orientation into tag, field out of so rotating 180 degrees
-    correction = wpimath.geometry.Transform3d( wpimath.geometry.Translation3d( 0.0, 0.0, 0.0), rot180 ) 
-    field_pose = field_pose.transformBy( correction )
-
     # Filter out zero poses that apriltag library can return due to errors
     if est.pose1.translation().Z()>0.01:
       tag_pose = est.pose1
       # Disambiguate pose, choose closest to vertical (TBD adjust for camera elevation).
       if est.pose2.translation().Z()>0.01 and abs(est.pose2.rotation().X())<abs(est.pose1.rotation().X()):
         tag_pose = est.pose2
-
-      # Get 1st camera position
-      # 1) Convert pose estimate transform from camera coordinates frame to robot coordinate frame
-      # 2) Create pose for camera position, transform to tag position
-      # 3) Reset the origin at the tag
-      # 4) Apply a rigid body transform (using the defined tag pose on the field) to compute robot pose on the field 
-      T1 = wpimath.geometry.CoordinateSystem.convert( tag_pose, wpimath.geometry.CoordinateSystem.EDN(), wpimath.geometry.CoordinateSystem.NWU() )
-      bc = wpimath.geometry.Pose3d()
-      bt = bc.transformBy(T1)
-      # TBD can correct for camera position and orientation here and generate bb, the bot frame center
-      bc = bc.relativeTo(bt)
-      bt = bt.relativeTo(bt)
-      fc = bc.rotateBy( field_pose.rotation() )
-      fc = wpimath.geometry.Pose3d( fc.translation()+field_pose.translation(), fc.rotation() )
-      # Publish bot pose (should be done on detection for time stamping)
-      global bot_pose
-      bot_pose = fc.toPose2d()
-      bot_pose_pub.set( [bot_pose.translation().X(), bot_pose.translation().Y(), bot_pose.rotation().radians()] )
-      
     else:
       # Discarded both poses
       tag_id = 0  
@@ -132,10 +107,37 @@ def detect_and_process_apriltag( detector, estimator ):
         if best_tag_id==0 or result[1].translation().norm()<best_result[1].translation().norm(): # Pick closest tag if there are multiple choices
           best_tag_id = result[0]
           best_result = result
-          draw_tag( best_result )
-    # Note that results will be empty if no apriltag is detected
-    #for result in results:
-    #  draw_tag( result )
+
+    if best_tag_id>0:
+      # Compute robot pose for the preferred tag
+
+      # Get pose in field coordinates
+      field_pose = field.getTagPose( best_tag_id )
+      # Apriltag defines orientation into tag, field out of so rotating 180 degrees
+      correction = wpimath.geometry.Transform3d( wpimath.geometry.Translation3d( 0.0, 0.0, 0.0), rot180 ) 
+      field_pose = field_pose.transformBy( correction )
+
+      # Get camera position
+      # 1) Convert pose estimate transform from camera coordinates frame to robot coordinate frame
+      # 2) Create pose at origin for camera position, transform to get tag position
+      # 3) Reset the origin at the tag
+      # 4) Apply a rigid body transform (using the defined tag pose on the field) to compute robot pose on the field 
+      tag_pose = best_result[1]
+      T1 = wpimath.geometry.CoordinateSystem.convert( tag_pose, wpimath.geometry.CoordinateSystem.EDN(), wpimath.geometry.CoordinateSystem.NWU() )
+      bc = wpimath.geometry.Pose3d()
+      bt = bc.transformBy(T1)
+      # TBD can correct for camera position and orientation here and generate bb, the bot frame center
+      bc = bc.relativeTo(bt)
+      bt = bt.relativeTo(bt)
+      fc = bc.rotateBy( field_pose.rotation() )
+      fc = wpimath.geometry.Pose3d( fc.translation()+field_pose.translation(), fc.rotation() )
+      # Publish bot pose (should be done on detection for time stamping)
+      global bot_pose
+      bot_pose = fc.toPose2d()
+      bot_pose_pub.set( [bot_pose.translation().X(), bot_pose.translation().Y(), bot_pose.rotation().radians()] )
+      
+      draw_tag( best_result )
+
 
 # Code relating to Webcam capture 
 
