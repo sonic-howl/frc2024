@@ -40,7 +40,6 @@ class SwerveConstants:
   br_chassis_angular_offset = math.pi / 2
 
   kPTurning = 1
-  # kPTurning = 0.4
   kITurning = 0
   kDTurning = 0
 
@@ -63,19 +62,16 @@ class SwerveConstants:
 
   kWheelDiameterMeters = 3 / inches_to_meters
   kWheelCircumferenceMeters = kWheelDiameterMeters * math.pi
-  # kWheelRotationsPerMeter = 1 / kWheelCircumference
+  kDriveWheelFreeSpeedRps = (
+    FalconConstants.kMotorFreeSpeedRPM * kWheelCircumferenceMeters
+  ) / kDrivingMotorReduction
+
   kEncoderPulsesPerRevolution = (
     kDrivingMotorReduction * FalconConstants.kUnitsPerRotation
   )  # manually measured as 10532
   kEncoderPositionPerMeter = kEncoderPulsesPerRevolution / kWheelCircumferenceMeters
 
-  # print("kEncoderPositionPerMeter", kEncoderPositionPerMeter)
-
-  kDriveWheelFreeSpeedRps = (
-    FalconConstants.kMotorFreeSpeedRPM * kWheelCircumferenceMeters
-  ) / kDrivingMotorReduction
-
-  # print("kDriveWheelFreeSpeedRps", kDriveWheelFreeSpeedRps)
+  ## For potential use for movement to pose ##
 
   # kDrivingEncoderPositionFactor = (
   #     kWheelCircumferenceMeters

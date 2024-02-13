@@ -52,4 +52,4 @@ class DriveTeam:
     return self.copilot.getAButton()
 
   def get_view_command(self) -> bool:  # swap between 3rd & first person view
-    return self.pilot.getBButtonPressed()
+    return self.pilot.getBackButtonPressed()

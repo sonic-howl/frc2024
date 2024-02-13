@@ -2,7 +2,6 @@ from enum import Enum
 
 
 class RobotConstants:
-  # !
   maxSpeed = 1
   scale_speed = 1
   rotationScale = 0.5
