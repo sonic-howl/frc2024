@@ -1,5 +1,8 @@
+import math
+
 import wpilib
 import wpilib.deployinfo
+import wpimath.geometry
 
 import drivestation
 import driveteam
@@ -55,8 +58,85 @@ class MyRobot(wpilib.TimedRobot):
     This function is called upon program startup and
     should be used for any initialization code.
     """
+    # Sendable Chooser
+    self.defaultAuto = "Default Auto"
+    self.blueLeft = "Blue Left"
+    self.blueMiddle = "Blue Middle"
+    self.blueRight = "Blue Right"
+    self.redRight = "Red Right"
+    self.redMiddle = "Red Middle"
+    self.redLeft = "Red Left"
+
+    self.chooser = wpilib.SendableChooser()
+
+    self.chooser.setDefaultOption("Default Auto", self.defaultAuto)
+    self.chooser.addOption("Blue Left", self.blueLeft)
+    self.chooser.addOption("Blue Middle", self.blueMiddle)
+    self.chooser.addOption("Blue Right", self.blueRight)
+    self.chooser.addOption("Red Right", self.redRight)
+    self.chooser.addOption("Red Middle", self.redMiddle)
+    self.chooser.addOption("Red Left", self.redLeft)
+    wpilib.SmartDashboard.putData("Auto choices", self.chooser)
+
     # Add the deploy artifacts to the shuffleboard
     addDeployArtifacts()
+
+  def disabledPeriodic(self):
+    # Sendable Chooser
+    self.autoSelected = self.chooser.getSelected()
+
+    inchToM = 39.73  # Inches to metres (x / inchToM)
+
+    match self.autoSelected:
+      case self.blueLeft:
+        kX = 72.5
+        kY = 275.42
+        kRotation = math.pi
+        self.drivebase.resetOdometer(
+          wpimath.geometry.Pose2d(kX / inchToM, kY / inchToM, kRotation)
+        )
+      case self.blueMiddle:
+        kX = 72.5
+        kY = 218.42
+        kRotation = math.pi
+        self.drivebase.resetOdometer(
+          wpimath.geometry.Pose2d(kX / inchToM, kY / inchToM, kRotation)
+        )
+      case self.blueRight:
+        kX = 72.5
+        kY = 161.42
+        kRotation = math.pi
+        self.drivebase.resetOdometer(
+          wpimath.geometry.Pose2d(kX / inchToM, kY / inchToM, kRotation)
+        )
+      case self.redRight:
+        kX = 578.77
+        kY = 275.42
+        kRotation = 0
+        self.drivebase.resetOdometer(
+          wpimath.geometry.Pose2d(kX / inchToM, kY / inchToM, kRotation)
+        )
+      case self.redMiddle:
+        kX = 578.77
+        kY = 218.42
+        kRotation = 0
+        self.drivebase.resetOdometer(
+          wpimath.geometry.Pose2d(kX / inchToM, kY / inchToM, kRotation)
+        )
+      case self.redLeft:
+        kX = 578.77
+        kY = 161.42
+        kRotation = 0
+        self.drivebase.resetOdometer(
+          wpimath.geometry.Pose2d(kX / inchToM, kY / inchToM, kRotation)
+        )
+      case _:
+        kX = 0
+        kY = 0
+        kRotation = 0
+        self.drivebase.resetOdometer(
+          wpimath.geometry.Pose2d(kX / inchToM, kY / inchToM, kRotation)
+        )
 
   def autonomousInit(self):
     """This function is run once each time the robot enters autonomous mode."""

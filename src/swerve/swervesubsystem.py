@@ -120,18 +120,19 @@ class SwerveSubsystem:
   def resetOdometer(self, pose: Pose2d = Pose2d()):
     self.odometer.resetPosition(
       self.getRotation2d(),
+      [
+        self.front_left.getPosition(),
+        self.front_right.getPosition(),
+        self.back_left.getPosition(),
+        self.back_right.getPosition(),
+      ],
       pose,
-      self.front_left.getPosition(),
-      self.front_right.getPosition(),
-      self.back_left.getPosition(),
-      self.back_right.getPosition(),
     )
 
   def periodic(self) -> None:
     # TODO print gyro angle, robot pose on dashboard
 
-    if not RobotConstants.isSimulation:
-      self.field.setRobotPose(self.getPose())
+    self.field.setRobotPose(self.getPose())
 
     self.odometer.update(
       self.getRotation2d(),
