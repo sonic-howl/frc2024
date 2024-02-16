@@ -1,13 +1,12 @@
 import wpilib
-import wpilib.cameraserver
 import wpilib.deployinfo
 from cscore import CameraServer as CS
 
 import drivestation
 import driveteam
 
-# import swerve.swervesubsystem
-# import utils.utils
+import swerve.swervesubsystem
+import utils.utils
 from shuffleboard import addDeployArtifacts
 
 
@@ -16,7 +15,7 @@ class MyRobot(wpilib.TimedRobot):
     wpilib._wpilib.TimedRobot.__init__(self)
 
     self.pilots = driveteam.DriveTeam()
-    # self.drivebase = swerve.swervesubsystem.SwerveSubsystem()
+    self.drivebase = swerve.swervesubsystem.SwerveSubsystem()
     self.strafe = 0.0
     self.turn = 0.0
     self.drive = 0.0
@@ -82,15 +81,15 @@ class MyRobot(wpilib.TimedRobot):
     # drivestation.light_2(self.fire)
     # drivestation.light_3(self.pickup)
 
-    # # drive base
-    # if self.togglefieldoriented:
-    #   self.drivebase.toggleFieldOriented()
+    # drive base
+    if self.togglefieldoriented:
+      self.drivebase.toggleFieldOriented()
 
-    # magnitude = abs(self.strafe) + abs(self.drive) + abs(self.turn)
-    # if utils.utils.dz(magnitude) > 0:
-    #   self.drivebase.setvelocity(self.drive, self.strafe, self.turn)
-    # else:
-    #   self.drivebase.stop()
+    magnitude = abs(self.strafe) + abs(self.drive) + abs(self.turn)
+    if utils.utils.dz(magnitude) > 0:
+      self.drivebase.setvelocity(self.drive, self.strafe, self.turn)
+    else:
+      self.drivebase.stop()
 
   def testInit(self):
     """This function is called once each time the robot enters test mode."""
