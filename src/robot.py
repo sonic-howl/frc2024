@@ -86,57 +86,39 @@ class MyRobot(wpilib.TimedRobot):
     self.autoSelected = self.chooser.getSelected()
 
     inchToM = 39.73  # Inches to metres (x / inchToM)
-
     match self.autoSelected:
       case self.blueLeft:
         kX = 72.5
         kY = 275.42
         kRotation = math.pi
-        self.drivebase.resetOdometer(
-          wpimath.geometry.Pose2d(kX / inchToM, kY / inchToM, kRotation)
-        )
       case self.blueMiddle:
         kX = 72.5
         kY = 218.42
         kRotation = math.pi
-        self.drivebase.resetOdometer(
-          wpimath.geometry.Pose2d(kX / inchToM, kY / inchToM, kRotation)
-        )
       case self.blueRight:
         kX = 72.5
         kY = 161.42
         kRotation = math.pi
-        self.drivebase.resetOdometer(
-          wpimath.geometry.Pose2d(kX / inchToM, kY / inchToM, kRotation)
-        )
       case self.redRight:
         kX = 578.77
         kY = 275.42
         kRotation = 0
-        self.drivebase.resetOdometer(
-          wpimath.geometry.Pose2d(kX / inchToM, kY / inchToM, kRotation)
-        )
       case self.redMiddle:
         kX = 578.77
         kY = 218.42
         kRotation = 0
-        self.drivebase.resetOdometer(
-          wpimath.geometry.Pose2d(kX / inchToM, kY / inchToM, kRotation)
-        )
       case self.redLeft:
         kX = 578.77
         kY = 161.42
         kRotation = 0
-        self.drivebase.resetOdometer(
-          wpimath.geometry.Pose2d(kX / inchToM, kY / inchToM, kRotation)
-        )
       case _:
         kX = 0
         kY = 0
         kRotation = 0
-        self.drivebase.resetOdometer(
-          wpimath.geometry.Pose2d(kX / inchToM, kY / inchToM, kRotation)
-        )
+    if self.drivebase.isCalibrated():
+      self.drivebase.resetOdometer(
+        wpimath.geometry.Pose2d(kX / inchToM, kY / inchToM, kRotation)
+      )
     self.drivebase.stop()
 
   def autonomousInit(self):

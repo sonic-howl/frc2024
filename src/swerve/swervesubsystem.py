@@ -66,7 +66,6 @@ class SwerveSubsystem:
         self.back_right.getPosition(),
       ),
     )
-    
 
     self.theta_pid = ProfiledPIDControllerRadians(
       SwerveConstants.kPRobotTurn,
@@ -146,7 +145,6 @@ class SwerveSubsystem:
     if self.isCalibrated():
       if self.gyro.isCalibrating():
         self.gyroCalibrated = False
-        print("Calibrating")
     elif not self.gyro.isCalibrating():
       self.resetGyro()
       self.gyroCalibrated = True
