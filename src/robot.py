@@ -1,12 +1,12 @@
 import wpilib
 import wpilib.deployinfo
+from cscore import CameraServer as CS
 
 import drivestation
 import driveteam
 
 import swerve.swervesubsystem
 import utils.utils
-
 from shuffleboard import addDeployArtifacts
 
 
@@ -54,6 +54,11 @@ class MyRobot(wpilib.TimedRobot):
     This function is called upon program startup and
     should be used for any initialization code.
     """
+    camera0 = CS.startAutomaticCapture()
+    camera0.setResolution(640, 480)
+    camera1 = CS.startAutomaticCapture()
+    camera1.setResolution(640, 480)
+
     # Add the deploy artifacts to the shuffleboard
     addDeployArtifacts()
 
