@@ -66,13 +66,8 @@ class SwerveSubsystem:
         self.back_right.getPosition(),
       ),
     )
-
-    def resetGyro():
-      """reset gyro after it's calibration of 1s"""
-      sleep(1)
+    if self.isCalibrated():
       self.resetGyro()
-
-    Thread(target=resetGyro).start()
 
     self.theta_pid = ProfiledPIDControllerRadians(
       SwerveConstants.kPRobotTurn,
@@ -110,6 +105,9 @@ class SwerveSubsystem:
   def resetGyro(self):
     # self.gyro.zeroYaw()
     self.gyro.reset()
+
+  def isCalibrated(self):
+    return not self.gyro.isCalibrating()
 
   def reset_motor_positions(self):
     self.front_left.resetEncoders()

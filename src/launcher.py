@@ -3,11 +3,11 @@ import rev
 
 class Launchers:
   def __init__(self):
-    self.motor1 = rev.CANSparkMax(1, rev.CANSparkLowLevel.MotorType.kBrushless)
+    self.motor1 = rev.CANSparkMax(10, rev.CANSparkLowLevel.MotorType.kBrushless)
 
-    self.motor2 = rev.CANSparkMax(2, rev.CANSparkLowLevel.MotorType.kBrushless)
+    self.motor2 = rev.CANSparkMax(11, rev.CANSparkLowLevel.MotorType.kBrushless)
 
-    self.elevator = rev.CANSparkMax(10, rev.CANSparkLowLevel.MotorType.kBrushless)
+    self.elevator = rev.CANSparkMax(12, rev.CANSparkLowLevel.MotorType.kBrushless)
 
     self.encoder1 = self.motor1.getEncoder()
 
