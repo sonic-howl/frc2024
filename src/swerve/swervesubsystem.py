@@ -66,8 +66,7 @@ class SwerveSubsystem:
         self.back_right.getPosition(),
       ),
     )
-    if self.isCalibrated():
-      self.resetGyro()
+    
 
     self.theta_pid = ProfiledPIDControllerRadians(
       SwerveConstants.kPRobotTurn,
@@ -85,6 +84,8 @@ class SwerveSubsystem:
     if not RobotConstants.isSimulation:
       self.field = Field2d()
       SmartDashboard.putData("Field", self.field)
+
+    self.gyroCalibrated = False
 
   def getAngle(self) -> float:
     # return self.gyro.getAngle() % 360
@@ -107,7 +108,7 @@ class SwerveSubsystem:
     self.gyro.reset()
 
   def isCalibrated(self):
-    return not self.gyro.isCalibrating()
+    return self.gyroCalibrated
 
   def reset_motor_positions(self):
     self.front_left.resetEncoders()
@@ -141,6 +142,14 @@ class SwerveSubsystem:
         self.back_right.getPosition(),
       ),
     )
+
+    if self.isCalibrated():
+      if self.gyro.isCalibrating():
+        self.gyroCalibrated = False
+        print("Calibrating")
+    elif not self.gyro.isCalibrating():
+      self.resetGyro()
+      self.gyroCalibrated = True
 
   def toggleFieldOriented(self):
     self.field_oriented = not self.field_oriented
@@ -186,6 +195,7 @@ class SwerveSubsystem:
     self.setModuleStates(swerveModuleStates)
 
   def stop(self) -> None:
+    self.periodic()
     self.front_left.stop()
     self.front_right.stop()
     self.back_left.stop()

@@ -137,6 +137,7 @@ class MyRobot(wpilib.TimedRobot):
         self.drivebase.resetOdometer(
           wpimath.geometry.Pose2d(kX / inchToM, kY / inchToM, kRotation)
         )
+    self.drivebase.stop()
 
   def autonomousInit(self):
     """This function is run once each time the robot enters autonomous mode."""
