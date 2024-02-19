@@ -1,5 +1,6 @@
 import math
 
+import ntcore
 import wpilib
 import wpilib.deployinfo
 import wpimath.geometry
@@ -10,6 +11,7 @@ import driveteam
 import launcher
 import swerve.swervesubsystem
 import utils.utils
+from constants.networktables import PoseInfo
 from shuffleboard import addDeployArtifacts
 
 
@@ -36,6 +38,20 @@ class MyRobot(wpilib.TimedRobot):
     self.pickup = 0.0
     self.eject = False
 
+  def init_NT(self):
+    """
+    This function initializes network tables for the robot
+    """
+    self.network_table = ntcore.NetworkTableInstance.getDefault()
+    self.pose_table = self.network_table.getTable(PoseInfo.name)
+    # self.odometry_pose_pub = self.pose_table.getFloatArrayTopic(
+    #   PoseInfo.odometry_pose
+    # ).publish()
+    self.odometry_x_pub = self.pose_table.getFloatTopic(PoseInfo.odometry_x).publish()
+    self.odometry_y_pub = self.pose_table.getFloatTopic(PoseInfo.odometry_y).publish()
+    self.odometry_r_pub = self.pose_table.getFloatTopic(PoseInfo.odometry_r).publish()
+    self.gyro_pub = self.pose_table.getFloatTopic(PoseInfo.gyro_angle).publish()
+
   def getInputs(self):
     self.strafe = self.pilots.get_strafe_command()
     self.turn = self.pilots.get_turn_command()
@@ -54,6 +70,19 @@ class MyRobot(wpilib.TimedRobot):
 
     self.togglefieldoriented = self.pilots.get_view_command()
 
+  def setOutputs(self):
+    # Robot Pose
+    odometry_pose = self.drivebase.getPose()
+    # self.odometry_pose_pub.set(
+    #   [odometry_pose.X(), odometry_pose.Y(), odometry_pose.rotation().degrees()]
+    # )
+    self.odometry_x_pub.set(odometry_pose.X())
+    self.odometry_y_pub.set(odometry_pose.Y())
+    self.odometry_r_pub.set(odometry_pose.rotation().degrees())
+    self.gyro_pub.set(self.drivebase.getAngle())
+    # Update Field2D Robot Pose
+    self.field.setRobotPose(self.drivebase.getPose())
+
   def robotInit(self):
     """
     This function is called upon program startup and
@@ -67,6 +96,8 @@ class MyRobot(wpilib.TimedRobot):
     self.redRight = "Red Right"
     self.redMiddle = "Red Middle"
     self.redLeft = "Red Left"
+
+    self.init_NT()
 
     self.chooser = wpilib.SendableChooser()
 
@@ -120,17 +151,25 @@ class MyRobot(wpilib.TimedRobot):
         kX = 0
         kY = 0
         kRotation = 0
+
+    # Note this forces the odometry to remain at this position throughout Disabled state.
     if self.drivebase.isCalibrated():
       self.drivebase.resetOdometer(
         wpimath.geometry.Pose2d(kX / inchToM, kY / inchToM, kRotation)
       )
+
     self.drivebase.stop()
+
+    self.setOutputs()
 
   def autonomousInit(self):
     """This function is run once each time the robot enters autonomous mode."""
 
   def autonomousPeriodic(self):
     """This function is called periodically during autonomous."""
+    self.drivebase.stop()
+
+    self.setOutputs()
 
   def teleopInit(self):
     """This function is called once each time the robot enters teleoperated mode."""
@@ -144,9 +183,6 @@ class MyRobot(wpilib.TimedRobot):
     wpilib.SmartDashboard.putString("DB/String 0", str(self.drivebase.getRotation2d()))
     # drivestation.light_2(self.fire)
     # drivestation.light_3(self.pickup)
-
-    # Update Field2D Robot Pose
-    self.field.setRobotPose(self.drivebase.getPose())
 
     # drive base
     if self.togglefieldoriented:
@@ -165,6 +201,8 @@ class MyRobot(wpilib.TimedRobot):
       self.launcher.elevate(self.aim)
     else:
       self.launcher.shoot(self.fire)
+
+    self.setOutputs()
 
   def testInit(self):
     """This function is called once each time the robot enters test mode."""

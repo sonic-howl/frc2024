@@ -1,6 +1,4 @@
 import math
-from threading import Thread
-from time import sleep
 from typing import Tuple
 
 import wpilib
@@ -122,6 +120,7 @@ class SwerveSubsystem:
       ],
       pose,
     )
+    # potentially call gyro.setAngleAdjustment to align gyro with odometry (not necessary if we only use odometry)
 
   def periodic(self) -> None:
     # TODO print gyro angle, robot pose on dashboard
