@@ -5,7 +5,7 @@ from typing import Tuple
 
 import wpilib
 from navx import AHRS
-from wpilib import DriverStation, Field2d, SmartDashboard
+from wpilib import DriverStation
 from wpimath.controller import ProfiledPIDControllerRadians
 from wpimath.geometry import Pose2d, Rotation2d
 from wpimath.kinematics import (
@@ -80,16 +80,12 @@ class SwerveSubsystem:
     self.theta_pid.enableContinuousInput(0, math.tau)
     self.theta_pid.setTolerance(math.radians(3))
 
-    if not RobotConstants.isSimulation:
-      self.field = Field2d()
-      SmartDashboard.putData("Field", self.field)
-
     self.gyroCalibrated = False
 
   def getAngle(self) -> float:
     # return self.gyro.getAngle() % 360
     # return self.gyro.getFusedHeading()
-    # if RobotConstants.isSimulation:
+    # if wpilib.RobotBase.isReal():
     #  from physics import PhysicsEngine
 
     #  return PhysicsEngine.simGyro.getAngle()
@@ -129,8 +125,6 @@ class SwerveSubsystem:
 
   def periodic(self) -> None:
     # TODO print gyro angle, robot pose on dashboard
-
-    self.field.setRobotPose(self.getPose())
 
     self.odometer.update(
       self.getRotation2d(),
@@ -186,7 +180,7 @@ class SwerveSubsystem:
         z,
       )
 
-    # if RobotConstants.isSimulation:
+    # if wpilib.RobotBase.isReal():
     # self.simChassisSpeeds = chassisSpeeds
 
     swerveModuleStates = SwerveSubsystem.toSwerveModuleStatesForecast(chassisSpeeds)
@@ -199,7 +193,7 @@ class SwerveSubsystem:
     self.back_left.stop()
     self.back_right.stop()
 
-    if RobotConstants.isSimulation:
+    if wpilib.RobotBase.isReal():
       self.simChassisSpeeds = None
 
   @staticmethod

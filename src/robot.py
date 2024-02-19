@@ -3,6 +3,7 @@ import math
 import wpilib
 import wpilib.deployinfo
 import wpimath.geometry
+from wpilib import Field2d, SmartDashboard
 
 import drivestation
 import driveteam
@@ -78,6 +79,10 @@ class MyRobot(wpilib.TimedRobot):
     self.chooser.addOption("Red Left", self.redLeft)
     wpilib.SmartDashboard.putData("Auto choices", self.chooser)
 
+    # Add 2D Field to SmartDashboard
+    self.field = Field2d()
+    SmartDashboard.putData("Field", self.field)
+
     # Add the deploy artifacts to the shuffleboard
     addDeployArtifacts()
 
@@ -139,6 +144,9 @@ class MyRobot(wpilib.TimedRobot):
     wpilib.SmartDashboard.putString("DB/String 0", str(self.drivebase.getRotation2d()))
     # drivestation.light_2(self.fire)
     # drivestation.light_3(self.pickup)
+
+    # Update Field2D Robot Pose
+    self.field.setRobotPose(self.drivebase.getPose())
 
     # drive base
     if self.togglefieldoriented:

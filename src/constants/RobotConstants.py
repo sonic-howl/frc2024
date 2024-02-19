@@ -8,8 +8,6 @@ class RobotConstants:
   rotationCurvature = 2.0
   rotationDeadzone = 0.075
 
-  isSimulation = False
-
   period = 0.02
 
   controller_deadzone = 0.075
