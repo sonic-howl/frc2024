@@ -1,4 +1,4 @@
-from enum import Enum
+# General robot constants
 
 
 class RobotConstants:
@@ -18,9 +18,3 @@ class RobotConstants:
   frame_length = 34.5
 
   light_strip_pwm_port = 1
-
-  class NavXPort(Enum):
-    kUSB = 1
-    kSPI = 2
-
-  navxPort = NavXPort.kUSB

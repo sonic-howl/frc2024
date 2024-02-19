@@ -81,13 +81,6 @@ class SwerveSubsystem:
     self.gyroCalibrated = False
 
   def getAngle(self) -> float:
-    # return self.gyro.getAngle() % 360
-    # return self.gyro.getFusedHeading()
-    # if wpilib.RobotBase.isReal():
-    #  from physics import PhysicsEngine
-
-    #  return PhysicsEngine.simGyro.getAngle()
-
     return -self.gyro.getYaw()
 
   def getRotation2d(self):
@@ -123,8 +116,6 @@ class SwerveSubsystem:
     # potentially call gyro.setAngleAdjustment to align gyro with odometry (not necessary if we only use odometry)
 
   def periodic(self) -> None:
-    # TODO print gyro angle, robot pose on dashboard
-
     self.odometer.update(
       self.getRotation2d(),
       (
@@ -151,16 +142,11 @@ class SwerveSubsystem:
     x = utils.utils.dz(drive) * speed_scale
     y = utils.utils.dz(strafe) * speed_scale
     z = utils.utils.dz(rotate) * speed_scale
-    # z = self.zLimiter.calculate(z)
     z = utils.utils.calcAxisSpeedWithCurvatureAndDeadzone(z)
     # convert values to meters per second and apply rate limiters
     x *= SwerveConstants.kDriveMaxMetersPerSecond
-    # x = self.xLimiter.calculate(x)
 
     y *= SwerveConstants.kDriveMaxMetersPerSecond
-    # y = self.yLimiter.calculate(y)
-
-    # z = self.zLimiter.calculate(z)
 
     if self.field_oriented:
       if DriverStation.getAlliance() == DriverStation.Alliance.kRed:
@@ -178,9 +164,6 @@ class SwerveSubsystem:
         y,
         z,
       )
-
-    # if wpilib.RobotBase.isReal():
-    # self.simChassisSpeeds = chassisSpeeds
 
     swerveModuleStates = SwerveSubsystem.toSwerveModuleStatesForecast(chassisSpeeds)
     self.setModuleStates(swerveModuleStates)

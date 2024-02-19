@@ -78,8 +78,8 @@
           },
           "6,0": {
             "size": [
-              2,
-              1
+              8,
+              6
             ],
             "content": {
               "_type": "Field",
@@ -160,6 +160,23 @@
               "_title": "SmartDashboard/Auto choices",
               "_glyph": 148,
               "_showGlyph": false
+            }
+          },
+          "5,0": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Gyro",
+              "_source0": "network_table:///Pose Table/Gyro Angle",
+              "_title": "Pose Table/Gyro Angle",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Visuals/Major tick spacing": 45.0,
+              "Visuals/Starting angle": 180.0,
+              "Visuals/Show tick mark ring": true,
+              "Visuals/Counter clockwise": false
             }
           }
         }
