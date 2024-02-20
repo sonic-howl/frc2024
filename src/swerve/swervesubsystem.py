@@ -105,12 +105,12 @@ class SwerveSubsystem:
   def resetOdometer(self, pose: Pose2d = Pose2d()):
     self.odometer.resetPosition(
       self.getRotation2d(),
-      [
+      (
         self.front_left.getPosition(),
         self.front_right.getPosition(),
         self.back_left.getPosition(),
         self.back_right.getPosition(),
-      ],
+      ),
       pose,
     )
     # potentially call gyro.setAngleAdjustment to align gyro with odometry (not necessary if we only use odometry)
@@ -165,7 +165,11 @@ class SwerveSubsystem:
         z,
       )
 
-    swerveModuleStates = SwerveSubsystem.toSwerveModuleStatesForecast(chassisSpeeds)
+    self.setChassisSpeeds(chassisSpeeds)
+
+  def setChassisSpeeds(self, speeds: ChassisSpeeds):
+    self.simChassisSpeeds = speeds
+    swerveModuleStates = SwerveSubsystem.toSwerveModuleStatesForecast(speeds)
     self.setModuleStates(swerveModuleStates)
 
   def stop(self) -> None:
@@ -215,3 +219,13 @@ class SwerveSubsystem:
     self.front_right.setDesiredState(fr, isClosedLoop=isClosedLoop)
     self.back_right.setDesiredState(bl, isClosedLoop=isClosedLoop)
     self.back_left.setDesiredState(br, isClosedLoop=isClosedLoop)
+
+  def getChassisSpeeds(self) -> ChassisSpeeds:
+    return SwerveConstants.kDriveKinematics.toChassisSpeeds(
+      (
+        self.front_left.getState(),
+        self.front_right.getState(),
+        self.back_left.getState(),
+        self.back_right.getState(),
+      )
+    )

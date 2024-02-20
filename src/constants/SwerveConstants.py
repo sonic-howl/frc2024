@@ -52,9 +52,15 @@ class SwerveConstants:
   kDriveYLimit = 5
   kDriveZLimit = 4
 
+  # TODO tune
   kPRobotTurn = 1
   kIRobotTurn = 0.1
   kDRobotTurn = 0.005
+
+  # TODO tune
+  kPRobotStrafe = 1
+  kIRobotStrafe = 0.1
+  kDRobotStrafe = 0.005
 
   inches_to_meters = 39.37
 
