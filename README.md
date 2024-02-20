@@ -308,6 +308,8 @@ py -3 robot.py deploy
 python3 robot.py deploy
 ```
 
+> Before deploying, make sure you have used the `cd` command to navigate to the `/src` directory. This needs to be done because we only want to deploy the code present in the `/src` folder to the robot (due to memory limitations).
+
 > See full guide on deploying robot code [here](https://robotpy.readthedocs.io/en/stable/guide/deploy.html)
 
 ## Simulation Testing
