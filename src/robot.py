@@ -12,6 +12,7 @@ import launcher
 import swerve.swervesubsystem
 import utils.utils
 from constants.networktables import PoseInfo
+from constants.RobotConstants import RobotConstants
 from shuffleboard import addDeployArtifacts
 
 
@@ -118,33 +119,39 @@ class MyRobot(wpilib.TimedRobot):
     addDeployArtifacts()
 
   def disabledPeriodic(self):
-    # Sendable Chooser
+    self.drivebase.stop()
+
+    self.setOutputs()
+
+  def autonomousInit(self):
+    """This function is run once each time the robot enters autonomous mode."""
+    # Check only once during autonomous initialization for setting initial pose
     self.autoSelected = self.chooser.getSelected()
 
-    inchToM = 39.73  # Inches to metres (x / inchToM)
     match self.autoSelected:
+      # Positions mark the autonomous start line, adjust for frame and bumpers
       case self.blueLeft:
-        kX = 72.5
+        kX = 76.125 - RobotConstants.frame_length / 2 - RobotConstants.bumper_width
         kY = 275.42
         kRotation = math.pi
       case self.blueMiddle:
-        kX = 72.5
+        kX = 76.125 - RobotConstants.frame_length / 2 - RobotConstants.bumper_width
         kY = 218.42
         kRotation = math.pi
       case self.blueRight:
-        kX = 72.5
+        kX = 76.125 - RobotConstants.frame_length / 2 - RobotConstants.bumper_width
         kY = 161.42
         kRotation = math.pi
       case self.redRight:
-        kX = 578.77
+        kX = 577.125 + RobotConstants.frame_length / 2 + RobotConstants.bumper_width
         kY = 275.42
         kRotation = 0
       case self.redMiddle:
-        kX = 578.77
+        kX = 577.125 + RobotConstants.frame_length / 2 + RobotConstants.bumper_width
         kY = 218.42
         kRotation = 0
       case self.redLeft:
-        kX = 578.77
+        kX = 577.125 + RobotConstants.frame_length / 2 + RobotConstants.bumper_width
         kY = 161.42
         kRotation = 0
       case _:
@@ -152,18 +159,13 @@ class MyRobot(wpilib.TimedRobot):
         kY = 0
         kRotation = 0
 
-    # Note this forces the odometry to remain at this position throughout Disabled state.
+    # Set the dashboard programmed initial pose.
+    inchToM = 39.73  # Inches to metres (x / inchToM)
     if self.drivebase.isCalibrated():
       self.drivebase.resetOdometer(
         wpimath.geometry.Pose2d(kX / inchToM, kY / inchToM, kRotation)
       )
-
-    self.drivebase.stop()
-
-    self.setOutputs()
-
-  def autonomousInit(self):
-    """This function is run once each time the robot enters autonomous mode."""
+    # else the gyro is probably broken if it is still calibrating, degraded operations tbd.
 
   def autonomousPeriodic(self):
     """This function is called periodically during autonomous."""

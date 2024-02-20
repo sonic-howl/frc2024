@@ -14,7 +14,9 @@ class RobotConstants:
   pilot_controller_id = 0
   operator_controller_id = 1
 
+  # Measurements (inches) as of Feb 19 2024
   frame_width = 24.5
   frame_length = 34.5
+  bumper_width = 3.5
 
   light_strip_pwm_port = 1
