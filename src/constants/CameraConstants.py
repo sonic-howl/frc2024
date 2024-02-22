@@ -1,10 +1,8 @@
 import math
 
-import numpy as np
+from constants.RobotConstants import RobotConstants
 
-import constants.RobotConstants as RobotConstants
-
-# Approximate measured Focal Lengths (FL is Focal length), 640 x 480p
+# Approximate measured Focal Lengths (FL is Focal length), at 640 x 480p
 MSLifeFL = 625
 LogitechFL = 800
 TargetSize = 13  # Inches
@@ -15,16 +13,17 @@ LogitechVFOV = math.atan(480 / (2 * LogitechFL))
 
 
 class kRearCamera:
-  x = -RobotConstants.RobotConstants.frame_length / 2
+  # In radians
+  Elevation = math.radians(-10)
+  Rotation = 0  # Always at 0
+  FOV = MSLifeVFOV
+
+  # In inches, robot coordinates
+  x = -RobotConstants.frame_length / 2
   y = 0
   z = 12
-  Elevation = 0
-  Rotation = 0
+  MinRange = z / math.tan(FOV - Elevation)
+
+  # In pixels
   FL = MSLifeFL
-
-  MinRange = z / math.tan(MSLifeVFOV - Elevation)
-
-
-print("MSLifeVFOV: " + str(MSLifeVFOV))
-print("LogitechVFOV: " + str(LogitechVFOV))
-print("Minrange: " + str(kRearCamera.MinRange))
+  HorizonShift = int(FL * ((math.tan(Elevation)) / (math.cos(Elevation))))

@@ -10,6 +10,11 @@ def Initialization():
     * CameraConstants.TargetSize
     / CameraConstants.kRearCamera.MinRange
   )
+  global guidelineXOffset
+  guidelineXOffset = int(
+    CameraConstants.kRearCamera.FL
+    * (CameraConstants.kRearCamera.y / CameraConstants.kRearCamera.MinRange)
+  )
 
 
 def get_capture(window_name, video_capture_device_index=0):
@@ -28,32 +33,36 @@ def get_capture(window_name, video_capture_device_index=0):
 def draw_overlay():
   # Get the height and width of the frame
   height, width, channels = frame.shape
+  VanishingPointX = width // 2
+  VanishingPointY = height // 2 + CameraConstants.kRearCamera.HorizonShift
   # Draw a circle in the center of the frame
   cv2.circle(frame, (width // 2, height // 2), 50, (0, 0, 255), 1)
-  # Draw diagonal lines from top-left to bottom-right and top-right to bottom-left
+  # Draw lines representing the width of the note at specific distances
   cv2.line(
     frame,
-    (width // 2 - guidelineSpacing // 2, 0),
-    (width // 2 - guidelineSpacing // 2, height),
+    (VanishingPointX, VanishingPointY),
+    (width // 2 - guidelineSpacing // 2 - guidelineXOffset, height),
     (0, 255, 0),
     1,
   )
   cv2.line(
     frame,
-    (width // 2 + guidelineSpacing // 2, 0),
-    (width // 2 + guidelineSpacing // 2, height),
+    (VanishingPointX, VanishingPointY),
+    (width // 2 + guidelineSpacing // 2 - guidelineXOffset, height),
     (0, 255, 0),
     1,
   )
+  # Draw the horizon
+  cv2.line(frame, (0, VanishingPointY), (width, VanishingPointY), (0, 255, 0), 1)
   # Draw a text on the frame
   cv2.putText(
     frame,
     "q to quit",
-    (width // 2 - 100, 450),
+    (20, 40),
     cv2.FONT_HERSHEY_SIMPLEX,
     1,
     (255, 255, 255),
-    2,
+    1,
   )
 
 
