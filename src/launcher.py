@@ -8,7 +8,10 @@ class Launchers:
 
     self.motor2 = rev.CANSparkMax(11, rev.CANSparkLowLevel.MotorType.kBrushless)
 
-    self.elevator = rev.CANSparkMax(12, rev.CANSparkLowLevel.MotorType.kBrushed)
+    if wpilib.RobotBase.isReal():
+      self.elevator = rev.CANSparkMax(12, rev.CANSparkLowLevel.MotorType.kBrushed)
+    else:
+      self.elevator = rev.CANSparkMax(12, rev.CANSparkLowLevel.MotorType.kBrushless)
 
     self.encoder1 = self.motor1.getEncoder()
 
