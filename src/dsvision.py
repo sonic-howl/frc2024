@@ -1,20 +1,15 @@
 import cv2
 
-import constants.CameraConstants as CameraConstants
+from constants.CameraConstants import kRearCamera
 
 
 def Initialization():
+  TargetSize = 13  # Note (foam ring) diameter in inches
+
   global guidelineSpacing
-  guidelineSpacing = int(
-    CameraConstants.kRearCamera.FL
-    * CameraConstants.TargetSize
-    / CameraConstants.kRearCamera.MinRange
-  )
+  guidelineSpacing = int(kRearCamera.FL * TargetSize / kRearCamera.MinRange)
   global guidelineXOffset
-  guidelineXOffset = int(
-    CameraConstants.kRearCamera.FL
-    * (CameraConstants.kRearCamera.y / CameraConstants.kRearCamera.MinRange)
-  )
+  guidelineXOffset = int(kRearCamera.FL * (kRearCamera.y / kRearCamera.MinRange))
 
 
 def get_capture(window_name, video_capture_device_index=0):
@@ -34,7 +29,7 @@ def draw_overlay():
   # Get the height and width of the frame
   height, width, channels = frame.shape
   VanishingPointX = width // 2
-  VanishingPointY = height // 2 + CameraConstants.kRearCamera.HorizonShift
+  VanishingPointY = height // 2 + kRearCamera.HorizonShift
   # Draw a circle in the center of the frame
   cv2.circle(frame, (width // 2, height // 2), 50, (0, 0, 255), 1)
   # Draw lines representing the width of the note at specific distances
@@ -72,7 +67,6 @@ def show_capture(capture_window_name, capture):
     global frame
     ret, frame = capture.read()
     if frame is not None:
-      # Detect apriltag, frame will be modified
       draw_overlay()
       # Display the resulting frame in the named window
       cv2.imshow(capture_window_name, frame)
@@ -90,7 +84,7 @@ def cleanup_capture(capture):
 
 def main():
   Initialization()
-  capture_window_name = "Capture Window"
+  capture_window_name = "Pickup Camera"
   capture = get_capture(capture_window_name, 0)
 
   # Loop while processing images.

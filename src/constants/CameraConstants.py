@@ -5,7 +5,6 @@ from constants.RobotConstants import RobotConstants
 # Approximate measured Focal Lengths (FL is Focal length), at 640 x 480p
 MSLifeFL = 625
 LogitechFL = 800
-TargetSize = 13  # Inches
 
 # Vertical FOV
 MSLifeVFOV = math.atan(480 / (2 * MSLifeFL))
