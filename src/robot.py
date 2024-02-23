@@ -199,8 +199,12 @@ class MyRobot(wpilib.TimedRobot):
     # launcher
     if self.unjam:
       self.launcher.unjams()
+    elif self.eject:
+      self.launcher.eject()
     elif abs(self.aim) >= 0.05:
       self.launcher.elevate(self.aim)
+    elif self.pickup:
+      self.launcher.pickup()
     else:
       self.launcher.shoot(self.fire)
 
