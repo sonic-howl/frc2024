@@ -5,7 +5,8 @@ from wpimath.kinematics import SwerveDrive4Kinematics
 
 from constants.RobotConstants import RobotConstants
 
-
+# Falcon 500 with integrated Talon FX motor controller
+# https://store.ctr-electronics.com/content/user-manual/Falcon%20500%20User%20Guide.pdf
 class FalconConstants:
   kMotorFreeSpeedRPM = 6380
   kUnitsPerRotation = 2048
@@ -45,6 +46,7 @@ class SwerveConstants:
   kDTurning = 0
 
   # TODO calibrate
+  # 
   kDriveMaxMetersPerSecond = 5.15
   kDriveMaxAccelerationMetersPerSecond = 3.0
   kDriveMaxTurnMetersPerSecond = 8.0
@@ -58,15 +60,15 @@ class SwerveConstants:
   kDRobotTurn = 0.005
 
   inches_to_meters = 39.37
+  meters_per_inch  = 0.0254
 
+  # 3in MAXSwerveModule https://revrobotics.ca/rev-21-3005/
   kDrivingMotorReduction = 5.08
-
-  kWheelDiameterMeters = 3 / inches_to_meters
+  
+  kWheelDiameterMeters = 3.0 * meters_per_inch
   kWheelCircumferenceMeters = kWheelDiameterMeters * math.pi
   # kWheelRotationsPerMeter = 1 / kWheelCircumference
-  kEncoderPulsesPerRevolution = (
-    kDrivingMotorReduction * FalconConstants.kUnitsPerRotation
-  )  # manually measured as 10532
+  kEncoderPulsesPerRevolution = kDrivingMotorReduction * FalconConstants.kUnitsPerRotation  # manually measured as 10532
   kEncoderPositionPerMeter = kEncoderPulsesPerRevolution / kWheelCircumferenceMeters
 
   # print("kEncoderPositionPerMeter", kEncoderPositionPerMeter)
