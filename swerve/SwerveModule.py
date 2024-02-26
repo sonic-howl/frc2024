@@ -104,7 +104,7 @@ class SwerveModule:
 
     self.initNetworkTables()
 
-    self.lastDesiresState = self.getState()
+    self.lastDesiredState = self.getState()
 
   def initNetworkTables(self):
     network_table_instance = NetworkTableInstance.getDefault()
@@ -204,7 +204,7 @@ class SwerveModule:
     # self.turn_motor.set(turn_speed)
     self.turn_pid.setReference(set_point, rev.CANSparkMax.ControlType.kPosition)
 
-    self.lastDesiresState = state
+    self.lastDesiredState = state
 
   def stop(self) -> None:
     self.drive_motor.stopMotor()

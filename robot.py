@@ -40,20 +40,20 @@ class MyRobot(wpilib.TimedRobot):
     wpilib._wpilib.TimedRobot.__init__(self)
 
   def getInputs(self):
-    self.strafe = driveteam.strafe_command()
-    self.turn = driveteam.turn_command()
-    self.drive = driveteam.drive_command()
-    #self.winch = driveteam.get_winch_command()
-    #self.hookextend = driveteam.get_hook_extension_command()
-    #self.hookretract = driveteam.get_hook_retract_command()
-    #self.hookleft = driveteam.get_hook_left_command()
-    #self.hookright = driveteam.get_hook_right_command()
+    self.strafe = self.driveteam.strafe_command()
+    self.turn = self.driveteam.turn_command()
+    self.drive = self.driveteam.drive_command()
+    #self.winch = self.driveteam.get_winch_command()
+    #self.hookextend = self.driveteam.get_hook_extension_command()
+    #self.hookretract = self.driveteam.get_hook_retract_command()
+    #self.hookleft = self.driveteam.get_hook_left_command()
+    #self.hookright = self.driveteam.get_hook_right_command()
 
-    #self.aim = driveteam.get_aim_command()
-    self.fire = driveteam.launch_command()
-    self.unjam = driveteam.unjam_command()
-    self.pickup = driveteam.pickup_command()
-    self.eject = driveteam.eject_command()
+    #self.aim = self.driveteam.get_aim_command()
+    self.fire = self.driveteam.launch_command()
+    self.unjam = self.driveteam.unjam_command()
+    self.pickup = self.driveteam.pickup_command()
+    self.eject = self.driveteam.eject_command()
 
 
   def robotInit(self):
@@ -73,6 +73,7 @@ class MyRobot(wpilib.TimedRobot):
     self.vision_table = self.network_table.getTable( VisionTable.name )
     self.bot_pose_sub = self.vision_table.getFloatArrayTopic( VisionTable.bot_pose ).subscribe( [0.0, 0.0, 0.0] )
 
+    self.driveteam = driveteam.DriveTeam()
     self.drivebase = swerve.swervesubsystem.SwerveSubsystem()
 
   def robotPeriodic(self):

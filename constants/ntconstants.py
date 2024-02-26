@@ -8,3 +8,9 @@ class VisionTable:
   bot_r_pose = "Bot R"
   bot_pose = "Bot Pose"
   tag_pose = "Tag Pose"
+
+class SimTable:
+  name = "Simulator Controller Table"
+  x    = "Sim X Command"
+  y    = "Sim Y Command"
+  r    = "Sim R Command"
