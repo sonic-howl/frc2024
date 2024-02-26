@@ -15,6 +15,8 @@ from constants.ntconstants import VisionTable
 class MyRobot(wpilib.TimedRobot):
 
   def __init__(self):
+    wpilib._wpilib.TimedRobot.__init__(self)
+    
     self.strafe = 0.0
     self.turn = 0.0
     self.drive = 0.0
@@ -37,7 +39,9 @@ class MyRobot(wpilib.TimedRobot):
     self.ts = 0
     self.vision_pose = ntcore.TimestampedFloat()
 
-    wpilib._wpilib.TimedRobot.__init__(self)
+    self.driveteam = driveteam.DriveTeam()
+    self.drivebase = swerve.swervesubsystem.SwerveSubsystem()
+
 
   def getInputs(self):
     self.strafe = self.driveteam.strafe_command()
@@ -72,9 +76,6 @@ class MyRobot(wpilib.TimedRobot):
     self.network_table = ntcore.NetworkTableInstance.getDefault()
     self.vision_table = self.network_table.getTable( VisionTable.name )
     self.bot_pose_sub = self.vision_table.getFloatArrayTopic( VisionTable.bot_pose ).subscribe( [0.0, 0.0, 0.0] )
-
-    self.driveteam = driveteam.DriveTeam()
-    self.drivebase = swerve.swervesubsystem.SwerveSubsystem()
 
   def robotPeriodic(self):
     """
