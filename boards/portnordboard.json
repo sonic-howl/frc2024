@@ -301,6 +301,57 @@
               "Range/Max": 10.0,
               "Visuals/Show value": true
             }
+          },
+          "8,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Number Slider",
+              "_source0": "network_table:///Simulator Controller Table/Sim R Command",
+              "_title": "/Simulator Controller Table/Sim R Command",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Slider Settings/Min": -1.0,
+              "Slider Settings/Max": 1.0,
+              "Slider Settings/Block increment": 0.0625,
+              "Visuals/Display value": true
+            }
+          },
+          "8,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Number Slider",
+              "_source0": "network_table:///Simulator Controller Table/Sim X Command",
+              "_title": "/Simulator Controller Table/Sim X Command",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Slider Settings/Min": -1.0,
+              "Slider Settings/Max": 1.0,
+              "Slider Settings/Block increment": 0.0625,
+              "Visuals/Display value": true
+            }
+          },
+          "8,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Number Slider",
+              "_source0": "network_table:///Simulator Controller Table/Sim Y Command",
+              "_title": "/Simulator Controller Table/Sim Y Command",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Slider Settings/Min": -1.0,
+              "Slider Settings/Max": 1.0,
+              "Slider Settings/Block increment": 0.0625,
+              "Visuals/Display value": true
+            }
           }
         }
       }
@@ -379,8 +430,8 @@
   ],
   "windowGeometry": {
     "x": -8.0,
-    "y": -8.0,
+    "y": 0.0,
     "width": 1936.0,
-    "height": 1056.0
+    "height": 1057.0
   }
 }
