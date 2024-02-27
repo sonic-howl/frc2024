@@ -149,9 +149,6 @@ class SwerveSubsystem:
     y *= SwerveConstants.kDriveMaxMetersPerSecond
 
     if self.field_oriented:
-      if DriverStation.getAlliance() == DriverStation.Alliance.kRed:
-        x = -x
-        y = -y
       chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
         x,
         y,
@@ -215,3 +212,28 @@ class SwerveSubsystem:
     self.front_right.setDesiredState(fr, isClosedLoop=isClosedLoop)
     self.back_right.setDesiredState(bl, isClosedLoop=isClosedLoop)
     self.back_left.setDesiredState(br, isClosedLoop=isClosedLoop)
+
+  def moveToPose(self, pose: Pose2d):
+    currentPose = Pose2d
+    x = currentPose.X()
+    y = currentPose.Y()
+    rotation = currentPose.rotation()
+
+    errorX = pose.X() - x
+    errorY = pose.Y() - y
+    errorRotaion = pose.rotation() - rotation
+
+    # TBD
+    KpX = 0.314159265358979
+    KpY = 0.314159265358979
+    KpRotation = 0.4
+
+    commandX = errorX * KpX
+    commandY = errorY * KpY
+    commandRotation = errorRotaion * KpRotation
+
+    commandX = utils.utils.limiter(commandX, -1, 1)
+    commandY = utils.utils.limiter(commandY, -1, 1)
+    commandRotation = utils.utils.limiter(commandRotation, -1, 1)
+
+    self.setvelocity(commandX, commandY, commandRotation)

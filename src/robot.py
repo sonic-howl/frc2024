@@ -71,6 +71,11 @@ class MyRobot(wpilib.TimedRobot):
 
     self.togglefieldoriented = self.pilots.get_view_command()
 
+    self.moveToAmp = self.pilots.get_move_to_amp_command()
+    self.moveToSpeaker = self.pilots.get_move_to_speaker_command()
+    self.moveToPickupLeft = self.pilots.get_move_to_pickup_left_command()
+    self.moveToPickupRight = self.pilots.get_move_to_pickup_right_command()
+
   def setOutputs(self):
     # Robot Pose
     odometry_pose = self.drivebase.getPose()
