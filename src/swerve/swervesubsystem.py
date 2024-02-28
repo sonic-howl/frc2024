@@ -214,14 +214,14 @@ class SwerveSubsystem:
     self.back_left.setDesiredState(br, isClosedLoop=isClosedLoop)
 
   def moveToPose(self, pose: Pose2d):
-    currentPose = Pose2d
+    currentPose = self.getPose()
     x = currentPose.X()
     y = currentPose.Y()
-    rotation = currentPose.rotation()
+    rotation = currentPose.rotation().radians()
 
     errorX = pose.X() - x
     errorY = pose.Y() - y
-    errorRotaion = pose.rotation() - rotation
+    errorRotaion = pose.rotation().radians() - rotation
 
     # TBD
     KpX = 0.314159265358979

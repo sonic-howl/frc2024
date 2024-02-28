@@ -6,6 +6,7 @@ import wpilib.deployinfo
 import wpimath.geometry
 from wpilib import Field2d, SmartDashboard
 
+import constants.FieldConstants as FieldConstants
 import drivestation
 import driveteam
 import launcher
@@ -198,6 +199,26 @@ class MyRobot(wpilib.TimedRobot):
     magnitude = abs(self.strafe) + abs(self.drive) + abs(self.turn)
     if utils.utils.dz(magnitude) > 0:
       self.drivebase.setvelocity(self.drive, self.strafe, self.turn)
+    elif self.moveToAmp:
+      if wpilib.DriverStation.getAlliance() == wpilib.DriverStation.Alliance.kBlue:
+        self.drivebase.moveToPose(FieldConstants.kBlueAmpLocation)
+      else:
+        self.drivebase.moveToPose(FieldConstants.kRedAmpLocation)
+    elif self.moveToSpeaker:
+      if wpilib.DriverStation.getAlliance() == wpilib.DriverStation.Alliance.kBlue:
+        self.drivebase.moveToPose(FieldConstants.kBlueSpeakerLocation)
+      else:
+        self.drivebase.moveToPose(FieldConstants.kRedSpeakerLocation)
+    elif self.moveToPickupLeft:
+      if wpilib.DriverStation.getAlliance() == wpilib.DriverStation.Alliance.kBlue:
+        self.drivebase.moveToPose(FieldConstants.kBluePickupLeftLocation)
+      else:
+        self.drivebase.moveToPose(FieldConstants.kRedPickupLeftLocation)
+    elif self.moveToPickupRight:
+      if wpilib.DriverStation.getAlliance() == wpilib.DriverStation.Alliance.kBlue:
+        self.drivebase.moveToPose(FieldConstants.kBluePickupRightLocation)
+      else:
+        self.drivebase.moveToPose(FieldConstants.kRedPickupRightLocation)
     else:
       self.drivebase.stop()
 
