@@ -1,4 +1,5 @@
 import wpilib
+import wpinet
 import wpilib.deployinfo
 from cscore import CameraServer as CS
 
@@ -58,6 +59,10 @@ class MyRobot(wpilib.TimedRobot):
     camera0.setResolution(640, 480)
     camera1 = CS.startAutomaticCapture()
     camera1.setResolution(640, 480)
+
+    # Forawrd the necessary ports to access the Limelight. Should expose ports: (5800, 5801, 5802, 5803, 5804, 5805, 5806, and 5807)
+    for port in range(5800, 5807 + 1):
+      wpinet.PortForwarder.getInstance().add(port, "limelight.local", port)
 
     # Add the deploy artifacts to the shuffleboard
     addDeployArtifacts()
