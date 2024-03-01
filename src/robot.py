@@ -119,6 +119,7 @@ class MyRobot(wpilib.TimedRobot):
     addDeployArtifacts()
 
     self.autoMoveCounter = 0
+    self.autoShootCounter = 0
 
   def disabledPeriodic(self):
     self.drivebase.stop()
