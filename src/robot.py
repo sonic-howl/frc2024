@@ -200,7 +200,13 @@ class MyRobot(wpilib.TimedRobot):
 
     magnitude = abs(self.strafe) + abs(self.drive) + abs(self.turn)
     if utils.utils.dz(magnitude) > 0:
-      self.drivebase.setvelocity(self.drive, self.strafe, self.turn)
+      if (
+        wpilib.DriverStation.getAlliance() == wpilib.DriverStation.Alliance.kRed
+        and self.drivebase.field_oriented
+      ):
+        self.drivebase.setvelocity(-self.drive, -self.strafe, self.turn)
+      else:
+        self.drivebase.setvelocity(self.drive, self.strafe, self.turn)
     elif self.moveToAmp:
       if wpilib.DriverStation.getAlliance() == wpilib.DriverStation.Alliance.kBlue:
         self.drivebase.moveToPose(
@@ -232,7 +238,7 @@ class MyRobot(wpilib.TimedRobot):
         self.drivebase.moveToPose(
           FieldConstants.kBluePickupLeftLocation.transformBy(
             wpimath.geometry.Transform2d(
-              FieldConstants.BluePickupOffset, wpimath.geometry.Rotation2d
+              FieldConstants.BluePickupOffset, wpimath.geometry.Rotation2d()
             )
           )
         )
@@ -240,7 +246,7 @@ class MyRobot(wpilib.TimedRobot):
         self.drivebase.moveToPose(
           FieldConstants.kRedPickupLeftLocation.transformBy(
             wpimath.geometry.Transform2d(
-              FieldConstants.RedPickupOffset, wpimath.geometry.Rotation2d
+              FieldConstants.RedPickupOffset, wpimath.geometry.Rotation2d()
             )
           )
         )
@@ -249,7 +255,7 @@ class MyRobot(wpilib.TimedRobot):
         self.drivebase.moveToPose(
           FieldConstants.kBluePickupRightLocation.transformBy(
             wpimath.geometry.Transform2d(
-              FieldConstants.BluePickupOffset, wpimath.geometry.Rotation2d
+              FieldConstants.BluePickupOffset, wpimath.geometry.Rotation2d()
             )
           )
         )
@@ -257,7 +263,7 @@ class MyRobot(wpilib.TimedRobot):
         self.drivebase.moveToPose(
           FieldConstants.kRedPickupRightLocation.transformBy(
             wpimath.geometry.Transform2d(
-              FieldConstants.RedPickupOffset, wpimath.geometry.Rotation2d
+              FieldConstants.RedPickupOffset, wpimath.geometry.Rotation2d()
             )
           )
         )

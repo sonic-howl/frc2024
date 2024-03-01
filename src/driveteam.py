@@ -8,16 +8,10 @@ class DriveTeam:
 
   ### Pilot ###
   def get_strafe_command(self):
-    if wpilib.DriverStation.getAlliance() == wpilib.DriverStation.Alliance.kRed:
-      return self.pilot.getLeftX()
-    else:
-      return -self.pilot.getLeftX()
+    return -self.pilot.getLeftX()
 
   def get_drive_command(self):  # translational(foward/backward)
-    if wpilib.DriverStation.getAlliance() == wpilib.DriverStation.Alliance.kRed:
-      return self.pilot.getLeftY()
-    else:
-      return -self.pilot.getLeftY()
+    return -self.pilot.getLeftY()
 
   def get_turn_command(self):  # left/right
     return -self.pilot.getRightX()

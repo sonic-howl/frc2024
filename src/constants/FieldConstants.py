@@ -6,11 +6,11 @@ from constants.RobotConstants import RobotConstants
 
 MetersPerInch = 0.0254
 
-kSpeakerShootingRange = 72 + (RobotConstants.frame_length / 2) * MetersPerInch
+kSpeakerShootingRange = (72 + (RobotConstants.frame_length / 2)) * MetersPerInch
 kAmpShootingRange = (
-  0 + (RobotConstants.frame_length / 2 + RobotConstants.bumper_width) * MetersPerInch
-)
-kPickupRange = 20 + (RobotConstants.frame_length / 2) * MetersPerInch
+  0 + (RobotConstants.frame_length / 2 + RobotConstants.bumper_width)
+) * MetersPerInch
+kPickupRange = (20 + (RobotConstants.frame_length / 2)) * MetersPerInch
 ## Locations -- https://firstfrc.blob.core.windows.net/frc2024/FieldAssets/2024LayoutMarkingDiagram.pdf, page 4 ##
 
 # Speaker locations #

@@ -236,4 +236,6 @@ class SwerveSubsystem:
     commandY = utils.utils.limiter(commandY, -1, 1)
     commandRotation = utils.utils.limiter(commandRotation, -1, 1)
 
+    self.field_oriented = True
+
     self.setvelocity(commandX, commandY, commandRotation)
