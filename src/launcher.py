@@ -27,7 +27,7 @@ class Launchers:
     self.motor2.set(0.0)
     self.feed.set(0.0)
     self.elevator.set(0.0)
-    self.firetimer = 50  # In robot cycles
+    self.firetimer = 75  # In robot cycles
 
   def shoot(self, fire: float):
     if fire <= 0.05:
