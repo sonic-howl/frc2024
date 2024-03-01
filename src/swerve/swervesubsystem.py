@@ -103,6 +103,8 @@ class SwerveSubsystem:
     self.back_right.resetEncoders()
 
   def resetOdometer(self, pose: Pose2d = Pose2d()):
+    self.odometerGyroOffset = pose.rotation() - self.getRotation2d()
+
     self.odometer.resetPosition(
       self.getRotation2d(),
       [
@@ -117,7 +119,8 @@ class SwerveSubsystem:
 
   def periodic(self) -> None:
     self.odometer.update(
-      self.getRotation2d(),
+      self.getRotation2d()
+      + self.odometerGyroOffset,  # TODO: Verify if this is necessary to correct the odometry
       (
         self.front_left.getPosition(),
         self.front_right.getPosition(),
@@ -156,7 +159,8 @@ class SwerveSubsystem:
         x,
         y,
         z,
-        self.getRotation2d(),
+        self.getRotation2d()
+        + self.odometerGyroOffset,  # Adding the odometry gyro offset at init to correct for the 180 degree difference
       )
     else:
       chassisSpeeds = ChassisSpeeds(
