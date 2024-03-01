@@ -5,14 +5,18 @@ import wpilib
 import wpilib.deployinfo
 import wpimath.geometry
 from wpilib import Field2d, SmartDashboard
+from cscore import CameraServer as CS
+
 
 import drivestation
 import driveteam
 import launcher
 import swerve.swervesubsystem
 import utils.utils
+
 from constants.networktables import PoseInfo
 from constants.RobotConstants import RobotConstants
+
 from shuffleboard import addDeployArtifacts
 
 
@@ -108,6 +112,12 @@ class MyRobot(wpilib.TimedRobot):
     # Add 2D Field to SmartDashboard
     self.field = Field2d()
     SmartDashboard.putData("Field", self.field)
+
+    camera0 = CS.startAutomaticCapture()
+    camera0.setResolution(640, 480)
+    camera1 = CS.startAutomaticCapture()
+    camera1.setResolution(640, 480)
+
 
     # Add the deploy artifacts to the shuffleboard
     addDeployArtifacts()
