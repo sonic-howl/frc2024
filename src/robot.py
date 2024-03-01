@@ -189,12 +189,14 @@ class MyRobot(wpilib.TimedRobot):
     drivestation.setDBLED("1", self.eject)
 
     wpilib.SmartDashboard.putString("DB/String 0", str(self.drivebase.getRotation2d()))
-    # drivestation.light_2(self.fire)
-    # drivestation.light_3(self.pickup)
 
     # drive base
     if self.togglefieldoriented:
       self.drivebase.toggleFieldOriented()
+
+      wpilib.SmartDashboard.putString(
+        "fieldOriented", str(self.drivebase.field_oriented)
+      )
 
     magnitude = abs(self.strafe) + abs(self.drive) + abs(self.turn)
     if utils.utils.dz(magnitude) > 0:

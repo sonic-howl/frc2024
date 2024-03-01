@@ -1,7 +1,8 @@
 import math
 
-from RobotConstants import RobotConstants
 from wpimath.geometry import Pose2d, Translation2d
+
+from constants.RobotConstants import RobotConstants
 
 MetersPerInch = 0.0254
 
