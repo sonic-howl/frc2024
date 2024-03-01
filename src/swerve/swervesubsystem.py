@@ -80,6 +80,8 @@ class SwerveSubsystem:
 
     self.gyroCalibrated = False
 
+    self.odometerGyroOffset = Rotation2d()
+
   def getAngle(self) -> float:
     return -self.gyro.getYaw()
 
@@ -119,9 +121,7 @@ class SwerveSubsystem:
 
   def periodic(self) -> None:
     self.odometer.update(
-      self.getRotation2d()
-      + self.odometerGyroOffset,  # TODO: Verify if this is necessary to correct the odometry
-      (
+      self.getRotation2d()(
         self.front_left.getPosition(),
         self.front_right.getPosition(),
         self.back_left.getPosition(),
