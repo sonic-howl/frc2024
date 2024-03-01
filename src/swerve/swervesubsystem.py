@@ -80,6 +80,8 @@ class SwerveSubsystem:
 
     self.gyroCalibrated = False
 
+    self.odometerGyroOffset = Rotation2d()
+
   def getAngle(self) -> float:
     return -self.gyro.getYaw()
 
