@@ -34,16 +34,16 @@ class DriveTeam:
     return self.copilot.getLeftY()
 
   def get_firing_command(self) -> float:  # shoot shooter
-    return self.copilot.getLeftTriggerAxis()
-
-  def get_unjam_command(self) -> bool:  # unjam shooter
-    return self.copilot.getLeftBumper()
-
-  def get_pickup_command(self) -> float:  # used to pickup rings
     return self.copilot.getRightTriggerAxis()
 
-  def get_eject_command(self) -> bool:  # eject stuck note
+  def get_unjam_command(self) -> bool:  # unjam shooter
     return self.copilot.getRightBumper()
+
+  def get_pickup_command(self) -> float:  # used to pickup rings
+    return self.copilot.getLeftTriggerAxis()
+
+  def get_eject_command(self) -> bool:  # eject stuck note
+    return self.copilot.getLeftBumper()
 
   def get_test_command(self):
     return self.pilot.getAButton()
