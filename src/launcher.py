@@ -55,6 +55,7 @@ class Launchers:
     self.motor2.set(-0.25)
     self.feed.set(-0.5)
 
+  ### Elevator is currently not physically implemented. Might be added later. ###
   # def elevate(self, elevate: float):
   #   # Stop unrelated motors
   #   self.motor1.set(0.0)
