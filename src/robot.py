@@ -118,7 +118,6 @@ class MyRobot(wpilib.TimedRobot):
     camera1 = CS.startAutomaticCapture()
     camera1.setResolution(640, 480)
 
-
     # Add the deploy artifacts to the shuffleboard
     addDeployArtifacts()
 
