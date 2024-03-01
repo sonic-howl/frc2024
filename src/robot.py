@@ -177,15 +177,17 @@ class MyRobot(wpilib.TimedRobot):
     """This function is called periodically during autonomous."""
     if self.autoShootCounter >= 0:
       self.autoShootCounter = self.autoShootCounter - 1
-      launcher.Launchers.shoot(self, 1.0)
-    if self.autoShootCounter <= 0 and self.autoMoveCounter >= 0:
+      self.launcher.shoot(self, 1.0)
+    elif self.autoShootCounter < 0 and self.autoMoveCounter >= 0:
       self.autoMoveCounter = self.autoMoveCounter - 1
+      self.launcher.stop()
       if wpilib.DriverStation.getAlliance() == wpilib.DriverStation.Alliance.kBlue:
         self.drivebase.setvelocity(0.3, 0.0, 0.0)
       else:
         self.drivebase.setvelocity(-0.3, 0.0, 0.0)
-
-    self.drivebase.stop()
+    else:
+      self.drivebase.stop()
+      self.launcher.stop()
 
     self.setOutputs()
 
