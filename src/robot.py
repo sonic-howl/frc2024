@@ -1,12 +1,22 @@
+import math
+
+import ntcore
 import wpilib
 import wpilib.deployinfo
+import wpimath.geometry
+from wpilib import Field2d, SmartDashboard
 from cscore import CameraServer as CS
+
 
 import drivestation
 import driveteam
-
+import launcher
 import swerve.swervesubsystem
 import utils.utils
+
+from constants.networktables import PoseInfo
+from constants.RobotConstants import RobotConstants
+
 from shuffleboard import addDeployArtifacts
 
 
@@ -16,6 +26,8 @@ class MyRobot(wpilib.TimedRobot):
 
     self.pilots = driveteam.DriveTeam()
     self.drivebase = swerve.swervesubsystem.SwerveSubsystem()
+    self.launcher = launcher.Launchers()
+
     self.strafe = 0.0
     self.turn = 0.0
     self.drive = 0.0
@@ -30,6 +42,17 @@ class MyRobot(wpilib.TimedRobot):
     self.unjam = False
     self.pickup = 0.0
     self.eject = False
+
+  def init_NT(self):
+    """
+    This function initializes network tables for the robot
+    """
+    self.network_table = ntcore.NetworkTableInstance.getDefault()
+    self.pose_table = self.network_table.getTable(PoseInfo.name)
+    self.odometry_x_pub = self.pose_table.getFloatTopic(PoseInfo.odometry_x).publish()
+    self.odometry_y_pub = self.pose_table.getFloatTopic(PoseInfo.odometry_y).publish()
+    self.odometry_r_pub = self.pose_table.getFloatTopic(PoseInfo.odometry_r).publish()
+    self.gyro_pub = self.pose_table.getFloatTopic(PoseInfo.gyro_angle).publish()
 
   def getInputs(self):
     self.strafe = self.pilots.get_strafe_command()
@@ -49,11 +72,47 @@ class MyRobot(wpilib.TimedRobot):
 
     self.togglefieldoriented = self.pilots.get_view_command()
 
+  def setOutputs(self):
+    # Robot Pose
+    odometry_pose = self.drivebase.getPose()
+    self.odometry_x_pub.set(odometry_pose.X())
+    self.odometry_y_pub.set(odometry_pose.Y())
+    self.odometry_r_pub.set(odometry_pose.rotation().degrees())
+    self.gyro_pub.set(self.drivebase.getAngle())
+    # Update Field2D Robot Pose
+    self.field.setRobotPose(self.drivebase.getPose())
+
   def robotInit(self):
     """
     This function is called upon program startup and
     should be used for any initialization code.
     """
+    # Sendable Chooser
+    self.defaultAuto = "Default Auto"
+    self.blueLeft = "Blue Left"
+    self.blueMiddle = "Blue Middle"
+    self.blueRight = "Blue Right"
+    self.redRight = "Red Right"
+    self.redMiddle = "Red Middle"
+    self.redLeft = "Red Left"
+
+    self.init_NT()
+
+    self.chooser = wpilib.SendableChooser()
+
+    self.chooser.setDefaultOption("Default Auto", self.defaultAuto)
+    self.chooser.addOption("Blue Left", self.blueLeft)
+    self.chooser.addOption("Blue Middle", self.blueMiddle)
+    self.chooser.addOption("Blue Right", self.blueRight)
+    self.chooser.addOption("Red Right", self.redRight)
+    self.chooser.addOption("Red Middle", self.redMiddle)
+    self.chooser.addOption("Red Left", self.redLeft)
+    wpilib.SmartDashboard.putData("Auto choices", self.chooser)
+
+    # Add 2D Field to SmartDashboard
+    self.field = Field2d()
+    SmartDashboard.putData("Field", self.field)
+
     camera0 = CS.startAutomaticCapture()
     camera0.setResolution(640, 480)
     camera1 = CS.startAutomaticCapture()
@@ -62,11 +121,60 @@ class MyRobot(wpilib.TimedRobot):
     # Add the deploy artifacts to the shuffleboard
     addDeployArtifacts()
 
+  def disabledPeriodic(self):
+    self.drivebase.stop()
+
+    self.setOutputs()
+
   def autonomousInit(self):
     """This function is run once each time the robot enters autonomous mode."""
+    # Check only once during autonomous initialization for setting initial pose
+    self.autoSelected = self.chooser.getSelected()
+
+    match self.autoSelected:
+      # Positions mark the autonomous start line, adjust for frame and bumpers
+      case self.blueLeft:
+        kX = 76.125 - RobotConstants.frame_length / 2 - RobotConstants.bumper_width
+        kY = 275.42
+        kRotation = math.pi
+      case self.blueMiddle:
+        kX = 76.125 - RobotConstants.frame_length / 2 - RobotConstants.bumper_width
+        kY = 218.42
+        kRotation = math.pi
+      case self.blueRight:
+        kX = 76.125 - RobotConstants.frame_length / 2 - RobotConstants.bumper_width
+        kY = 161.42
+        kRotation = math.pi
+      case self.redRight:
+        kX = 577.125 + RobotConstants.frame_length / 2 + RobotConstants.bumper_width
+        kY = 275.42
+        kRotation = 0
+      case self.redMiddle:
+        kX = 577.125 + RobotConstants.frame_length / 2 + RobotConstants.bumper_width
+        kY = 218.42
+        kRotation = 0
+      case self.redLeft:
+        kX = 577.125 + RobotConstants.frame_length / 2 + RobotConstants.bumper_width
+        kY = 161.42
+        kRotation = 0
+      case _:
+        kX = 0
+        kY = 0
+        kRotation = 0
+
+    # Set the dashboard programmed initial pose.
+    inchToM = 39.73  # Inches to metres (x / inchToM)
+    if self.drivebase.isCalibrated():
+      self.drivebase.resetOdometer(
+        wpimath.geometry.Pose2d(kX / inchToM, kY / inchToM, kRotation)
+      )
+    # else the gyro is probably broken if it is still calibrating, degraded operations tbd.
 
   def autonomousPeriodic(self):
     """This function is called periodically during autonomous."""
+    self.drivebase.stop()
+
+    self.setOutputs()
 
   def teleopInit(self):
     """This function is called once each time the robot enters teleoperated mode."""
@@ -78,8 +186,6 @@ class MyRobot(wpilib.TimedRobot):
     drivestation.setDBLED("1", self.eject)
 
     wpilib.SmartDashboard.putString("DB/String 0", str(self.drivebase.getRotation2d()))
-    # drivestation.light_2(self.fire)
-    # drivestation.light_3(self.pickup)
 
     # drive base
     if self.togglefieldoriented:
@@ -90,6 +196,22 @@ class MyRobot(wpilib.TimedRobot):
       self.drivebase.setvelocity(self.drive, self.strafe, self.turn)
     else:
       self.drivebase.stop()
+
+    # launcher
+    if self.unjam:
+      self.launcher.unjams()
+    elif self.eject:
+      self.launcher.eject()
+    # elif abs(self.aim) >= 0.05:
+    #   self.launcher.elevate(self.aim)
+    elif self.fire > 0.1:
+      self.launcher.shoot(self.fire)
+    elif self.pickup:
+      self.launcher.pickup()
+    else:
+      self.launcher.stop()
+
+    self.setOutputs()
 
   def testInit(self):
     """This function is called once each time the robot enters test mode."""

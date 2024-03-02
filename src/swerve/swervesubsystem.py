@@ -1,11 +1,9 @@
 import math
-from threading import Thread
-from time import sleep
 from typing import Tuple
 
 import wpilib
 from navx import AHRS
-from wpilib import DriverStation, Field2d, SmartDashboard
+from wpilib import DriverStation
 from wpimath.controller import ProfiledPIDControllerRadians
 from wpimath.geometry import Pose2d, Rotation2d
 from wpimath.kinematics import (
@@ -67,13 +65,6 @@ class SwerveSubsystem:
       ),
     )
 
-    def resetGyro():
-      """reset gyro after it's calibration of 1s"""
-      sleep(1)
-      self.resetGyro()
-
-    Thread(target=resetGyro).start()
-
     self.theta_pid = ProfiledPIDControllerRadians(
       SwerveConstants.kPRobotTurn,
       SwerveConstants.kIRobotTurn,
@@ -87,18 +78,9 @@ class SwerveSubsystem:
     self.theta_pid.enableContinuousInput(0, math.tau)
     self.theta_pid.setTolerance(math.radians(3))
 
-    if not RobotConstants.isSimulation:
-      self.field = Field2d()
-      SmartDashboard.putData("Field", self.field)
+    self.gyroCalibrated = False
 
   def getAngle(self) -> float:
-    # return self.gyro.getAngle() % 360
-    # return self.gyro.getFusedHeading()
-    # if RobotConstants.isSimulation:
-    #  from physics import PhysicsEngine
-
-    #  return PhysicsEngine.simGyro.getAngle()
-
     return -self.gyro.getYaw()
 
   def getRotation2d(self):
@@ -111,6 +93,9 @@ class SwerveSubsystem:
     # self.gyro.zeroYaw()
     self.gyro.reset()
 
+  def isCalibrated(self):
+    return self.gyroCalibrated
+
   def reset_motor_positions(self):
     self.front_left.resetEncoders()
     self.front_right.resetEncoders()
@@ -120,19 +105,17 @@ class SwerveSubsystem:
   def resetOdometer(self, pose: Pose2d = Pose2d()):
     self.odometer.resetPosition(
       self.getRotation2d(),
+      [
+        self.front_left.getPosition(),
+        self.front_right.getPosition(),
+        self.back_left.getPosition(),
+        self.back_right.getPosition(),
+      ],
       pose,
-      self.front_left.getPosition(),
-      self.front_right.getPosition(),
-      self.back_left.getPosition(),
-      self.back_right.getPosition(),
     )
+    # potentially call gyro.setAngleAdjustment to align gyro with odometry (not necessary if we only use odometry)
 
   def periodic(self) -> None:
-    # TODO print gyro angle, robot pose on dashboard
-
-    if not RobotConstants.isSimulation:
-      self.field.setRobotPose(self.getPose())
-
     self.odometer.update(
       self.getRotation2d(),
       (
@@ -143,6 +126,13 @@ class SwerveSubsystem:
       ),
     )
 
+    if self.isCalibrated():
+      if self.gyro.isCalibrating():
+        self.gyroCalibrated = False
+    elif not self.gyro.isCalibrating():
+      self.resetGyro()
+      self.gyroCalibrated = True
+
   def toggleFieldOriented(self):
     self.field_oriented = not self.field_oriented
 
@@ -152,16 +142,11 @@ class SwerveSubsystem:
     x = utils.utils.dz(drive) * speed_scale
     y = utils.utils.dz(strafe) * speed_scale
     z = utils.utils.dz(rotate) * speed_scale
-    # z = self.zLimiter.calculate(z)
     z = utils.utils.calcAxisSpeedWithCurvatureAndDeadzone(z)
     # convert values to meters per second and apply rate limiters
     x *= SwerveConstants.kDriveMaxMetersPerSecond
-    # x = self.xLimiter.calculate(x)
 
     y *= SwerveConstants.kDriveMaxMetersPerSecond
-    # y = self.yLimiter.calculate(y)
-
-    # z = self.zLimiter.calculate(z)
 
     if self.field_oriented:
       if DriverStation.getAlliance() == DriverStation.Alliance.kRed:
@@ -180,19 +165,17 @@ class SwerveSubsystem:
         z,
       )
 
-    # if RobotConstants.isSimulation:
-    # self.simChassisSpeeds = chassisSpeeds
-
     swerveModuleStates = SwerveSubsystem.toSwerveModuleStatesForecast(chassisSpeeds)
     self.setModuleStates(swerveModuleStates)
 
   def stop(self) -> None:
+    self.periodic()
     self.front_left.stop()
     self.front_right.stop()
     self.back_left.stop()
     self.back_right.stop()
 
-    if RobotConstants.isSimulation:
+    if not wpilib.RobotBase.isReal():
       self.simChassisSpeeds = None
 
   @staticmethod
