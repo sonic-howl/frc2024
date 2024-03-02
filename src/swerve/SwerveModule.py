@@ -40,7 +40,6 @@ class SwerveModule:
     self.drive_motor = phoenix5.WPI_TalonFX(drive_motor_id)
     # talonfx_configs = configs.TalonFXConfiguration()
 
-    # Turn Motor
     self.drive_motor.configPeakOutputReverse(-RobotConstants.maxSpeed)
     self.drive_motor.configPeakOutputForward(RobotConstants.maxSpeed)
     self.drive_motor.configClosedLoopPeakOutput(0, RobotConstants.maxSpeed)
