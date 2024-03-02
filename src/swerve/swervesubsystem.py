@@ -175,7 +175,7 @@ class SwerveSubsystem:
     self.back_left.stop()
     self.back_right.stop()
 
-    if wpilib.RobotBase.isReal():
+    if not wpilib.RobotBase.isReal():
       self.simChassisSpeeds = None
 
   @staticmethod
