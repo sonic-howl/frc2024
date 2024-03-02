@@ -21,6 +21,7 @@ class Launchers:
     self.feedswitch = wpilib.DigitalInput(0)
 
     self.feed_amp_counter = 0
+    self.firetimer = 75
 
   def stop(self):
     self.motor1.set(0.0)
