@@ -117,4 +117,4 @@ class Launchers:
     self.motor2.set(0.0)
     # self.elevator.set(0.0)
     # Push note back out the pickup
-    self.feed.set(-0.3)
+    self.feed.set(-0.5)
