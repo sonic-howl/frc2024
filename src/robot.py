@@ -4,19 +4,16 @@ import ntcore
 import wpilib
 import wpilib.deployinfo
 import wpimath.geometry
-from wpilib import Field2d, SmartDashboard
 from cscore import CameraServer as CS
-
+from wpilib import Field2d, SmartDashboard
 
 import drivestation
 import driveteam
 import launcher
 import swerve.swervesubsystem
 import utils.utils
-
 from constants.networktables import PoseInfo
 from constants.RobotConstants import RobotConstants
-
 from shuffleboard import addDeployArtifacts
 
 
@@ -121,6 +118,9 @@ class MyRobot(wpilib.TimedRobot):
     # Add the deploy artifacts to the shuffleboard
     addDeployArtifacts()
 
+    self.autoMoveCounter = 0
+    self.autoShootCounter = 0
+
   def disabledPeriodic(self):
     self.drivebase.stop()
 
@@ -168,11 +168,26 @@ class MyRobot(wpilib.TimedRobot):
       self.drivebase.resetOdometer(
         wpimath.geometry.Pose2d(kX / inchToM, kY / inchToM, kRotation)
       )
+
+    self.autoMoveCounter = 75
+    self.autoShootCounter = 100
     # else the gyro is probably broken if it is still calibrating, degraded operations tbd.
 
   def autonomousPeriodic(self):
     """This function is called periodically during autonomous."""
-    self.drivebase.stop()
+    if self.autoShootCounter >= 0:
+      self.autoShootCounter = self.autoShootCounter - 1
+      self.launcher.shoot(1.0)
+    elif self.autoShootCounter < 0 and self.autoMoveCounter >= 0:
+      self.autoMoveCounter = self.autoMoveCounter - 1
+      self.launcher.stop()
+      if wpilib.DriverStation.getAlliance() == wpilib.DriverStation.Alliance.kBlue:
+        self.drivebase.setvelocity(-0.3, 0.0, 0.0)
+      else:
+        self.drivebase.setvelocity(0.3, 0.0, 0.0)
+    else:
+      self.drivebase.stop()
+      self.launcher.stop()
 
     self.setOutputs()
 
