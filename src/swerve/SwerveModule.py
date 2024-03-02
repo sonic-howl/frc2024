@@ -85,7 +85,7 @@ class SwerveModule:
 
     # We are not using the built in PID controller, but this is where the config would go...
     # self. #...
-    # self.turn_pid = self.turn_motor.getPIDController()
+    self.turn_pid = self.turn_motor.getPIDController()
     # self.turn_pid.setFeedbackDevice(self.turn_encoder)
     # self.turn_pid.setP(SwerveConstants.kPTurning)
     # self.turn_pid.setI(SwerveConstants.kITurning)
