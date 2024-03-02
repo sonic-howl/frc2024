@@ -220,7 +220,7 @@ class MyRobot(wpilib.TimedRobot):
     # elif abs(self.aim) >= 0.05:
     #   self.launcher.elevate(self.aim)
     elif self.fire > 0.1:
-      self.launcher.shoot(self.fire)
+      self.launcher.shoot(1.0)
     elif self.pickup:
       self.launcher.pickup()
     else:
