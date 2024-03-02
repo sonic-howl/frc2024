@@ -66,36 +66,36 @@ class SwerveModule:
       turn_motor_id, rev.CANSparkLowLevel.MotorType.kBrushless
     )
     # ?
-    self.turn_motor.restoreFactoryDefaults()
-    self.turn_motor.setInverted(turn_motor_reversed)
-    self.turn_motor.setIdleMode(rev.CANSparkMax.IdleMode.kBrake)
-    # self.turn_motor.setOpenLoopRampRate(200 / 1000)  # ms
-    self.turn_motor.setSmartCurrentLimit(20)
-    self.turn_motor.setSecondaryCurrentLimit(20)
+    # self.turn_motor.restoreFactoryDefaults()
+    # self.turn_motor.setInverted(turn_motor_reversed)
+    # self.turn_motor.setIdleMode(rev.CANSparkMax.IdleMode.kBrake)
+    # # self.turn_motor.setOpenLoopRampRate(200 / 1000)  # ms
+    # self.turn_motor.setSmartCurrentLimit(20)
+    # self.turn_motor.setSecondaryCurrentLimit(20)
 
     # create encoders
     self.turn_encoder = self.turn_motor.getAbsoluteEncoder(
       rev.SparkMaxAbsoluteEncoder.Type.kDutyCycle
     )
-    self.turn_encoder.setPositionConversionFactor(math.pi * 2)  # radians
-    self.turn_encoder.setVelocityConversionFactor(
-      (math.pi * 2) / 60
-    )  # radians per second
-    self.turn_encoder.setInverted(abs_encoder_reversed)
+    # self.turn_encoder.setPositionConversionFactor(math.pi * 2)  # radians
+    # self.turn_encoder.setVelocityConversionFactor(
+    #   (math.pi * 2) / 60
+    # )  # radians per second
+    # self.turn_encoder.setInverted(abs_encoder_reversed)
 
     # We are not using the built in PID controller, but this is where the config would go...
     # self. #...
-    self.turn_pid = self.turn_motor.getPIDController()
-    self.turn_pid.setFeedbackDevice(self.turn_encoder)
-    self.turn_pid.setP(SwerveConstants.kPTurning)
-    self.turn_pid.setI(SwerveConstants.kITurning)
-    self.turn_pid.setD(SwerveConstants.kDTurning)
-    self.turn_pid.setPositionPIDWrappingEnabled(True)
-    self.turn_pid.setPositionPIDWrappingMinInput(0)
-    self.turn_pid.setPositionPIDWrappingMaxInput(math.pi * 2)
-    self.turn_pid.setOutputRange(-1, 1)
+    # self.turn_pid = self.turn_motor.getPIDController()
+    # self.turn_pid.setFeedbackDevice(self.turn_encoder)
+    # self.turn_pid.setP(SwerveConstants.kPTurning)
+    # self.turn_pid.setI(SwerveConstants.kITurning)
+    # self.turn_pid.setD(SwerveConstants.kDTurning)
+    # self.turn_pid.setPositionPIDWrappingEnabled(True)
+    # self.turn_pid.setPositionPIDWrappingMinInput(0)
+    # self.turn_pid.setPositionPIDWrappingMaxInput(math.pi * 2)
+    # self.turn_pid.setOutputRange(-1, 1)
 
-    self.turn_motor.burnFlash()
+    # self.turn_motor.burnFlash()
 
     self.resetEncoders()
 
