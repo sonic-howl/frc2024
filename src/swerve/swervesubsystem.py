@@ -120,13 +120,16 @@ class SwerveSubsystem:
     # potentially call gyro.setAngleAdjustment to align gyro with odometry (not necessary if we only use odometry)
 
   def periodic(self) -> None:
-    self.odometer.update(
-      self.getRotation2d()(
-        self.front_left.getPosition(),
-        self.front_right.getPosition(),
-        self.back_left.getPosition(),
-        self.back_right.getPosition(),
-      ),
+    (
+      self.odometer.update(
+        self.getRotation2d(),
+        (
+          self.front_left.getPosition(),
+          self.front_right.getPosition(),
+          self.back_left.getPosition(),
+          self.back_right.getPosition(),
+        ),
+      )
     )
 
     if self.isCalibrated():
