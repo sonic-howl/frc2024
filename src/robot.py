@@ -46,6 +46,7 @@ class MyRobot(wpilib.TimedRobot):
     """
     self.network_table = ntcore.NetworkTableInstance.getDefault()
     self.pose_table = self.network_table.getTable(PoseInfo.name)
+
     self.odometry_x_pub = self.pose_table.getFloatTopic(PoseInfo.odometry_x).publish()
     self.odometry_y_pub = self.pose_table.getFloatTopic(PoseInfo.odometry_y).publish()
     self.odometry_r_pub = self.pose_table.getFloatTopic(PoseInfo.odometry_r).publish()
@@ -72,6 +73,7 @@ class MyRobot(wpilib.TimedRobot):
   def setOutputs(self):
     # Robot Pose
     odometry_pose = self.drivebase.getPose()
+
     self.odometry_x_pub.set(odometry_pose.X())
     self.odometry_y_pub.set(odometry_pose.Y())
     self.odometry_r_pub.set(odometry_pose.rotation().degrees())

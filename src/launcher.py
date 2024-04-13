@@ -24,8 +24,9 @@ class Launchers:
     self.firetimer = 75
 
   def stop(self):
-    # self.motor1.set(0.0)
-    # self.motor2.set(0.0)
+    self.motor1.set(0.0)
+    self.motor2.set(0.0)
+
     self.feed.set(0.0)
     self.elevator.set(0.0)
     self.firetimer = 75  # In robot cycles
