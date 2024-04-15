@@ -177,25 +177,25 @@ class MyRobot(wpilib.TimedRobot):
         wpimath.geometry.Pose2d(kX / inchToM, kY / inchToM, kRotation)
       )
 
-    self.autoMoveCounter = 75
-    self.autoShootCounter = 100
+    # self.autoMoveCounter = 75
+    # self.autoShootCounter = 100
     # else the gyro is probably broken if it is still calibrating, degraded operations tbd.
 
   def autonomousPeriodic(self):
     """This function is called periodically during autonomous."""
-    if self.autoShootCounter >= 0:
-      self.autoShootCounter = self.autoShootCounter - 1
-      self.launcher.shoot(1.0)
-    elif self.autoShootCounter < 0 and self.autoMoveCounter >= 0:
-      self.autoMoveCounter = self.autoMoveCounter - 1
-      self.launcher.stop()
-      if wpilib.DriverStation.getAlliance() == wpilib.DriverStation.Alliance.kBlue:
-        self.drivebase.setvelocity(-0.3, 0.0, 0.0)
-      else:
-        self.drivebase.setvelocity(0.3, 0.0, 0.0)
-    else:
-      self.drivebase.stop()
-      self.launcher.stop()
+    # if self.autoShootCounter >= 0:
+    #   self.autoShootCounter = self.autoShootCounter - 1
+    #   self.launcher.shoot(1.0)
+    # elif self.autoShootCounter < 0 and self.autoMoveCounter >= 0:
+    #   self.autoMoveCounter = self.autoMoveCounter - 1
+    #   self.launcher.stop()
+    #   if wpilib.DriverStation.getAlliance() == wpilib.DriverStation.Alliance.kBlue:
+    #     self.drivebase.setvelocity(-0.3, 0.0, 0.0)
+    #   else:
+    #     self.drivebase.setvelocity(0.3, 0.0, 0.0)
+    # else:
+    #   self.drivebase.stop()
+    #   self.launcher.stop()
 
     self.setOutputs()
 
@@ -219,7 +219,7 @@ class MyRobot(wpilib.TimedRobot):
       )
 
     magnitude = abs(self.strafe) + abs(self.drive) + abs(self.turn)
-    if utils.utils.dz(magnitude) > 0:
+    if utils.utils.dz(magnitude) > 0.025:
       if (
         wpilib.DriverStation.getAlliance() == wpilib.DriverStation.Alliance.kRed
         and self.drivebase.field_oriented

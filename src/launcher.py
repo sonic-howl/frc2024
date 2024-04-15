@@ -10,10 +10,10 @@ class Launchers:
 
     self.feed = rev.CANSparkMax(12, rev.CANSparkLowLevel.MotorType.kBrushless)
 
-    if wpilib.RobotBase.isReal():
-      self.elevator = rev.CANSparkMax(13, rev.CANSparkLowLevel.MotorType.kBrushed)
-    else:
-      self.elevator = rev.CANSparkMax(13, rev.CANSparkLowLevel.MotorType.kBrushless)
+    # if wpilib.RobotBase.isReal():
+    #   self.elevator = rev.CANSparkMax(13, rev.CANSparkLowLevel.MotorType.kBrushed)
+    # else:
+    #   self.elevator = rev.CANSparkMax(13, rev.CANSparkLowLevel.MotorType.kBrushless)
 
     # Limit switches
     self.upperswitch = wpilib.DigitalInput(1)
@@ -28,7 +28,7 @@ class Launchers:
     self.motor2.set(0.0)
 
     self.feed.set(0.0)
-    self.elevator.set(0.0)
+    # self.elevator.set(0.0)
     self.firetimer = 75  # In robot cycles
 
   def shoot(self, fire: float):
@@ -38,8 +38,8 @@ class Launchers:
       # Stop unrelated motors
       # self.elevator.set(0.0)
       # Spool up rollers
-      # self.motor1.set(-fire)
-      # self.motor2.set(fire)
+      self.motor1.set(-fire)
+      self.motor2.set(fire)
       self.firetimer = self.firetimer - 1
 
       # Feed ring into launcher when we are at the lowered position
@@ -53,8 +53,8 @@ class Launchers:
     # Stop unrelated motors
     # self.elevator.set(0.0)
     # Reverse rollers
-    # self.motor1.set(0.25)
-    # self.motor2.set(-0.25)
+    self.motor1.set(0.25)
+    self.motor2.set(-0.25)
     self.feed.set(-0.5)
 
   ### Elevator is currently not physically implemented. Might be added later. ###
@@ -102,8 +102,8 @@ class Launchers:
 
   def pickup(self):
     # # Stop unrelated motors
-    # self.motor1.set(0.0)
-    # self.motor2.set(0.0)
+    self.motor1.set(0.0)
+    self.motor2.set(0.0)
     # self.elevator.set(0.0)
     # Stop when note reaches limit switch in the feed mechanism
     if not self.feedswitch.get():
@@ -114,8 +114,8 @@ class Launchers:
 
   def eject(self):
     # Stop unrelated motors
-    # self.motor1.set(0.0)
-    # self.motor2.set(0.0)
+    self.motor1.set(0.0)
+    self.motor2.set(0.0)
     # self.elevator.set(0.0)
     # Push note back out the pickup
     self.feed.set(-0.5)
