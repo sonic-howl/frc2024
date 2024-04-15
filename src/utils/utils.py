@@ -8,6 +8,14 @@ def printAsync(*args, **kwargs) -> None:
   Thread(target=print, args=args, kwargs=kwargs).start()
 
 
+def limiter(value, min, max):
+  if value > max:
+    value = max
+  elif value < min:
+    value = min
+  return value
+
+
 def sgn(x: float) -> float:
   """return the sign of x"""
   return -1 if x < 0 else 1

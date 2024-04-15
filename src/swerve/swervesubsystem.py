@@ -3,7 +3,6 @@ from typing import Tuple
 
 import wpilib
 from navx import AHRS
-from wpilib import DriverStation
 from wpimath.controller import ProfiledPIDControllerRadians
 from wpimath.geometry import Pose2d, Rotation2d
 from wpimath.kinematics import (
@@ -155,9 +154,6 @@ class SwerveSubsystem:
     y *= SwerveConstants.kDriveMaxMetersPerSecond
 
     if self.field_oriented:
-      if DriverStation.getAlliance() == DriverStation.Alliance.kRed:
-        x = -x
-        y = -y
       chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
         x,
         y,
@@ -222,3 +218,30 @@ class SwerveSubsystem:
     self.front_right.setDesiredState(fr, isClosedLoop=isClosedLoop)
     self.back_right.setDesiredState(bl, isClosedLoop=isClosedLoop)
     self.back_left.setDesiredState(br, isClosedLoop=isClosedLoop)
+
+  def moveToPose(self, pose: Pose2d):
+    currentPose = self.getPose()
+    x = currentPose.X()
+    y = currentPose.Y()
+    rotation = currentPose.rotation().radians()
+
+    errorX = pose.X() - x
+    errorY = pose.Y() - y
+    errorRotaion = pose.rotation().radians() - rotation
+
+    # TBD
+    KpX = 1
+    KpY = 1
+    KpRotation = 1
+
+    commandX = errorX * KpX
+    commandY = errorY * KpY
+    commandRotation = errorRotaion * KpRotation
+
+    commandX = utils.utils.limiter(commandX, -1, 1)
+    commandY = utils.utils.limiter(commandY, -1, 1)
+    commandRotation = utils.utils.limiter(commandRotation, -1, 1)
+
+    self.field_oriented = True
+
+    self.setvelocity(commandX, commandY, commandRotation)

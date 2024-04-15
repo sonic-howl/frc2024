@@ -7,6 +7,7 @@ import wpimath.geometry
 from cscore import CameraServer as CS
 from wpilib import Field2d, SmartDashboard
 
+import constants.FieldConstants as FieldConstants
 import drivestation
 import driveteam
 import launcher
@@ -69,6 +70,11 @@ class MyRobot(wpilib.TimedRobot):
     self.eject = self.pilots.get_eject_command()
 
     self.togglefieldoriented = self.pilots.get_view_command()
+
+    self.moveToAmp = self.pilots.get_move_to_amp_command()
+    self.moveToSpeaker = self.pilots.get_move_to_speaker_command()
+    self.moveToPickupLeft = self.pilots.get_move_to_pickup_left_command()
+    self.moveToPickupRight = self.pilots.get_move_to_pickup_right_command()
 
   def setOutputs(self):
     # Robot Pose
@@ -208,9 +214,79 @@ class MyRobot(wpilib.TimedRobot):
     if self.togglefieldoriented:
       self.drivebase.toggleFieldOriented()
 
+      wpilib.SmartDashboard.putString(
+        "fieldOriented", str(self.drivebase.field_oriented)
+      )
+
     magnitude = abs(self.strafe) + abs(self.drive) + abs(self.turn)
     if utils.utils.dz(magnitude) > 0:
-      self.drivebase.setvelocity(self.drive, self.strafe, self.turn)
+      if (
+        wpilib.DriverStation.getAlliance() == wpilib.DriverStation.Alliance.kRed
+        and self.drivebase.field_oriented
+      ):
+        self.drivebase.setvelocity(-self.drive, -self.strafe, self.turn)
+      else:
+        self.drivebase.setvelocity(self.drive, self.strafe, self.turn)
+    elif self.moveToAmp:
+      if wpilib.DriverStation.getAlliance() == wpilib.DriverStation.Alliance.kBlue:
+        self.drivebase.moveToPose(
+          FieldConstants.kBlueAmpLocation.transformBy(
+            wpimath.geometry.Transform2d(0, -FieldConstants.kAmpShootingRange, 0)
+          )
+        )
+      else:
+        self.drivebase.moveToPose(
+          FieldConstants.kRedAmpLocation.transformBy(
+            wpimath.geometry.Transform2d(0, -FieldConstants.kAmpShootingRange, 0)
+          )
+        )
+    elif self.moveToSpeaker:
+      if wpilib.DriverStation.getAlliance() == wpilib.DriverStation.Alliance.kBlue:
+        self.drivebase.moveToPose(
+          FieldConstants.kBlueSpeakerLocation.transformBy(
+            wpimath.geometry.Transform2d(+FieldConstants.kSpeakerShootingRange, 0, 0)
+          )
+        )
+      else:
+        self.drivebase.moveToPose(
+          FieldConstants.kRedSpeakerLocation.transformBy(
+            wpimath.geometry.Transform2d(-FieldConstants.kSpeakerShootingRange, 0, 0)
+          )
+        )
+    elif self.moveToPickupLeft:
+      if wpilib.DriverStation.getAlliance() == wpilib.DriverStation.Alliance.kBlue:
+        self.drivebase.moveToPose(
+          FieldConstants.kBluePickupLeftLocation.transformBy(
+            wpimath.geometry.Transform2d(
+              FieldConstants.BluePickupOffset, wpimath.geometry.Rotation2d()
+            )
+          )
+        )
+      else:
+        self.drivebase.moveToPose(
+          FieldConstants.kRedPickupLeftLocation.transformBy(
+            wpimath.geometry.Transform2d(
+              FieldConstants.RedPickupOffset, wpimath.geometry.Rotation2d()
+            )
+          )
+        )
+    elif self.moveToPickupRight:
+      if wpilib.DriverStation.getAlliance() == wpilib.DriverStation.Alliance.kBlue:
+        self.drivebase.moveToPose(
+          FieldConstants.kBluePickupRightLocation.transformBy(
+            wpimath.geometry.Transform2d(
+              FieldConstants.BluePickupOffset, wpimath.geometry.Rotation2d()
+            )
+          )
+        )
+      else:
+        self.drivebase.moveToPose(
+          FieldConstants.kRedPickupRightLocation.transformBy(
+            wpimath.geometry.Transform2d(
+              FieldConstants.RedPickupOffset, wpimath.geometry.Rotation2d()
+            )
+          )
+        )
     else:
       self.drivebase.stop()
 
