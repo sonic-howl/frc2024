@@ -3,7 +3,6 @@ from typing import Tuple
 
 import wpilib
 from navx import AHRS
-from wpilib import DriverStation
 from wpimath.controller import ProfiledPIDControllerRadians
 from wpimath.geometry import Pose2d, Rotation2d
 from wpimath.kinematics import (
