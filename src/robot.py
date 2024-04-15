@@ -4,6 +4,7 @@ import ntcore
 import wpilib
 import wpilib.deployinfo
 import wpimath.geometry
+from cscore import CameraServer as CS
 from wpilib import Field2d, SmartDashboard
 
 import constants.FieldConstants as FieldConstants
@@ -46,9 +47,7 @@ class MyRobot(wpilib.TimedRobot):
     """
     self.network_table = ntcore.NetworkTableInstance.getDefault()
     self.pose_table = self.network_table.getTable(PoseInfo.name)
-    # self.odometry_pose_pub = self.pose_table.getFloatArrayTopic(
-    #   PoseInfo.odometry_pose
-    # ).publish()
+
     self.odometry_x_pub = self.pose_table.getFloatTopic(PoseInfo.odometry_x).publish()
     self.odometry_y_pub = self.pose_table.getFloatTopic(PoseInfo.odometry_y).publish()
     self.odometry_r_pub = self.pose_table.getFloatTopic(PoseInfo.odometry_r).publish()
@@ -80,9 +79,7 @@ class MyRobot(wpilib.TimedRobot):
   def setOutputs(self):
     # Robot Pose
     odometry_pose = self.drivebase.getPose()
-    # self.odometry_pose_pub.set(
-    #   [odometry_pose.X(), odometry_pose.Y(), odometry_pose.rotation().degrees()]
-    # )
+
     self.odometry_x_pub.set(odometry_pose.X())
     self.odometry_y_pub.set(odometry_pose.Y())
     self.odometry_r_pub.set(odometry_pose.rotation().degrees())
@@ -121,8 +118,16 @@ class MyRobot(wpilib.TimedRobot):
     self.field = Field2d()
     SmartDashboard.putData("Field", self.field)
 
+    camera0 = CS.startAutomaticCapture()
+    camera0.setResolution(640, 480)
+    # camera1 = CS.startAutomaticCapture()
+    # camera1.setResolution(640, 480)
+
     # Add the deploy artifacts to the shuffleboard
     addDeployArtifacts()
+
+    self.autoMoveCounter = 0
+    self.autoShootCounter = 0
 
   def disabledPeriodic(self):
     self.drivebase.stop()
@@ -171,11 +176,26 @@ class MyRobot(wpilib.TimedRobot):
       self.drivebase.resetOdometer(
         wpimath.geometry.Pose2d(kX / inchToM, kY / inchToM, kRotation)
       )
+
+    self.autoMoveCounter = 75
+    self.autoShootCounter = 100
     # else the gyro is probably broken if it is still calibrating, degraded operations tbd.
 
   def autonomousPeriodic(self):
     """This function is called periodically during autonomous."""
-    self.drivebase.stop()
+    if self.autoShootCounter >= 0:
+      self.autoShootCounter = self.autoShootCounter - 1
+      self.launcher.shoot(1.0)
+    elif self.autoShootCounter < 0 and self.autoMoveCounter >= 0:
+      self.autoMoveCounter = self.autoMoveCounter - 1
+      self.launcher.stop()
+      if wpilib.DriverStation.getAlliance() == wpilib.DriverStation.Alliance.kBlue:
+        self.drivebase.setvelocity(-0.3, 0.0, 0.0)
+      else:
+        self.drivebase.setvelocity(0.3, 0.0, 0.0)
+    else:
+      self.drivebase.stop()
+      self.launcher.stop()
 
     self.setOutputs()
 
@@ -273,10 +293,16 @@ class MyRobot(wpilib.TimedRobot):
     # launcher
     if self.unjam:
       self.launcher.unjams()
-    elif abs(self.aim) >= 0.05:
-      self.launcher.elevate(self.aim)
+    elif self.eject:
+      self.launcher.eject()
+    # elif abs(self.aim) >= 0.05:
+    #   self.launcher.elevate(self.aim)
+    elif self.fire > 0.1:
+      self.launcher.shoot(1.0)
+    elif self.pickup:
+      self.launcher.pickup()
     else:
-      self.launcher.shoot(self.fire)
+      self.launcher.stop()
 
     self.setOutputs()
 
