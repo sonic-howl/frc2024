@@ -224,13 +224,13 @@ class MyRobot(wpilib.TimedRobot):
       if wpilib.DriverStation.getAlliance() == wpilib.DriverStation.Alliance.kBlue:
         self.drivebase.moveToPose(
           FieldConstants.kBlueSpeakerLocation.transformBy(
-            wpimath.geometry.Transform2d(0, +FieldConstants.kSpeakerShootingRange, 0)
+            wpimath.geometry.Transform2d(+FieldConstants.kSpeakerShootingRange, 0, 0)
           )
         )
       else:
         self.drivebase.moveToPose(
           FieldConstants.kRedSpeakerLocation.transformBy(
-            wpimath.geometry.Transform2d(0, -FieldConstants.kSpeakerShootingRange, 0)
+            wpimath.geometry.Transform2d(-FieldConstants.kSpeakerShootingRange, 0, 0)
           )
         )
     elif self.moveToPickupLeft:

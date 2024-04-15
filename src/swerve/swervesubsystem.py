@@ -224,9 +224,9 @@ class SwerveSubsystem:
     errorRotaion = pose.rotation().radians() - rotation
 
     # TBD
-    KpX = 0.314159265358979
-    KpY = 0.314159265358979
-    KpRotation = 0.4
+    KpX = 1
+    KpY = 1
+    KpRotation = 1
 
     commandX = errorX * KpX
     commandY = errorY * KpY
