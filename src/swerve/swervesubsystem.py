@@ -227,16 +227,21 @@ class SwerveSubsystem:
 
     errorX = pose.X() - x
     errorY = pose.Y() - y
-    errorRotaion = pose.rotation().radians() - rotation
+    errorR = pose.rotation().radians() - rotation
 
-    # TBD
+    errorR = math.fmod(errorR, 2.0 * math.pi)
+    if errorR > math.pi / 2.0:
+      errorR = errorR - (2.0 * math.pi)
+    elif errorR < -math.pi / 2.0:
+      errorR = errorR + (2.0 * math.pi)
+
     KpX = 1
     KpY = 1
     KpRotation = 1
 
     commandX = errorX * KpX
     commandY = errorY * KpY
-    commandRotation = errorRotaion * KpRotation
+    commandRotation = errorR * KpRotation
 
     commandX = utils.utils.limiter(commandX, -1, 1)
     commandY = utils.utils.limiter(commandY, -1, 1)
