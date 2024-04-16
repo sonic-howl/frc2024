@@ -376,6 +376,19 @@
               "Visuals/Robot Icon Size": 50.0,
               "Visuals/Show Outside Circles": false
             }
+          },
+          "9,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/fieldOriented",
+              "_title": "fieldOriented",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
           }
         }
       }
