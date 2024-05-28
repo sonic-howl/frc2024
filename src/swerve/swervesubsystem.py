@@ -3,7 +3,6 @@ from typing import Tuple
 
 import wpilib
 from navx import AHRS
-from wpilib import DriverStation
 from wpimath.controller import ProfiledPIDControllerRadians
 from wpimath.geometry import Pose2d, Rotation2d
 from wpimath.kinematics import (
@@ -80,6 +79,8 @@ class SwerveSubsystem:
 
     self.gyroCalibrated = False
 
+    self.odometerGyroOffset = Rotation2d()
+
   def getAngle(self) -> float:
     return -self.gyro.getYaw()
 
@@ -103,6 +104,8 @@ class SwerveSubsystem:
     self.back_right.resetEncoders()
 
   def resetOdometer(self, pose: Pose2d = Pose2d()):
+    self.odometerGyroOffset = pose.rotation() - self.getRotation2d()
+
     self.odometer.resetPosition(
       self.getRotation2d(),
       [
@@ -116,14 +119,16 @@ class SwerveSubsystem:
     # potentially call gyro.setAngleAdjustment to align gyro with odometry (not necessary if we only use odometry)
 
   def periodic(self) -> None:
-    self.odometer.update(
-      self.getRotation2d(),
-      (
-        self.front_left.getPosition(),
-        self.front_right.getPosition(),
-        self.back_left.getPosition(),
-        self.back_right.getPosition(),
-      ),
+    (
+      self.odometer.update(
+        self.getRotation2d(),
+        (
+          self.front_left.getPosition(),
+          self.front_right.getPosition(),
+          self.back_left.getPosition(),
+          self.back_right.getPosition(),
+        ),
+      )
     )
 
     if self.isCalibrated():
@@ -149,14 +154,12 @@ class SwerveSubsystem:
     y *= SwerveConstants.kDriveMaxMetersPerSecond
 
     if self.field_oriented:
-      if DriverStation.getAlliance() == DriverStation.Alliance.kRed:
-        x = -x
-        y = -y
       chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
         x,
         y,
         z,
-        self.getRotation2d(),
+        self.getRotation2d()
+        + self.odometerGyroOffset,  # Adding the odometry gyro offset at init to correct for the 180 degree difference
       )
     else:
       chassisSpeeds = ChassisSpeeds(
@@ -215,3 +218,35 @@ class SwerveSubsystem:
     self.front_right.setDesiredState(fr, isClosedLoop=isClosedLoop)
     self.back_right.setDesiredState(bl, isClosedLoop=isClosedLoop)
     self.back_left.setDesiredState(br, isClosedLoop=isClosedLoop)
+
+  def moveToPose(self, pose: Pose2d):
+    currentPose = self.getPose()
+    x = currentPose.X()
+    y = currentPose.Y()
+    rotation = currentPose.rotation().radians()
+
+    errorX = pose.X() - x
+    errorY = pose.Y() - y
+    errorR = pose.rotation().radians() - rotation
+
+    errorR = math.fmod(errorR, 2.0 * math.pi)
+    if errorR > math.pi:
+      errorR = errorR - (2.0 * math.pi)
+    elif errorR < -math.pi / 2.0:
+      errorR = errorR + (2.0 * math.pi)
+
+    KpX = 1
+    KpY = 1
+    KpRotation = 1
+
+    commandX = errorX * KpX
+    commandY = errorY * KpY
+    commandRotation = errorR * KpRotation
+
+    commandX = utils.utils.limiter(commandX, -0.5, 0.5)
+    commandY = utils.utils.limiter(commandY, -0.5, 0.5)
+    commandRotation = utils.utils.limiter(commandRotation, -1, 1)
+    # Set to .7 to prevent skidding
+    self.field_oriented = True
+
+    self.setvelocity(commandX, commandY, commandRotation)
