@@ -35,16 +35,19 @@ class DriveTeam:
     return self.pilot.getBackButtonPressed()
 
   def get_move_to_amp_command(self):
-    return self.pilot.getYButton()
+    # return self.pilot.getYButton()
+    return False
 
   def get_move_to_speaker_command(self):
     return self.pilot.getAButton()
 
   def get_move_to_pickup_left_command(self):
-    return self.pilot.getXButton()
+    # return self.pilot.getXButton()
+    return False
 
   def get_move_to_pickup_right_command(self):
-    return self.pilot.getBButton()
+    # return self.pilot.getBButton()
+    return False
 
   ### Copilot ###
   def get_aim_command(self) -> float:  # raise/lower shooter
