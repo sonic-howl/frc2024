@@ -170,6 +170,11 @@ class MyRobot(wpilib.TimedRobot):
         kY = 0
         kRotation = 0
 
+    # Override starting position for demo in tight space
+    kX = 577.125 + RobotConstants.frame_length / 2 + RobotConstants.bumper_width
+    kY = 218.42
+    kRotation = 0
+
     # Set the dashboard programmed initial pose.
     inchToM = 39.73  # Inches to metres (x / inchToM)
     if self.drivebase.isCalibrated():
