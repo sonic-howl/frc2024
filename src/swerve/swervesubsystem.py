@@ -230,7 +230,7 @@ class SwerveSubsystem:
     errorR = pose.rotation().radians() - rotation
 
     errorR = math.fmod(errorR, 2.0 * math.pi)
-    if errorR > math.pi / 2.0:
+    if errorR > math.pi:
       errorR = errorR - (2.0 * math.pi)
     elif errorR < -math.pi / 2.0:
       errorR = errorR + (2.0 * math.pi)
@@ -243,10 +243,10 @@ class SwerveSubsystem:
     commandY = errorY * KpY
     commandRotation = errorR * KpRotation
 
-    commandX = utils.utils.limiter(commandX, -1, 1)
-    commandY = utils.utils.limiter(commandY, -1, 1)
+    commandX = utils.utils.limiter(commandX, -0.5, 0.5)
+    commandY = utils.utils.limiter(commandY, -0.5, 0.5)
     commandRotation = utils.utils.limiter(commandRotation, -1, 1)
-
+    # Set to .7 to prevent skidding
     self.field_oriented = True
 
     self.setvelocity(commandX, commandY, commandRotation)
